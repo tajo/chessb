@@ -1,9 +1,5 @@
 import React from 'react';
-
-export const COLORS = {
-  BLACK: 'BLACK',
-  WHITE: 'WHITE'
-};
+import {COLORS} from '../constants';
 
 export default class Square extends React.Component {
 
@@ -18,7 +14,7 @@ export default class Square extends React.Component {
       color: this.props.color === COLORS.WHITE ? '#b58863' : '#f0d9b5',
       width: '12.5%',
       height: '12.5%',
-      display: 'inline-block'
+      float: 'left'
     };
 
     return (

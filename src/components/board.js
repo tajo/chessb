@@ -8,9 +8,9 @@ export default class Board extends React.Component {
 
   render () {
     const styles = {
-      width: '800px',
-      height: '800px',
-      border: '3px solid black'
+      width: '600px',
+      height: '600px',
+      margin: 10
     };
 
     return (

@@ -1,4 +1,5 @@
 import React from 'react';
+import {PIECES} from '../constants';
 
 import bishopb from '../assets/chess/bishopb.svg';
 import bishopw from '../assets/chess/bishopw.svg';
@@ -13,21 +14,6 @@ import queenw from '../assets/chess/queenw.svg';
 import rookb from '../assets/chess/rookb.svg';
 import rookw from '../assets/chess/rookw.svg';
 
-export const PIECES = {
-  BISHOPB: 'BISHOPB',
-  BISHOPW: 'BISHOPW',
-  KINGB: 'KINGB',
-  KINGW: 'KINGW',
-  KNIGHTB: 'KNIGHTB',
-  KNIGHTW: 'KNIGHTW',
-  PAWNB: 'PAWNB',
-  PAWNW: 'PAWNW',
-  QUEENB: 'QUEENB',
-  QUEENW: 'QUEENW',
-  ROOKB: 'ROOKB',
-  ROOKW: 'ROOKW'
-};
-
 export default class Piece extends React.Component {
 
   static propTypes = {
@@ -36,7 +22,7 @@ export default class Piece extends React.Component {
 
   render () {
     return (
-      <div className='piece'>
+      <div height='100%' width='100%'>
         <img src={getPic(this.props.type)} height='100%' width='100%' />
       </div>
     );
