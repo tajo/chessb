@@ -1,34 +1,46 @@
-import thunk from 'redux-thunk'
-import rootReducer from './modules'
+import fetch from '../fetch';
+import injectDependencies from '../injectDeps';
+import promiseMiddleware from 'redux-promise-middleware';
+import shortid from 'shortid';
+import rootReducer from './reducers';
 import {
   applyMiddleware,
   compose,
   createStore
-} from 'redux'
+} from 'redux';
 
 export default function configureStore (initialState) {
-  let createStoreWithMiddleware
+  const getUid = () => shortid.generate();
+  const now = () => Date.now();
+  const dependenciesMiddleware = injectDependencies({fetch, getUid, now});
 
-  const middleware = applyMiddleware(thunk)
+  let middleware = applyMiddleware(
+    dependenciesMiddleware,
+    promiseMiddleware({
+      promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
+    })
+  );
 
+  let createStoreWithMiddleware;
   if (__DEBUG__) {
     createStoreWithMiddleware = compose(
       middleware,
       require('containers/DevTools').instrument()
-    )
+    );
   } else {
-    createStoreWithMiddleware = compose(middleware)
+    createStoreWithMiddleware = compose(middleware);
   }
 
-  const store = createStoreWithMiddleware(createStore)(
-    rootReducer, initialState
-  )
-  if (module.hot) {
-    module.hot.accept('./modules', () => {
-      const nextRootReducer = require('./modules')
+  const store = createStoreWithMiddleware(createStore)(rootReducer, initialState);
 
-      store.replaceReducer(nextRootReducer)
-    })
+  // Enable hot reload where available.
+  if (module.hot) { // eslint-disable-line no-undef
+    // Enable Webpack hot module replacement for reducers.
+    module.hot.accept('./reducers', () => { // eslint-disable-line no-undef
+      const nextAppReducer = require('./reducers'); // eslint-disable-line no-undef
+      store.replaceReducer(nextAppReducer);
+    });
   }
-  return store
+
+  return store;
 }

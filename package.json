@@ -20,19 +20,27 @@
     "url": "git+https://github.com/tajo/chessb.git"
   },
   "author": "Vojtech Miksu <vojtech@miksu.cz> (https://miksu.cz)",
+  "license": "UNLICENSED",
   "dependencies": {
+    "bluebird": "^3.1.1",
+    "chess.js": "^0.9.3",
     "cssnano": "^3.3.2",
     "debug": "^2.2.0",
     "dotenv": "^1.2.0",
     "history": "1.13.1",
+    "immutable": "^3.7.6",
+    "isomorphic-fetch": "^2.2.0",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",
     "react-router": "1.0.1",
     "redux": "^3.0.0",
     "redux-actions": "^0.9.0",
+    "redux-promise-middleware": "^2.3.1",
     "redux-simple-router": "^1.0.0",
     "redux-thunk": "^1.0.0",
+    "shortid": "^2.2.4",
+    "urijs": "^1.17.0",
     "yargs": "^3.18.0"
   },
   "devDependencies": {
