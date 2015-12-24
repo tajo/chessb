@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { actions as counterActions } from '../redux/actions/counter';
 import styles from './HomeView.scss';
+import Piece, {PIECES} from '../components/piece';
+import Square, {COLORS} from '../components/square';
+import Board from '../components/board';
 
 // We define mapStateToProps where we'd normally use
 // the @connect decorator so the data requirements are clear upfront, but then
@@ -23,21 +26,58 @@ export class HomeView extends React.Component {
   render () {
     return (
       <div className='container text-center'>
-        <h1>Welcome to the React Redux Starter Kit</h1>
-        <h2>
-          Sample Counter:&nbsp;
-          <span className={styles['counter--green']}>{this.props.counter}</span>
-        </h2>
-        <button className='btn btn-default'
-                onClick={() => this.props.increment(1)}>
-          Increment
-        </button>
-        <button className='btn btn-default'
-                onClick={this.props.doubleAsync}>
-          Double (Async)
-        </button>
-        <hr />
-        <Link to='/about'>Go To About View</Link>
+        <Board>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+          <Square color={COLORS.WHITE}>
+            <Piece type={PIECES.PAWNB} />
+          </Square>
+          <Square color={COLORS.BLACK}>
+            <Piece type={PIECES.KINGW} />
+          </Square>
+        </Board>
+
+        <Link to='/counter'>Go To Counter</Link>
       </div>
     );
   }
