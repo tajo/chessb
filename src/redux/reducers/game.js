@@ -14,14 +14,12 @@ const InitialState = Record({
 
 const initialState = new InitialState;
 
-export default function counterReducer (state = initialState, action) {
+export default function gameReducer (state = initialState, action) {
   switch (action.type) {
-    case actions.COUNTER_INCREMENT: {
-      return state.update('counter', counter => counter + 1);
-    }
-
-    case actions.COUNTER_DOUBLE_INCREMENT_SUCCESS: {
-      return state.update('counter', counter => counter + 2);
+    case actions.GAME_MOVE: {
+      return state
+        .update(action.board, _board => _board.set(action.start, null))
+        .update(action.board, _board => _board.set(action.end, action.piece));
     }
   }
   return state;

@@ -5,11 +5,20 @@ import {actions as gameActions} from '../redux/actions/game';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import Piece from '../components/piece';
+import {getMoveResult} from '../lib/chess';
 
 const squareTarget = {
-  drop (props, monitor, component) {
-    props.move(
+  canDrop (props, monitor) {
+    return !!getMoveResult(
       props.game.get(props.board),
+      monitor.getItem().position,
+      props.position
+    );
+  },
+
+  drop (props, monitor) {
+    props.move(
+      props.board,
       monitor.getItem().position,
       props.position,
       monitor.getItem().type
@@ -20,7 +29,8 @@ const squareTarget = {
 function collect (connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
   };
 }
 
@@ -36,6 +46,7 @@ class Square extends React.Component {
     piece: React.PropTypes.string,
     position: React.PropTypes.string.isRequired,
     isOver: React.PropTypes.bool.isRequired,
+    canDrop: React.PropTypes.bool.isRequired,
     connectDropTarget: React.PropTypes.func.isRequired,
     move: React.PropTypes.func.isRequired,
     board: React.PropTypes.string.isRequired,
@@ -49,7 +60,7 @@ class Square extends React.Component {
       width: '12.5%',
       height: '12.5%',
       float: 'left',
-      border: this.props.isOver ? '3px solid black' : 'none'
+      border: (this.props.isOver && this.props.canDrop) ? '3px solid black' : 'none'
     };
 
     return this.props.connectDropTarget(
