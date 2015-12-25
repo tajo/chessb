@@ -28,14 +28,13 @@ export class HomeView extends React.Component {
   }
 
   render () {
-    console.log(this.props.game.get('aBoard'));
     return (
       <div className='container text-center'>
         <Board>
           {this.props.game.get('aBoard').map((val, key, iter) => {
             return (
-              <Square color={getSquareColor(key)} key={key}>
-                {val && <Piece type={val} />}
+              <Square color={getSquareColor(key)} key={key} position={key}>
+                {val && <Piece type={val} position={key} />}
               </Square>
             );
           })}

@@ -1,5 +1,6 @@
 import React from 'react';
 import {PIECES} from '../constants';
+import {DragSource} from 'react-dnd';
 
 import bishopb from '../assets/chess/bishopb.svg';
 import bishopw from '../assets/chess/bishopw.svg';
@@ -14,20 +15,49 @@ import queenw from '../assets/chess/queenw.svg';
 import rookb from '../assets/chess/rookb.svg';
 import rookw from '../assets/chess/rookw.svg';
 
-export default class Piece extends React.Component {
+const pieceSource = {
+  beginDrag (props) {
+    return {
+      type: props.type,
+      position: props.position
+    };
+  }
+};
+
+function collect (connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+  };
+}
+
+class Piece extends React.Component {
 
   static propTypes = {
-    type: React.PropTypes.string.isRequired
+    type: React.PropTypes.string.isRequired,
+    connectDragSource: React.PropTypes.func.isRequired,
+    connectDragPreview: React.PropTypes.func.isRequired,
+    isDragging: React.PropTypes.bool.isRequired,
+    position: React.PropTypes.string.isRequired
+  }
+
+  componentDidMount () {
+    const img = new Image();
+    img.src = getPic(this.props.type);
+    //  img.onload = () => this.props.connectDragPreview(img);
   }
 
   render () {
-    return (
+    return this.props.connectDragSource(
       <div height='100%' width='100%'>
         <img src={getPic(this.props.type)} height='100%' width='100%' />
       </div>
     );
   }
 }
+
+export default DragSource('piece', pieceSource, collect)(Piece);
 
 function getPic (type) {
   if (type === PIECES.BISHOPB) return bishopb;

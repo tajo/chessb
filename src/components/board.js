@@ -1,6 +1,8 @@
 import React from 'react';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
-export default class Board extends React.Component {
+class Board extends React.Component {
 
   static propTypes = {
     children: React.PropTypes.any
@@ -8,9 +10,8 @@ export default class Board extends React.Component {
 
   render () {
     const styles = {
-      width: '600px',
-      height: '600px',
-      margin: 10
+      width: '100vmin',
+      height: '100vmin'
     };
 
     return (
@@ -20,3 +21,5 @@ export default class Board extends React.Component {
     );
   }
 }
+
+export default DragDropContext(HTML5Backend)(Board);

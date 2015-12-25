@@ -1,11 +1,29 @@
 import React from 'react';
 import {COLORS} from '../constants';
+import {DropTarget} from 'react-dnd';
 
-export default class Square extends React.Component {
+const squareTarget = {
+  drop (props, monitor, component) {
+    console.log(props);
+    console.log(monitor.getItem());
+  }
+};
+
+function collect (connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+  };
+}
+
+class Square extends React.Component {
 
   static propTypes = {
     children: React.PropTypes.object,
-    color: React.PropTypes.string.isRequired
+    color: React.PropTypes.string.isRequired,
+    position: React.PropTypes.string.isRequired,
+    isOver: React.PropTypes.bool.isRequired,
+    connectDropTarget: React.PropTypes.func.isRequired
   }
 
   render () {
@@ -14,13 +32,16 @@ export default class Square extends React.Component {
       color: this.props.color === COLORS.WHITE ? '#b58863' : '#f0d9b5',
       width: '12.5%',
       height: '12.5%',
-      float: 'left'
+      float: 'left',
+      border: this.props.isOver ? '3px solid black' : 'none'
     };
 
-    return (
+    return this.props.connectDropTarget(
       <div style={styles}>
         {this.props.children}
       </div>
     );
   }
 }
+
+export default DropTarget('piece', squareTarget, collect)(Square);
