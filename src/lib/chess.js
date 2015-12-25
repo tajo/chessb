@@ -11,6 +11,16 @@ export function getNewGame () {
   return newBoard;
 }
 
+export function getMoveResult (board, start, end, promotion = null) {
+  const game = new Chess();
+  board.forEach((piece, position) => {
+    if (translatePieceReverse(piece)) {
+      game.put(translatePieceReverse(piece), position);
+    }
+  });
+  return game.move({from: start, to: end, promotion: promotion});
+}
+
 function translatePiece (piece) {
   if (!piece) return null;
   if (piece.type === 'p' && piece.color === 'b') return PIECES.PAWNB;
@@ -25,4 +35,21 @@ function translatePiece (piece) {
   if (piece.type === 'n' && piece.color === 'w') return PIECES.KNIGHTW;
   if (piece.type === 'r' && piece.color === 'b') return PIECES.ROOKB;
   if (piece.type === 'r' && piece.color === 'w') return PIECES.ROOKW;
+  return null;
+}
+
+function translatePieceReverse (piece) {
+  if (piece === PIECES.PAWNB) return {type: 'p', color: 'b'};
+  if (piece === PIECES.PAWNW) return {type: 'p', color: 'w'};
+  if (piece === PIECES.KINGB) return {type: 'k', color: 'b'};
+  if (piece === PIECES.KINGW) return {type: 'k', color: 'w'};
+  if (piece === PIECES.QUEENB) return {type: 'q', color: 'b'};
+  if (piece === PIECES.QUEENW) return {type: 'q', color: 'w'};
+  if (piece === PIECES.BISHOPB) return {type: 'b', color: 'b'};
+  if (piece === PIECES.BISHOPW) return {type: 'b', color: 'w'};
+  if (piece === PIECES.KNIGHTB) return {type: 'n', color: 'b'};
+  if (piece === PIECES.KNIGHTW) return {type: 'n', color: 'w'};
+  if (piece === PIECES.ROOKB) return {type: 'r', color: 'b'};
+  if (piece === PIECES.ROOKW) return {type: 'r', color: 'w'};
+  return null;
 }

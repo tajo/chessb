@@ -1,24 +1,17 @@
-export const COUNTER_INCREMENT = 'COUNTER_INCREMENT';
-export const COUNTER_DOUBLE_INCREMENT = 'COUNTER_DOUBLE_INCREMENT';
-export const COUNTER_DOUBLE_INCREMENT_SUCCESS = 'COUNTER_DOUBLE_INCREMENT_SUCCESS';
+import {getMoveResult} from '../../lib/chess';
+
+export const GAME_MOVE = 'GAME_MOVE';
 
 export const actions = {
-  increment,
-  doubleAsync
+  move
 };
 
-export function increment () {
+export function move (board, start, end, piece) {
+  console.log(getMoveResult(board, start, end));
   return {
-    type: COUNTER_INCREMENT
-  };
-}
-
-const timeout = (interval) => new Promise((resolve) => setTimeout(resolve, interval || 0));
-export function doubleAsync () {
-  return {
-    type: COUNTER_DOUBLE_INCREMENT,
-    payload: {
-      promise: timeout(1000)
-    }
+    type: GAME_MOVE,
+    start: start,
+    end: end,
+    piece: piece
   };
 }

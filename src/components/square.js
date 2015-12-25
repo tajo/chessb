@@ -1,11 +1,19 @@
 import React from 'react';
 import {COLORS} from '../constants';
 import {DropTarget} from 'react-dnd';
+import {actions as gameActions} from '../redux/actions/game';
+import {connect} from 'react-redux';
+import {Record} from 'immutable';
+import Piece from '../components/piece';
 
 const squareTarget = {
   drop (props, monitor, component) {
-    console.log(props);
-    console.log(monitor.getItem());
+    props.move(
+      props.game.get(props.board),
+      monitor.getItem().position,
+      props.position,
+      monitor.getItem().type
+    );
   }
 };
 
@@ -16,14 +24,22 @@ function collect (connect, monitor) {
   };
 }
 
+const mapStateToProps = (state) => ({
+  game: state.game
+});
+
 class Square extends React.Component {
 
   static propTypes = {
     children: React.PropTypes.object,
     color: React.PropTypes.string.isRequired,
+    piece: React.PropTypes.string,
     position: React.PropTypes.string.isRequired,
     isOver: React.PropTypes.bool.isRequired,
-    connectDropTarget: React.PropTypes.func.isRequired
+    connectDropTarget: React.PropTypes.func.isRequired,
+    move: React.PropTypes.func.isRequired,
+    board: React.PropTypes.string.isRequired,
+    game: React.PropTypes.instanceOf(Record).isRequired
   }
 
   render () {
@@ -38,10 +54,10 @@ class Square extends React.Component {
 
     return this.props.connectDropTarget(
       <div style={styles}>
-        {this.props.children}
+        {this.props.piece && <Piece type={this.props.piece} position={this.props.position} />}
       </div>
     );
   }
 }
 
-export default DropTarget('piece', squareTarget, collect)(Square);
+export default connect(mapStateToProps, gameActions)(DropTarget('piece', squareTarget, collect)(Square));
