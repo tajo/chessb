@@ -44,6 +44,7 @@ class Piece extends React.Component {
     canDrag: React.PropTypes.bool.isRequired,
     connectDragPreview: React.PropTypes.func.isRequired,
     isDragging: React.PropTypes.bool.isRequired,
+    isSelected: React.PropTypes.bool.isRequired,
     position: React.PropTypes.string.isRequired
   }
 
@@ -58,11 +59,12 @@ class Piece extends React.Component {
       height: '100%',
       width: '100%',
       cursor: this.props.canDrag ? 'pointer' : 'default',
-      border: this.props.isDragging ? '3px solid black' : 'none'
+      border: (this.props.isDragging || this.props.isSelected) ? '3px solid black' : 'none'
     };
     const pieceStyle = {
-      height: '100%',
-      width: '100%'
+      height: (this.props.isDragging || this.props.isSelected) ? '100%' : 'calc(100% - 6px)',
+      width: (this.props.isDragging || this.props.isSelected) ? '100%' : 'calc(100% - 6px)',
+      marginTop: (this.props.isDragging || this.props.isSelected) ? -3 : 0
     };
     return this.props.connectDragSource(
       <div style={squareStyle}>

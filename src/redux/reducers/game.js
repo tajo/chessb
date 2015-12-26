@@ -7,6 +7,7 @@ const BoardState = Record({
   board: OrderedMap(getNewBoard()),
   engine: getNewEngine(),
   moves: List(),
+  squareSelected: false,
   whitePieces: OrderedMap(freePieces),
   blackPieces: OrderedMap(freePieces)
 });
@@ -29,6 +30,11 @@ export default function gameReducer (state = initialState, action) {
             .set(action.start, null)
             .set(action.end, action.piece);
         });
+    }
+
+    case actions.GAME_SELECT_SQUARE: {
+      return state
+        .updateIn([action.board, 'squareSelected'], sqaure => action.position);
     }
   }
   return state;

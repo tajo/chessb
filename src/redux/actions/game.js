@@ -1,7 +1,9 @@
 export const GAME_MOVE = 'GAME_MOVE';
+export const GAME_SELECT_SQUARE = 'GAME_SELECT_SQUARE';
 
 export const actions = {
-  move
+  move,
+  selectSquare
 };
 
 export function move (engine, board, start, end, piece, promotion = null) {
@@ -13,5 +15,13 @@ export function move (engine, board, start, end, piece, promotion = null) {
     end: end,
     piece: piece,
     promotion: promotion
+  };
+}
+
+export function selectSquare (board, position) {
+  return {
+    type: GAME_SELECT_SQUARE,
+    board: board,
+    position: position
   };
 }

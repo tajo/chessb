@@ -50,6 +50,7 @@ class Square extends React.Component {
     canDrop: React.PropTypes.bool.isRequired,
     connectDropTarget: React.PropTypes.func.isRequired,
     move: React.PropTypes.func.isRequired,
+    selectSquare: React.PropTypes.func.isRequired,
     board: React.PropTypes.string.isRequired,
     game: React.PropTypes.instanceOf(Record).isRequired
   }
@@ -65,10 +66,12 @@ class Square extends React.Component {
     };
 
     return this.props.connectDropTarget(
-      <div style={styles}>
-        {this.props.piece && <Piece type={this.props.piece}
-                                    position={this.props.position}
-                                    canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)} />
+      <div style={styles} onClick={() => this.props.selectSquare(this.props.board, this.props.position)}>
+        {this.props.piece &&
+          <Piece type={this.props.piece}
+                 isSelected={this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position}
+                 position={this.props.position}
+                 canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)} />
         }
       </div>
     );
