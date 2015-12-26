@@ -1,7 +1,8 @@
 import React from 'react';
+import Component from 'react-pure-render/component';
 import Board from '../components/board';
 
-export class HomeView extends React.Component {
+export class HomeView extends Component {
 
   render () {
     return (

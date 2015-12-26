@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import Piece from '../components/piece';
 import {isMoveLegal, isPieceMovebale} from '../lib/chess';
+import Component from 'react-pure-render/component';
 
 const squareTarget = {
   canDrop (props, monitor) {
@@ -17,13 +18,13 @@ const squareTarget = {
   },
 
   drop (props, monitor) {
-    console.log(props.move(
+    props.move(
       props.game.getIn([props.board, 'engine']),
       props.board,
       monitor.getItem().position,
       props.position,
       monitor.getItem().type
-    ));
+    );
   }
 };
 
@@ -39,7 +40,7 @@ const mapStateToProps = (state) => ({
   game: state.game
 });
 
-class Square extends React.Component {
+class Square extends Component {
 
   static propTypes = {
     children: React.PropTypes.object,

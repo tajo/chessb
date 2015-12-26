@@ -1,6 +1,7 @@
 import React from 'react';
 import {PIECES} from '../constants';
 import {DragSource} from 'react-dnd';
+import Component from 'react-pure-render/component';
 
 import bishopb from '../assets/chess/bishopb.png';
 import bishopw from '../assets/chess/bishopw.png';
@@ -35,7 +36,7 @@ function collect (connect, monitor) {
   };
 }
 
-class Piece extends React.Component {
+class Piece extends Component {
 
   static propTypes = {
     type: React.PropTypes.string.isRequired,

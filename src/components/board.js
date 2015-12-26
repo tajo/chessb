@@ -5,12 +5,13 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Square from '../components/square';
 import {getSquareColor} from '../constants';
 import {Record} from 'immutable';
+import Component from 'react-pure-render/component';
 
 const mapStateToProps = (state) => ({
   game: state.game
 });
 
-class Board extends React.Component {
+class Board extends Component {
 
   static propTypes = {
     board: React.PropTypes.string.isRequired,
