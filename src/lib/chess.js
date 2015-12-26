@@ -2,7 +2,7 @@ import Chess from 'chess.js';
 // import {OrderedMap, Record} from 'immutable';
 import {board, PIECES} from '../constants';
 
-export function getNewGame () {
+export function getNewBoard () {
   const game = new Chess();
   let newBoard = {};
   for (let square in board) {
@@ -11,10 +11,13 @@ export function getNewGame () {
   return newBoard;
 }
 
-export function getMoveResult (moves, start, end, promotion = null) {
-  const game = new Chess();
-  moves.forEach((move) => game.move(move.toJS()));
-  return game.move({from: start, to: end, promotion: promotion});
+export function getNewEngine () {
+  return new Chess();
+}
+
+export function getMoveResult (engine, start, end, promotion = null) {
+  const moves = engine.moves({square: start, verbose: true});
+  return moves.some(move => move.to === end);
 }
 
 function translatePiece (piece) {

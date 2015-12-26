@@ -1,10 +1,11 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces} from '../../constants';
-import {getNewGame} from '../../lib/chess';
+import {getNewBoard, getNewEngine} from '../../lib/chess';
 
 const BoardState = Record({
-  board: OrderedMap(getNewGame()),
+  board: OrderedMap(getNewBoard()),
+  engine: getNewEngine(),
   moves: List(),
   whitePieces: OrderedMap(freePieces),
   blackPieces: OrderedMap(freePieces)

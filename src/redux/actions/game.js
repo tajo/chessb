@@ -4,7 +4,8 @@ export const actions = {
   move
 };
 
-export function move (board, start, end, piece, promotion = null) {
+export function move (engine, board, start, end, piece, promotion = null) {
+  engine.move({from: start, to: end, promotion: promotion});
   return {
     type: GAME_MOVE,
     board: board,
