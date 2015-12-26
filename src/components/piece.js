@@ -2,18 +2,18 @@ import React from 'react';
 import {PIECES} from '../constants';
 import {DragSource} from 'react-dnd';
 
-import bishopb from '../assets/chess/bishopb.svg';
-import bishopw from '../assets/chess/bishopw.svg';
-import kingb from '../assets/chess/kingb.svg';
-import kingw from '../assets/chess/kingw.svg';
-import knightb from '../assets/chess/knightb.svg';
-import knightw from '../assets/chess/knightw.svg';
-import pawnb from '../assets/chess/pawnb.svg';
-import pawnw from '../assets/chess/pawnw.svg';
-import queenb from '../assets/chess/queenb.svg';
-import queenw from '../assets/chess/queenw.svg';
-import rookb from '../assets/chess/rookb.svg';
-import rookw from '../assets/chess/rookw.svg';
+import bishopb from '../assets/chess/bishopb.png';
+import bishopw from '../assets/chess/bishopw.png';
+import kingb from '../assets/chess/kingb.png';
+import kingw from '../assets/chess/kingw.png';
+import knightb from '../assets/chess/knightb.png';
+import knightw from '../assets/chess/knightw.png';
+import pawnb from '../assets/chess/pawnb.png';
+import pawnw from '../assets/chess/pawnw.png';
+import queenb from '../assets/chess/queenb.png';
+import queenw from '../assets/chess/queenw.png';
+import rookb from '../assets/chess/rookb.png';
+import rookw from '../assets/chess/rookw.png';
 
 const pieceSource = {
   beginDrag (props) {
@@ -54,9 +54,15 @@ class Piece extends React.Component {
   }
 
   render () {
+    const pieceStyle = {
+      height: '100%',
+      width: '100%',
+      display: 'block',
+      zIndex: '100'
+    };
     return this.props.connectDragSource(
-      <div height='100%' width='100%'>
-        <img src={getPic(this.props.type)} height='100%' width='100%' />
+      <div height='100%' width='100%' style={{cursor: 'pointer'}}>
+        <img src={getPic(this.props.type)} style={pieceStyle} />
       </div>
     );
   }
