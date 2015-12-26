@@ -10,13 +10,17 @@ import {getMoveResult} from '../lib/chess';
 const squareTarget = {
   canDrop (props, monitor) {
     return !!getMoveResult(
-      props.game.get(props.board),
+      props.game.getIn([props.board, 'moves']),
       monitor.getItem().position,
       props.position
     );
   },
 
   drop (props, monitor) {
+    console.log(getMoveResult(
+      props.game.getIn([props.board, 'moves']),
+      monitor.getItem().position,
+      props.position));
     props.move(
       props.board,
       monitor.getItem().position,

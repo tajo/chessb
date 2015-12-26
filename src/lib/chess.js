@@ -11,13 +11,9 @@ export function getNewGame () {
   return newBoard;
 }
 
-export function getMoveResult (board, start, end, promotion = null) {
+export function getMoveResult (moves, start, end, promotion = null) {
   const game = new Chess();
-  board.forEach((piece, position) => {
-    if (translatePieceReverse(piece)) {
-      game.put(translatePieceReverse(piece), position);
-    }
-  });
+  moves.forEach((move) => game.move(move.toJS()));
   return game.move({from: start, to: end, promotion: promotion});
 }
 

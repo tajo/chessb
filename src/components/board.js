@@ -25,7 +25,7 @@ class Board extends React.Component {
 
     return (
       <div style={styles}>
-        {this.props.game.get(this.props.board).map((piece, position) => {
+        {this.props.game.get(this.props.board).get('board').map((piece, position) => {
           return (
             <Square color={getSquareColor(position)}
                     key={position}

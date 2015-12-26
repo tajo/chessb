@@ -4,12 +4,13 @@ export const actions = {
   move
 };
 
-export function move (board, start, end, piece) {
+export function move (board, start, end, piece, promotion = null) {
   return {
     type: GAME_MOVE,
     board: board,
     start: start,
     end: end,
-    piece: piece
+    piece: piece,
+    promotion: promotion
   };
 }

@@ -1,15 +1,18 @@
 import * as actions from '../actions/game';
-import {OrderedMap, Record} from 'immutable';
-import {board, freePieces} from '../../constants';
+import {OrderedMap, Record, List, Map} from 'immutable';
+import {freePieces} from '../../constants';
 import {getNewGame} from '../../lib/chess';
 
+const BoardState = Record({
+  board: OrderedMap(getNewGame()),
+  moves: List(),
+  whitePieces: OrderedMap(freePieces),
+  blackPieces: OrderedMap(freePieces)
+});
+
 const InitialState = Record({
-  aBoard: OrderedMap(getNewGame()),
-  aBoardWhitePieces: OrderedMap(freePieces),
-  aBoardBlackPieces: OrderedMap(freePieces),
-  bBoard: OrderedMap(board),
-  bBoardWhitePieces: OrderedMap(freePieces),
-  bBoardBlackPieces: OrderedMap(freePieces)
+  aBoard: new BoardState,
+  bBoard: new BoardState
 });
 
 const initialState = new InitialState;
@@ -17,9 +20,14 @@ const initialState = new InitialState;
 export default function gameReducer (state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
+      const move = Map({from: action.start, to: action.end, promotion: action.promotion});
       return state
-        .update(action.board, _board => _board.set(action.start, null))
-        .update(action.board, _board => _board.set(action.end, action.piece));
+        .updateIn([action.board, 'moves'], board => board.push(move))
+        .updateIn([action.board, 'board'], board => {
+          return board
+            .set(action.start, null)
+            .set(action.end, action.piece);
+        });
     }
   }
   return state;
