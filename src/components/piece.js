@@ -54,15 +54,19 @@ class Piece extends React.Component {
   }
 
   render () {
-    const pieceStyle = {
+    const squareStyle = {
       height: '100%',
       width: '100%',
-      display: 'block',
-      zIndex: '100'
+      cursor: this.props.canDrag ? 'pointer' : 'default',
+      border: this.props.isDragging ? '3px solid black' : 'none'
+    };
+    const pieceStyle = {
+      height: '100%',
+      width: '100%'
     };
     return this.props.connectDragSource(
-      <div height='100%' width='100%' style={{cursor: 'pointer'}}>
-        <img src={getPic(this.props.type)} style={pieceStyle} />
+      <div style={squareStyle}>
+        {!this.props.isDragging && <img src={getPic(this.props.type)} style={pieceStyle} draggable={this.props.canDrag} />}
       </div>
     );
   }

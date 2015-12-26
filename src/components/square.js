@@ -61,7 +61,7 @@ class Square extends React.Component {
       width: '12.5%',
       height: '12.5%',
       float: 'left',
-      border: (this.props.isOver && this.props.canDrop) ? '3px solid black' : 'none'
+      border: (this.props.isOver && this.props.canDrop) ? '3px solid darkred' : 'none'
     };
 
     return this.props.connectDropTarget(
