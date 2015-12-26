@@ -31,7 +31,6 @@ const pieceSource = {
 function collect (connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging()
   };
 }
@@ -42,16 +41,10 @@ class Piece extends React.Component {
     type: React.PropTypes.string.isRequired,
     connectDragSource: React.PropTypes.func.isRequired,
     canDrag: React.PropTypes.bool.isRequired,
-    connectDragPreview: React.PropTypes.func.isRequired,
+    overDrop: React.PropTypes.bool.isRequired,
     isDragging: React.PropTypes.bool.isRequired,
     isSelected: React.PropTypes.bool.isRequired,
     position: React.PropTypes.string.isRequired
-  }
-
-  componentDidMount () {
-    const img = new Image();
-    img.src = getPic(this.props.type);
-    //  img.onload = () => this.props.connectDragPreview(img);
   }
 
   render () {
@@ -59,12 +52,12 @@ class Piece extends React.Component {
       height: '100%',
       width: '100%',
       cursor: this.props.canDrag ? 'pointer' : 'default',
-      border: (this.props.isDragging || this.props.isSelected) ? '3px solid black' : 'none'
+      border: (this.props.isSelected || this.props.overDrop) ? '3px solid black' : 'none'
     };
     const pieceStyle = {
-      height: (this.props.isDragging || this.props.isSelected) ? '100%' : 'calc(100% - 6px)',
-      width: (this.props.isDragging || this.props.isSelected) ? '100%' : 'calc(100% - 6px)',
-      marginTop: (this.props.isDragging || this.props.isSelected) ? -3 : 0
+      height: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 6px)',
+      width: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 6px)',
+      marginTop: (this.props.isSelected || this.props.overDrop) ? -3 : 0
     };
     return this.props.connectDragSource(
       <div style={squareStyle}>

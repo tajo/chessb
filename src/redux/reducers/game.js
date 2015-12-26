@@ -25,6 +25,7 @@ export default function gameReducer (state = initialState, action) {
       const move = Map({from: action.start, to: action.end, promotion: action.promotion});
       return state
         .updateIn([action.board, 'moves'], board => board.push(move))
+        .updateIn([action.board, 'squareSelected'], square => null)
         .updateIn([action.board, 'board'], board => {
           return board
             .set(action.start, null)
@@ -33,8 +34,7 @@ export default function gameReducer (state = initialState, action) {
     }
 
     case actions.GAME_SELECT_SQUARE: {
-      return state
-        .updateIn([action.board, 'squareSelected'], sqaure => action.position);
+      return state.updateIn([action.board, 'squareSelected'], sqaure => action.position);
     }
   }
   return state;

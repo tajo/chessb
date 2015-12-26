@@ -61,20 +61,56 @@ class Square extends React.Component {
       color: this.props.color === COLORS.WHITE ? '#b58863' : '#f0d9b5',
       width: '12.5%',
       height: '12.5%',
-      float: 'left',
-      border: (this.props.isOver && this.props.canDrop) ? '3px solid darkred' : 'none'
+      float: 'left'
+    };
+
+    const emptySquareStyle = {
+      height: '100%',
+      width: '100%',
+      border: (this.props.isOver && this.props.canDrop) ? '3px solid black' : 'none'
     };
 
     return this.props.connectDropTarget(
-      <div style={styles} onClick={() => this.props.selectSquare(this.props.board, this.props.position)}>
-        {this.props.piece &&
-          <Piece type={this.props.piece}
+      <div style={styles} onClick={(e) => this.handleClick(e)}>
+        {this.props.piece
+         ? <Piece type={this.props.piece}
                  isSelected={this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position}
+                 overDrop={this.props.isOver && this.props.canDrop}
                  position={this.props.position}
                  canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)} />
-        }
+         : <div style={emptySquareStyle} />}
       </div>
     );
+  }
+
+  handleClick (e) {
+    if (this.props.game.getIn([this.props.board, 'squareSelected'])) {
+      if (this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position) {
+        this.props.selectSquare(this.props.board, null);
+        return;
+      }
+      if (isMoveLegal(
+        this.props.game.getIn([this.props.board, 'engine']),
+        this.props.game.getIn([this.props.board, 'squareSelected']),
+        this.props.position
+      )) {
+        this.props.move(
+          this.props.game.getIn([this.props.board, 'engine']),
+          this.props.board,
+          this.props.game.getIn([this.props.board, 'squareSelected']),
+          this.props.position,
+          this.props.game.getIn([this.props.board, 'board', this.props.game.getIn([this.props.board, 'squareSelected'])])
+        );
+      } else {
+        if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
+          this.props.selectSquare(this.props.board, this.props.position);
+        }
+      }
+    } else {
+      if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
+        this.props.selectSquare(this.props.board, this.props.position);
+      }
+    }
   }
 }
 
