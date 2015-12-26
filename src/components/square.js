@@ -67,7 +67,7 @@ class Square extends React.Component {
     const emptySquareStyle = {
       height: '100%',
       width: '100%',
-      border: (this.props.isOver && this.props.canDrop) ? '3px solid black' : 'none'
+      border: (this.props.isOver && this.props.canDrop) ? '2px solid black' : 'none'
     };
 
     return this.props.connectDropTarget(

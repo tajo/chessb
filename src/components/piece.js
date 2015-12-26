@@ -52,12 +52,12 @@ class Piece extends React.Component {
       height: '100%',
       width: '100%',
       cursor: this.props.canDrag ? 'pointer' : 'default',
-      border: (this.props.isSelected || this.props.overDrop) ? '3px solid black' : 'none'
+      border: (this.props.isSelected || this.props.overDrop) ? '2px solid black' : 'none'
     };
     const pieceStyle = {
-      height: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 6px)',
-      width: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 6px)',
-      marginTop: (this.props.isSelected || this.props.overDrop) ? -3 : 0
+      height: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 4px)',
+      width: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 4px)',
+      marginTop: (this.props.isSelected || this.props.overDrop) ? -2 : 0
     };
     return this.props.connectDragSource(
       <div style={squareStyle}>
