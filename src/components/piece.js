@@ -21,6 +21,10 @@ const pieceSource = {
       type: props.type,
       position: props.position
     };
+  },
+
+  canDrag (props) {
+    return props.canDrag;
   }
 };
 
@@ -37,6 +41,7 @@ class Piece extends React.Component {
   static propTypes = {
     type: React.PropTypes.string.isRequired,
     connectDragSource: React.PropTypes.func.isRequired,
+    canDrag: React.PropTypes.bool.isRequired,
     connectDragPreview: React.PropTypes.func.isRequired,
     isDragging: React.PropTypes.bool.isRequired,
     position: React.PropTypes.string.isRequired

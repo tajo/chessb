@@ -5,11 +5,11 @@ import {actions as gameActions} from '../redux/actions/game';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import Piece from '../components/piece';
-import {getMoveResult} from '../lib/chess';
+import {isMoveLegal, isPieceMovebale} from '../lib/chess';
 
 const squareTarget = {
   canDrop (props, monitor) {
-    return !!getMoveResult(
+    return !!isMoveLegal(
       props.game.getIn([props.board, 'engine']),
       monitor.getItem().position,
       props.position
@@ -17,17 +17,13 @@ const squareTarget = {
   },
 
   drop (props, monitor) {
-    console.log(getMoveResult(
-      props.game.getIn([props.board, 'engine']),
-      monitor.getItem().position,
-      props.position));
-    props.move(
+    console.log(props.move(
       props.game.getIn([props.board, 'engine']),
       props.board,
       monitor.getItem().position,
       props.position,
       monitor.getItem().type
-    );
+    ));
   }
 };
 
@@ -70,7 +66,10 @@ class Square extends React.Component {
 
     return this.props.connectDropTarget(
       <div style={styles}>
-        {this.props.piece && <Piece type={this.props.piece} position={this.props.position} />}
+        {this.props.piece && <Piece type={this.props.piece}
+                                    position={this.props.position}
+                                    canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)} />
+        }
       </div>
     );
   }

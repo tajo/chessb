@@ -15,9 +15,13 @@ export function getNewEngine () {
   return new Chess();
 }
 
-export function getMoveResult (engine, start, end, promotion = null) {
+export function isMoveLegal (engine, start, end, promotion = null) {
   const moves = engine.moves({square: start, verbose: true});
   return moves.some(move => move.to === end);
+}
+
+export function isPieceMovebale (engine, position) {
+  return engine.moves({square: position}).length > 0;
 }
 
 function translatePiece (piece) {
