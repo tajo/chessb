@@ -24,10 +24,17 @@ class Board extends Component {
 
   render () {
     const styles = {
-      width: '100vmin',
-      height: '100vmin',
-      position: 'relative'
+      width: '35vw',
+      height: '35vw',
+      position: 'relative',
+      float: 'left',
+      padding: 10,
+      margin: 10
     };
+
+    const board = this.props.board === 'bBoard'
+        ? this.props.game.get(this.props.board).get('board').reverse()
+        : this.props.game.get(this.props.board).get('board');
 
     return (
       <div style={styles}>
@@ -45,7 +52,7 @@ class Board extends Component {
                      }}
           />
         }
-        {this.props.game.get(this.props.board).get('board').map((piece, position) => {
+        {board.map((piece, position) => {
           return (
             <Square color={getSquareColor(position)}
                     key={position}
