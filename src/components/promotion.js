@@ -16,7 +16,8 @@ import styles from './promotion.scss';
 class Promotion extends Component {
 
   static propTypes = {
-    color: React.PropTypes.string.isRequired
+    color: React.PropTypes.string.isRequired,
+    finishMove: React.PropTypes.func.isRequired
   }
 
   render () {
@@ -50,7 +51,7 @@ class Promotion extends Component {
   }
 
   handleClick (piece) {
-    console.log(piece);
+    this.props.finishMove(piece);
   }
 }
 

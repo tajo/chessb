@@ -45,7 +45,7 @@ function translatePiece (piece) {
   return null;
 }
 
-function translatePieceReverse (piece) {
+export function translatePieceReverse (piece) {
   if (piece === PIECES.PAWNB) return {type: 'p', color: 'b'};
   if (piece === PIECES.PAWNW) return {type: 'p', color: 'w'};
   if (piece === PIECES.KINGB) return {type: 'k', color: 'b'};
@@ -60,3 +60,4 @@ function translatePieceReverse (piece) {
   if (piece === PIECES.ROOKW) return {type: 'r', color: 'w'};
   return null;
 }
+

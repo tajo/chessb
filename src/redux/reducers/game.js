@@ -1,11 +1,13 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
-import {freePieces} from '../../constants';
+import {freePieces, COLORS} from '../../constants';
 import {getNewBoard, getNewEngine} from '../../lib/chess';
 
 const BoardState = Record({
   board: OrderedMap(getNewBoard()),
   engine: getNewEngine(),
+  turn: COLORS.WHITE,
+  promotion: false,
   moves: List(),
   squareSelected: false,
   whitePieces: OrderedMap(freePieces),
@@ -24,8 +26,10 @@ export default function gameReducer (state = initialState, action) {
     case actions.GAME_MOVE: {
       const move = Map({from: action.start, to: action.end, promotion: action.promotion});
       return state
+        .updateIn([action.board, 'promotion'], promotion => false)
+        .updateIn([action.board, 'turn'], turn => turn === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE)
         .updateIn([action.board, 'moves'], board => board.push(move))
-        .updateIn([action.board, 'squareSelected'], square => null)
+        .updateIn([action.board, 'squareSelected'], square => false)
         .updateIn([action.board, 'board'], board => {
           return board
             .set(action.start, null)
@@ -35,6 +39,11 @@ export default function gameReducer (state = initialState, action) {
 
     case actions.GAME_SELECT_SQUARE: {
       return state.updateIn([action.board, 'squareSelected'], sqaure => action.position);
+    }
+
+    case actions.GAME_SHOW_PROMOTION_POPUP: {
+      const prom = Map({from: action.start, to: action.end});
+      return state.updateIn([action.board, 'promotion'], promotion => prom);
     }
   }
   return state;
