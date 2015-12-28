@@ -22,7 +22,7 @@ function CoreLayout ({ children }) {
     <div className='page-container'>
       <div style={topStyle}>
         <div style={{fontSize: '20px', marginRight: 20, fontWeight: 'bold'}}>Chess <img src={bee} style={{width: 25, height: 25, marginBottom: -4}} /></div>
-        <div style={{color: 'darkred', marginTop: -5, marginLeft: 20}}>alpha</div>
+        <div style={{color: 'darkred', marginTop: -5, marginLeft: 27}}>alpha</div>
       </div>
       <div className='view-container'>
         {children}

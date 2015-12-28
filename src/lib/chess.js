@@ -1,4 +1,4 @@
-import Chess from 'chess.js';
+import Chess from './engine';
 // import {OrderedMap, Record} from 'immutable';
 import {board, PIECES, COLORS} from '../constants';
 

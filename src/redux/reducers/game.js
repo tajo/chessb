@@ -2,7 +2,7 @@ import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces, COLORS, PIECES} from '../../constants';
 import {getNewBoard} from '../../lib/chess';
-import Chess from 'chess.js';
+import Chess from '../../lib/engine';
 
 const BoardState = Record({
   board: OrderedMap(getNewBoard()),
