@@ -114,7 +114,8 @@ export default function Chess(fen) {
     EP_CAPTURE: 'e',
     PROMOTION: 'p',
     KSIDE_CASTLE: 'k',
-    QSIDE_CASTLE: 'q'
+    QSIDE_CASTLE: 'q',
+    DROP: 'd'
   };
 
   var BITS = {
@@ -146,6 +147,14 @@ export default function Chess(fen) {
     a2:  96, b2:  97, c2:  98, d2:  99, e2: 100, f2: 101, g2: 102, h2: 103,
     a1: 112, b1: 113, c1: 114, d1: 115, e1: 116, f1: 117, g1: 118, h1: 119
   };
+
+  var FREE_SQUARES = {
+    q: 'q',
+    n: 'n',
+    r: 'r',
+    b: 'b',
+    p: 'p'
+  }
 
   var ROOKS = {
     w: [{square: SQUARES.a1, flag: BITS.QSIDE_CASTLE},
@@ -484,6 +493,28 @@ export default function Chess(fen) {
       }
     }
 
+    function addFreePieceMoves(color, single = null) {
+      var freePieces = (color === WHITE) ? whiteFreePieces : blackFreePieces;
+      if (single) freePieces = [single];
+
+      freePieces.forEach(freePiece => {
+        for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+          /* did we run off the end of the board */
+          if (i & 0x88) { i += 7; continue; }
+          var piece = board[i];
+          if (piece !== null) { continue; }
+          if (freePiece === PAWN && (rank(i) === RANK_8 || rank(i) === RANK_1)) { continue; }
+          moves.push({
+            color: color,
+            from: freePiece,
+            to: i,
+            flags: FLAGS.DROP,
+            piece: freePiece
+          });
+        }
+      });
+    }
+
     var moves = [];
     var us = turn;
     var them = swap_color(us);
@@ -501,6 +532,9 @@ export default function Chess(fen) {
     if (typeof options !== 'undefined' && 'square' in options) {
       if (options.square in SQUARES) {
         first_sq = last_sq = SQUARES[options.square];
+        single_square = true;
+      } else if (options.square in FREE_SQUARES) {
+        addFreePieceMoves(us, options.square);
         single_square = true;
       } else {
         /* invalid square */
@@ -564,6 +598,10 @@ export default function Chess(fen) {
           }
         }
       }
+    }
+
+    if (!single_square) {
+      addFreePieceMoves(us);
     }
 
     /* check for castling if: a) we're generating all moves, or b) we're doing
@@ -817,8 +855,13 @@ export default function Chess(fen) {
     var them = swap_color(us);
     push(move);
 
-    board[move.to] = board[move.from];
-    board[move.from] = null;
+    var dropMove = ['q', 'r', 'n', 'b', 'p'].some(piece => piece === move.from);
+    if (dropMove) {
+      board[move.to] = move.from;
+    } else {
+      board[move.to] = board[move.from];
+      board[move.from] = null;
+    }
 
     /* if ep capture, remove the captured pawn */
     if (move.flags & BITS.EP_CAPTURE) {
@@ -856,7 +899,7 @@ export default function Chess(fen) {
     }
 
     /* turn off castling if we move a rook */
-    if (castling[us]) {
+    if (castling[us] && !dropMove) {
       for (var i = 0, len = ROOKS[us].length; i < len; i++) {
         if (move.from === ROOKS[us][i].square &&
             castling[us] & ROOKS[us][i].flag) {
@@ -917,9 +960,12 @@ export default function Chess(fen) {
 
     var us = turn;
     var them = swap_color(turn);
+    var dropMove = ['q', 'r', 'n', 'b', 'p'].some(piece => piece === move.from);
 
-    board[move.from] = board[move.to];
-    board[move.from].type = move.piece;  // to undo any promotions
+    if (!dropMove) {
+      board[move.from] = board[move.to];
+      board[move.from].type = move.piece;  // to undo any promotions
+    }
     board[move.to] = null;
 
     if (move.flags & BITS.CAPTURE) {
@@ -1064,9 +1110,12 @@ export default function Chess(fen) {
   /* pretty = external move object */
   function make_pretty(ugly_move) {
     var move = clone(ugly_move);
+    var dropMove = ['q', 'r', 'n', 'b', 'p'].some(piece => piece === move.from);
     move.san = move_to_san(move);
     move.to = algebraic(move.to);
-    move.from = algebraic(move.from);
+    if (!dropMove) {
+      move.from = algebraic(move.from);
+    }
 
     var flags = '';
 
@@ -1076,6 +1125,9 @@ export default function Chess(fen) {
       }
     }
     move.flags = flags;
+    if (dropMove) {
+      move.flags = 'd';
+    }
 
     return move;
   }
