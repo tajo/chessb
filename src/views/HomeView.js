@@ -1,6 +1,9 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 import Board from '../components/board';
+import FreePieces from '../components/freePieces';
+import {DragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 export class HomeView extends Component {
 
@@ -15,11 +18,19 @@ export class HomeView extends Component {
     };
     return (
       <div style={rootStyles}>
-        <Board board='aBoard' />
-        <Board board='bBoard' />
+        <div>
+          <FreePieces />
+          <Board board='aBoard' />
+          <FreePieces />
+        </div>
+        <div>
+          <FreePieces />
+          <Board board='bBoard' />
+          <FreePieces />
+        </div>
       </div>
     );
   }
 }
 
-export default HomeView;
+export default DragDropContext(HTML5Backend)(HomeView);

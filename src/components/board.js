@@ -1,7 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {DragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import Square from './square';
 import {actions as gameActions} from '../redux/actions/game';
 import {getSquareColor} from '../constants';
@@ -24,12 +22,12 @@ class Board extends Component {
 
   render () {
     const styles = {
-      width: '35vw',
-      height: '35vw',
+      width: '33vw',
+      height: '33vw',
       position: 'relative',
-      float: 'left',
-      padding: 10,
-      margin: 10
+      margin: '5px 15px 5px 15px',
+      display: 'flex',
+      flexWrap: 'wrap'
     };
 
     const board = this.props.board === 'bBoard'
@@ -66,4 +64,4 @@ class Board extends Component {
   }
 }
 
-export default connect(mapStateToProps, gameActions)(DragDropContext(HTML5Backend)(Board));
+export default connect(mapStateToProps, gameActions)(Board);

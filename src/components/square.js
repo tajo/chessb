@@ -14,7 +14,7 @@ const squareTarget = {
       props.game.getIn([props.board, 'engine']),
       monitor.getItem().position,
       props.position
-    );
+    ) && props.board === monitor.getItem().board;
   },
 
   drop (props, monitor) {
@@ -61,8 +61,7 @@ class Square extends Component {
       backgroundColor: this.props.color === COLORS.BLACK ? '#b58863' : '#f0d9b5',
       color: this.props.color === COLORS.WHITE ? '#b58863' : '#f0d9b5',
       width: '12.5%',
-      height: '12.5%',
-      float: 'left'
+      height: '12.5%'
     };
 
     const emptySquareStyle = {
@@ -75,10 +74,11 @@ class Square extends Component {
       <div style={styles} onClick={(e) => this.handleClick(e)}>
         {this.props.piece
          ? <Piece type={this.props.piece}
-                 isSelected={this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position}
-                 overDrop={this.props.isOver && this.props.canDrop}
-                 position={this.props.position}
-                 canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)} />
+                  isSelected={this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position}
+                  overDrop={this.props.isOver && this.props.canDrop}
+                  position={this.props.position}
+                  canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)}
+                  board={this.props.board} />
          : <div style={emptySquareStyle} />}
       </div>
     );

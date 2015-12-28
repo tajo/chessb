@@ -20,7 +20,8 @@ const pieceSource = {
   beginDrag (props) {
     return {
       type: props.type,
-      position: props.position
+      position: props.position,
+      board: props.board
     };
   },
 
@@ -45,7 +46,8 @@ class Piece extends Component {
     overDrop: React.PropTypes.bool.isRequired,
     isDragging: React.PropTypes.bool.isRequired,
     isSelected: React.PropTypes.bool.isRequired,
-    position: React.PropTypes.string.isRequired
+    position: React.PropTypes.string.isRequired,
+    board: React.PropTypes.string.isRequired
   }
 
   render () {
@@ -58,7 +60,8 @@ class Piece extends Component {
     const pieceStyle = {
       height: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 4px)',
       width: (this.props.isSelected || this.props.overDrop) ? '100%' : 'calc(100% - 4px)',
-      marginTop: (this.props.isSelected || this.props.overDrop) ? -2 : 0
+      marginTop: (this.props.isSelected || this.props.overDrop) ? -2 : 0,
+      marginLeft: (this.props.isSelected || this.props.overDrop) ? 0 : 2
     };
     return this.props.connectDragSource(
       <div style={squareStyle}>

@@ -1,11 +1,12 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces, COLORS} from '../../constants';
-import {getNewBoard, getNewEngine} from '../../lib/chess';
+import {getNewBoard} from '../../lib/chess';
+import Chess from 'chess.js';
 
 const BoardState = Record({
   board: OrderedMap(getNewBoard()),
-  engine: getNewEngine(),
+  engine: null,
   turn: COLORS.WHITE,
   promotion: false,
   moves: List(),
@@ -15,8 +16,8 @@ const BoardState = Record({
 });
 
 const InitialState = Record({
-  aBoard: new BoardState,
-  bBoard: new BoardState
+  aBoard: new BoardState({engine: new Chess()}),
+  bBoard: new BoardState({engine: new Chess()})
 });
 
 const initialState = new InitialState;

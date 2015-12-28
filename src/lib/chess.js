@@ -15,10 +15,6 @@ export function makeMove (engine, start, end, promotion = null) {
   console.log(engine.move({from: start, to: end, promotion: promotion}));
 }
 
-export function getNewEngine () {
-  return new Chess();
-}
-
 export function isMoveLegal (engine, start, end, promotion = null) {
   const moves = engine.moves({square: start, verbose: true});
   return moves.some(move => move.to === end);
