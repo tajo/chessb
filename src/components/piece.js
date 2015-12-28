@@ -71,10 +71,14 @@ class Piece extends Component {
       fontSize: 13
     };
     const count = this.props.isDragging ? this.props.count - 1 : this.props.count;
-    return this.props.connectDragSource(
+    return (
       <div style={squareStyle}>
         {(!this.props.isDragging || this.props.count > 1) &&
-          <img src={getPic(this.props.type)} style={pieceStyle} draggable={this.props.canDrag} />}
+          this.props.connectDragSource(
+            <div>
+              <img src={getPic(this.props.type)} style={pieceStyle} draggable={this.props.canDrag} />
+            </div>
+          )}
         {count > 1 && <div style={indexStyle}>{count}</div>}
       </div>
     );
