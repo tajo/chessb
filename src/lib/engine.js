@@ -163,6 +163,8 @@ export default function Chess(fen) {
   var move_number = 1;
   var history = [];
   var header = {};
+  var blackFreePieces = [];
+  var whiteFreePieces = [];
 
   /* if the user passes in a fen string, load it, else default to
    * starting position
@@ -1585,6 +1587,37 @@ export default function Chess(fen) {
       }
 
       return move_history;
+    },
+
+    addFreePiece: function(color, piece) {
+      if ([KNIGHT, ROOK, BISHOP, QUEEN, PAWN].indexOf(piece) === -1) return;
+      if (color === WHITE) {
+        whiteFreePieces.push(piece)
+      }
+      if (color === BLACK) {
+        blackFreePieces.push(piece)
+      }
+    },
+
+    removeFreePiece: function(color, piece) {
+      if ([KNIGHT, ROOK, BISHOP, QUEEN, PAWN].indexOf(piece) === -1) return;
+      if (color === WHITE) {
+        var index = whiteFreePieces.indexOf(piece);
+        if (index > -1) whiteFreePieces.splice(index, 1);
+      }
+      if (color === BLACK) {
+        var index = blackFreePieces.indexOf(piece);
+        if (index > -1) blackFreePieces.splice(index, 1);
+      }
+    },
+
+    getFreePieces: function(color) {
+      if (color === WHITE) {
+        return whiteFreePieces;
+      }
+      if (color === BLACK) {
+        return blackFreePieces;
+      }
     }
 
   };

@@ -1,7 +1,7 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces, COLORS, PIECES} from '../../constants';
-import {getNewBoard} from '../../lib/chess';
+import {getNewBoard, translatePieceReverse} from '../../lib/chess';
 import Chess from '../../lib/engine';
 
 const BoardState = Record({
@@ -63,6 +63,10 @@ export default function gameReducer (state = initialState, action) {
 
       // give the captured pieces to other board
       if (capturedPiece) {
+        const translated = translatePieceReverse(capturedPiece);
+        state
+          .getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'])
+          .addFreePiece(translated.color, translated.type);
         state = state.updateIn([
           action.board === 'aBoard' ? 'bBoard' : 'aBoard',
           'freePieces',
