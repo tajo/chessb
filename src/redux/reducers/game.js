@@ -1,6 +1,6 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
-import {freePieces, COLORS} from '../../constants';
+import {freePieces, COLORS, PIECES} from '../../constants';
 import {getNewBoard} from '../../lib/chess';
 import Chess from 'chess.js';
 
@@ -26,6 +26,14 @@ export default function gameReducer (state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
       const move = Map({from: action.start, to: action.end, promotion: action.promotion});
+
+      // en passant capture
+      if (action.result.flags === 'e') {
+        const diff = action.piece === PIECES.PAWNW ? -1 : 1;
+        const deleteSquare = action.end[0] + (parseInt(action.end[1], 10) + diff).toString();
+        state = state.updateIn([action.board, 'board'], board => board.set(deleteSquare, null));
+      }
+
       return state
         .updateIn([action.board, 'promotion'], promotion => false)
         .updateIn([action.board, 'turn'], turn => turn === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE)
