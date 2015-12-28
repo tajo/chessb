@@ -494,16 +494,14 @@ export default function Chess(fen) {
       }
     }
 
-    function addFreePieceMoves(color, single = null) {
+    function addFreePieceMoves(board, color) {
       var freePieces = (color === WHITE) ? whiteFreePieces : blackFreePieces;
-      if (single) freePieces = [single];
-
       freePieces.forEach(freePiece => {
         for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
           /* did we run off the end of the board */
           if (i & 0x88) { i += 7; continue; }
           var piece = board[i];
-          if (piece !== null) { continue; }
+          if (piece != null) { continue; }
           if (freePiece === PAWN && (rank(i) === RANK_8 || rank(i) === RANK_1)) { continue; }
           moves.push({
             color: color,
@@ -528,20 +526,6 @@ export default function Chess(fen) {
     /* do we want legal moves? */
     var legal = (typeof options !== 'undefined' && 'legal' in options) ?
                 options.legal : true;
-
-    /* are we generating moves for a single square? */
-    if (typeof options !== 'undefined' && 'square' in options) {
-      if (options.square in SQUARES) {
-        first_sq = last_sq = SQUARES[options.square];
-        single_square = true;
-      } else if (options.square in FREE_SQUARES) {
-        addFreePieceMoves(us, options.square);
-        single_square = true;
-      } else {
-        /* invalid square */
-        return [];
-      }
-    }
 
     for (var i = first_sq; i <= last_sq; i++) {
       /* did we run off the end of the board */
@@ -601,9 +585,7 @@ export default function Chess(fen) {
       }
     }
 
-    if (!single_square) {
-      addFreePieceMoves(us);
-    }
+    addFreePieceMoves(board, us);
 
     /* check for castling if: a) we're generating all moves, or b) we're doing
      * single square move generation on the king's square
@@ -1264,11 +1246,7 @@ export default function Chess(fen) {
     },
 
     game_over: function() {
-      return half_moves >= 100 ||
-             in_checkmate() ||
-             in_stalemate() ||
-             insufficient_material() ||
-             in_threefold_repetition();
+      return in_checkmate();
     },
 
     validate_fen: function(fen) {

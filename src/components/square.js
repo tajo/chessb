@@ -10,7 +10,7 @@ import Component from 'react-pure-render/component';
 
 const squareTarget = {
   canDrop (props, monitor) {
-    return !!isMoveLegal(
+    return isMoveLegal(
       props.game.getIn([props.board, 'engine']),
       monitor.getItem().position,
       props.position

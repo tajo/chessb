@@ -3,7 +3,7 @@ import Component from 'react-pure-render/component';
 import Piece from './piece';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
-import {filterFreePieces, translatePieceReverse} from '../lib/chess';
+import {filterFreePieces, translatePieceReverse, isPieceMovebale} from '../lib/chess';
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -46,7 +46,7 @@ class FreePieces extends Component {
           return (
             <div style={squareStyle}>
               <Piece type={piece}
-                     canDrag
+                     canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), translatePieceReverse(piece).type)}
                      position={translatePieceReverse(piece).type}
                      board={this.props.board}
               />

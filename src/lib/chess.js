@@ -1,6 +1,4 @@
-import Chess from './engine';
-// import {OrderedMap, Record} from 'immutable';
-import {board, PIECES, COLORS} from '../constants';
+import {PIECES, COLORS} from '../constants';
 
 export function makeMove (engine, start, end, promotion = null) {
   console.log(engine.move({from: start, to: end, promotion: promotion}));
@@ -25,7 +23,7 @@ export function filterFreePieces (freePieces, color) {
   });
 }
 
-function translatePiece (piece) {
+export function translatePiece (piece) {
   if (!piece) return null;
   if (piece.type === 'p' && piece.color === 'b') return PIECES.PAWNB;
   if (piece.type === 'p' && piece.color === 'w') return PIECES.PAWNW;

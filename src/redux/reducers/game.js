@@ -1,7 +1,7 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces, COLORS, PIECES, startingBoard} from '../../constants';
-import {translatePieceReverse} from '../../lib/chess';
+import {translatePiece, translatePieceReverse} from '../../lib/chess';
 import Chess from '../../lib/engine';
 
 const BoardState = Record({
@@ -64,9 +64,9 @@ export default function gameReducer (state = initialState, action) {
       // give the captured pieces to other board
       if (capturedPiece) {
         const translated = translatePieceReverse(capturedPiece);
-        state
-          .getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'])
-          .addFreePiece(translated.color, translated.type);
+        const engine = state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']);
+        engine.addFreePiece(translated.color, translated.type);
+        engine.preLoad();
         state = state.updateIn([
           action.board === 'aBoard' ? 'bBoard' : 'aBoard',
           'freePieces',
@@ -76,12 +76,21 @@ export default function gameReducer (state = initialState, action) {
         });
       }
 
+      // drop piece
+      if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
+        state = state.updateIn([action.board, 'freePieces', action.piece], counter => counter - 1);
+        state.getIn([action.board, 'engine']).removeFreePiece(translatePieceReverse(action.piece).color, action.start);
+      }
+
       return state
         .updateIn([action.board, 'promotion'], promotion => false)
         .updateIn([action.board, 'turn'], turn => turn === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE)
         .updateIn([action.board, 'moves'], board => board.push(move))
         .updateIn([action.board, 'squareSelected'], square => false)
         .updateIn([action.board, 'board'], board => {
+          if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
+            return board.set(action.end, action.piece);
+          }
           return board
             .set(action.start, null)
             .set(action.end, action.piece);
