@@ -47,7 +47,8 @@ class Piece extends Component {
     isDragging: React.PropTypes.bool.isRequired,
     isSelected: React.PropTypes.bool,
     position: React.PropTypes.string.isRequired,
-    board: React.PropTypes.string.isRequired
+    board: React.PropTypes.string.isRequired,
+    count: React.PropTypes.number
   }
 
   render () {
@@ -63,9 +64,18 @@ class Piece extends Component {
       marginTop: (this.props.isSelected || this.props.overDrop) ? -2 : 0,
       marginLeft: (this.props.isSelected || this.props.overDrop) ? 0 : 2
     };
+    const indexStyle = {
+      position: 'absolute',
+      marginTop: -16,
+      marginLeft: 3,
+      fontSize: 13
+    };
+    const count = this.props.isDragging ? this.props.count - 1 : this.props.count;
     return this.props.connectDragSource(
       <div style={squareStyle}>
-        {!this.props.isDragging && <img src={getPic(this.props.type)} style={pieceStyle} draggable={this.props.canDrag} />}
+        {(!this.props.isDragging || this.props.count > 1) &&
+          <img src={getPic(this.props.type)} style={pieceStyle} draggable={this.props.canDrag} />}
+        {count > 1 && <div style={indexStyle}>{count}</div>}
       </div>
     );
   }

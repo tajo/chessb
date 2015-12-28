@@ -33,13 +33,6 @@ class FreePieces extends Component {
       cursor: 'pointer'
     };
 
-    const indexStyle = {
-      position: 'absolute',
-      marginTop: -16,
-      marginLeft: 3,
-      fontSize: 13
-    };
-
     return (
       <div style={rootStyle}>
         {freePieces.map((count, piece) => {
@@ -49,8 +42,8 @@ class FreePieces extends Component {
                      canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), translatePieceReverse(piece).type)}
                      position={translatePieceReverse(piece).type}
                      board={this.props.board}
+                     count={count}
               />
-              {count > 1 && <div style={indexStyle}>{count}</div>}
             </div>
           );
         })}
