@@ -34,10 +34,11 @@ export function move (engine, board, start, end, piece, promotion = null) {
   };
 }
 
-export function selectSquare (board, position) {
+export function selectSquare (board, position, piece) {
   return {
     type: GAME_SELECT_SQUARE,
     board: board,
-    position: position
+    position: position,
+    piece: piece
   };
 }

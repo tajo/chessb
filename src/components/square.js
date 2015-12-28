@@ -74,7 +74,7 @@ class Square extends Component {
       <div style={styles} onClick={(e) => this.handleClick(e)}>
         {this.props.piece
          ? <Piece type={this.props.piece}
-                  isSelected={this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position}
+                  isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === this.props.position}
                   overDrop={this.props.isOver && this.props.canDrop}
                   position={this.props.position}
                   canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)}
@@ -86,30 +86,30 @@ class Square extends Component {
 
   handleClick (e) {
     if (this.props.game.getIn([this.props.board, 'squareSelected'])) {
-      if (this.props.game.getIn([this.props.board, 'squareSelected']) === this.props.position) {
-        this.props.selectSquare(this.props.board, null);
+      if (this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === this.props.position) {
+        this.props.selectSquare(this.props.board, null, this.props.piece);
         return;
       }
       if (isMoveLegal(
         this.props.game.getIn([this.props.board, 'engine']),
-        this.props.game.getIn([this.props.board, 'squareSelected']),
+        this.props.game.getIn([this.props.board, 'squareSelected', 'position']),
         this.props.position
       )) {
         this.props.move(
           this.props.game.getIn([this.props.board, 'engine']),
           this.props.board,
-          this.props.game.getIn([this.props.board, 'squareSelected']),
+          this.props.game.getIn([this.props.board, 'squareSelected', 'position']),
           this.props.position,
-          this.props.game.getIn([this.props.board, 'board', this.props.game.getIn([this.props.board, 'squareSelected'])])
+          this.props.game.getIn([this.props.board, 'squareSelected', 'piece'])
         );
       } else {
         if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
-          this.props.selectSquare(this.props.board, this.props.position);
+          this.props.selectSquare(this.props.board, this.props.position, this.props.piece);
         }
       }
     } else {
       if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
-        this.props.selectSquare(this.props.board, this.props.position);
+        this.props.selectSquare(this.props.board, this.props.position, this.props.piece);
       }
     }
   }

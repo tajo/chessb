@@ -10,7 +10,7 @@ const BoardState = Record({
   turn: COLORS.WHITE,
   promotion: false,
   moves: List(),
-  squareSelected: false,
+  squareSelected: null,
   freePieces: OrderedMap(freePieces)
 });
 
@@ -86,7 +86,7 @@ export default function gameReducer (state = initialState, action) {
         .updateIn([action.board, 'promotion'], promotion => false)
         .updateIn([action.board, 'turn'], turn => turn === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE)
         .updateIn([action.board, 'moves'], board => board.push(move))
-        .updateIn([action.board, 'squareSelected'], square => false)
+        .updateIn([action.board, 'squareSelected'], square => null)
         .updateIn([action.board, 'board'], board => {
           if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
             return board.set(action.end, action.piece);
@@ -98,7 +98,11 @@ export default function gameReducer (state = initialState, action) {
     }
 
     case actions.GAME_SELECT_SQUARE: {
-      return state.updateIn([action.board, 'squareSelected'], sqaure => action.position);
+      if (action.position == null) {
+        return state.updateIn([action.board, 'squareSelected'], square => null);
+      }
+      const selected = Map({position: action.position, piece: action.piece});
+      return state.updateIn([action.board, 'squareSelected'], square => selected);
     }
 
     case actions.GAME_SHOW_PROMOTION_POPUP: {

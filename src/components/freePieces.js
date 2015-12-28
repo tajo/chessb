@@ -3,6 +3,8 @@ import Component from 'react-pure-render/component';
 import Piece from './piece';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
+import {COLORS} from '../constants';
+import {actions as gameActions} from '../redux/actions/game';
 import {filterFreePieces, translatePieceReverse, isPieceMovebale} from '../lib/chess';
 
 const mapStateToProps = (state) => ({
@@ -14,7 +16,8 @@ class FreePieces extends Component {
   static propTypes = {
     color: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired,
-    game: React.PropTypes.instanceOf(Record).isRequired
+    game: React.PropTypes.instanceOf(Record).isRequired,
+    selectSquare: React.PropTypes.func.isRequired
   }
 
   render () {
@@ -36,13 +39,16 @@ class FreePieces extends Component {
     return (
       <div style={rootStyle}>
         {freePieces.map((count, piece) => {
+          const position = translatePieceReverse(piece).type;
           return (
-            <div style={squareStyle}>
+            <div style={squareStyle} onClick={() => this.handleClick(position, piece)}>
               <Piece type={piece}
-                     canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), translatePieceReverse(piece).type)}
+                     canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)}
                      position={translatePieceReverse(piece).type}
                      board={this.props.board}
                      count={count}
+                     isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position &&
+                       this.props.game.getIn([this.props.board, 'squareSelected', 'piece']) === piece}
               />
             </div>
           );
@@ -50,6 +56,17 @@ class FreePieces extends Component {
       </div>
     );
   }
+
+  handleClick (position, piece) {
+    let passPosition = position;
+    if (this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position) {
+      passPosition = null;
+    }
+    if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)) {
+      this.props.selectSquare(this.props.board, passPosition, piece);
+    }
+  }
+
 }
 
-export default connect(mapStateToProps)(FreePieces);
+export default connect(mapStateToProps, gameActions)(FreePieces);
