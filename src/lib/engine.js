@@ -174,6 +174,7 @@ export default function Chess(fen) {
   var header = {};
   var blackFreePieces = [];
   var whiteFreePieces = [];
+  var generatedMoves = [];
 
   /* if the user passes in a fen string, load it, else default to
    * starting position
@@ -246,7 +247,7 @@ export default function Chess(fen) {
     move_number = parseInt(tokens[5], 10);
 
     update_setup(generate_fen());
-
+    preGenerateMoves();
     return true;
   }
 
@@ -754,11 +755,11 @@ export default function Chess(fen) {
   }
 
   function in_checkmate() {
-    return in_check() && generate_moves().length === 0;
+    return in_check() && generatedMoves.length === 0;
   }
 
   function in_stalemate() {
-    return !in_check() && generate_moves().length === 0;
+    return !in_check() && generatedMoves.length === 0;
   }
 
   function insufficient_material() {
@@ -1000,6 +1001,10 @@ export default function Chess(fen) {
     return move;
   }
 
+  function preGenerateMoves() {
+    generatedMoves = generate_moves({verbose: 'true'});
+  }
+
   /* this function is used to uniquely identify ambiguous moves */
   function get_disambiguator(move) {
     var moves = generate_moves();
@@ -1097,6 +1102,7 @@ export default function Chess(fen) {
   }
 
   function algebraic(i){
+    if (isDropMove(i)) { return i; }
     var f = file(i), r = rank(i);
     return 'abcdefgh'.substring(f,f+1) + '87654321'.substring(r,r+1);
   }
@@ -1112,7 +1118,6 @@ export default function Chess(fen) {
   /* pretty = external move object */
   function make_pretty(ugly_move) {
     var move = clone(ugly_move);
-    move.san = move_to_san(move);
     move.to = algebraic(move.to);
     if (!isDropMove(move.from)) {
       move.from = algebraic(move.from);
@@ -1221,20 +1226,11 @@ export default function Chess(fen) {
        * unnecessary move keys resulting from a verbose call.
        */
 
-      var ugly_moves = generate_moves(options);
+      var ugly_moves = generatedMoves;
       var moves = [];
 
       for (var i = 0, len = ugly_moves.length; i < len; i++) {
-
-        /* does the user want a full move object (most likely not), or just
-         * SAN
-         */
-        if (typeof options !== 'undefined' && 'verbose' in options &&
-            options.verbose) {
-          moves.push(make_pretty(ugly_moves[i]));
-        } else {
-          moves.push(move_to_san(ugly_moves[i]));
-        }
+        moves.push(make_pretty(ugly_moves[i]));
       }
 
       return moves;
@@ -1544,7 +1540,7 @@ export default function Chess(fen) {
        *      })
        */
       var move_obj = null;
-      var moves = generate_moves();
+      var moves = generatedMoves;
 
       if (typeof move === 'string') {
         /* convert the move string to a move object */
@@ -1581,6 +1577,7 @@ export default function Chess(fen) {
       var pretty_move = make_pretty(move_obj);
 
       make_move(move_obj);
+      preGenerateMoves();
 
       return pretty_move;
     },
@@ -1671,6 +1668,10 @@ export default function Chess(fen) {
       if (color === BLACK) {
         return blackFreePieces;
       }
+    },
+
+    preLoad: function() {
+      preGenerateMoves();
     }
 
   };

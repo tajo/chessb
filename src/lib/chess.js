@@ -2,26 +2,16 @@ import Chess from './engine';
 // import {OrderedMap, Record} from 'immutable';
 import {board, PIECES, COLORS} from '../constants';
 
-export function getNewBoard () {
-  const game = new Chess();
-  let newBoard = {};
-  for (let square in board) {
-    newBoard[square] = translatePiece(game.get(square));
-  }
-  return newBoard;
-}
-
 export function makeMove (engine, start, end, promotion = null) {
   console.log(engine.move({from: start, to: end, promotion: promotion}));
 }
 
 export function isMoveLegal (engine, start, end, promotion = null) {
-  const moves = engine.moves({square: start, verbose: true});
-  return moves.some(move => move.to === end);
+  return engine.moves().some(move => move.to === end && move.from === start);
 }
 
 export function isPieceMovebale (engine, position) {
-  return engine.moves({square: position}).length > 0;
+  return engine.moves().some(move => move.from === position);
 }
 
 export function filterFreePieces (freePieces, color) {

@@ -43,9 +43,9 @@ class Piece extends Component {
     type: React.PropTypes.string.isRequired,
     connectDragSource: React.PropTypes.func.isRequired,
     canDrag: React.PropTypes.bool.isRequired,
-    overDrop: React.PropTypes.bool.isRequired,
+    overDrop: React.PropTypes.bool,
     isDragging: React.PropTypes.bool.isRequired,
-    isSelected: React.PropTypes.bool.isRequired,
+    isSelected: React.PropTypes.bool,
     position: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired
   }
