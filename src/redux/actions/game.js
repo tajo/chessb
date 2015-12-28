@@ -20,7 +20,7 @@ export function move (engine, board, start, end, piece, promotion = null) {
     return {type: GAME_SHOW_PROMOTION_POPUP, board: board, start: start, end: end};
   }
   const result = engine.move({from: start, to: end, promotion: promotion});
-  console.log(`Game over: ${engine.game_over()}, Check mate: ${engine.in_checkmate()}`);
+  console.log(`Game over: ${engine.game_over()}`);
   const clickSound = new Audio(click);
   clickSound.load();
   clickSound.play();

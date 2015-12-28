@@ -737,7 +737,19 @@ export default function Chess(fen) {
   }
 
   function in_checkmate() {
-    return in_check() && generatedMoves.length === 0;
+    if (!in_check()) return false;
+    if (generatedMoves.length !== 0) return false;
+    var freePieces = whiteFreePieces;
+    if (turn === BLACK) freePieces = blackFreePieces;
+    freePieces.push('b');
+    preGenerateMoves();
+    freePieces.pop();
+    if (generatedMoves.length === 0) {
+      preGenerateMoves();
+      return true;
+    }
+    preGenerateMoves();
+    return false;
   }
 
   function in_stalemate() {
