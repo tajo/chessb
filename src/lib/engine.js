@@ -843,7 +843,7 @@ export default function Chess(fen) {
     push(move);
 
     if (isDropMove(move.from)) {
-      board[move.to] = move.from;
+      board[move.to] = {color: move.color, type: move.piece};
     } else {
       board[move.to] = board[move.from];
       board[move.from] = null;
@@ -1195,6 +1195,10 @@ export default function Chess(fen) {
      **************************************************************************/
     load: function(fen) {
       return load(fen);
+    },
+
+    getBoard: function() {
+      return board;
     },
 
     reset: function() {

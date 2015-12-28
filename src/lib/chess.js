@@ -1,9 +1,5 @@
 import {PIECES, COLORS} from '../constants';
 
-export function makeMove (engine, start, end, promotion = null) {
-  console.log(engine.move({from: start, to: end, promotion: promotion}));
-}
-
 export function isMoveLegal (engine, start, end, promotion = null) {
   return engine.moves().some(move => move.to === end && move.from === start);
 }
