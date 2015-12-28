@@ -3,7 +3,6 @@ import Component from 'react-pure-render/component';
 import Piece from './piece';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
-import {COLORS} from '../constants';
 import {actions as gameActions} from '../redux/actions/game';
 import {filterFreePieces, translatePieceReverse, isPieceMovebale} from '../lib/chess';
 
@@ -40,10 +39,11 @@ class FreePieces extends Component {
       <div style={rootStyle}>
         {freePieces.map((count, piece) => {
           const position = translatePieceReverse(piece).type;
+          const color = translatePieceReverse(piece).color;
           return (
             <div style={squareStyle} onClick={() => this.handleClick(position, piece)}>
               <Piece type={piece}
-                     canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)}
+                     canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position) && this.props.game.getIn([this.props.board, 'engine']).turn() === color}
                      position={translatePieceReverse(piece).type}
                      board={this.props.board}
                      count={count}
