@@ -11,8 +11,7 @@ const BoardState = Record({
   promotion: false,
   moves: List(),
   squareSelected: false,
-  whitePieces: OrderedMap(freePieces),
-  blackPieces: OrderedMap(freePieces)
+  freePieces: OrderedMap(freePieces)
 });
 
 const InitialState = Record({
@@ -27,11 +26,24 @@ export default function gameReducer (state = initialState, action) {
     case actions.GAME_MOVE: {
       const move = Map({from: action.start, to: action.end, promotion: action.promotion});
 
+      let capturedPiece = state.getIn([action.board, 'board', action.end]);
       // en passant capture
       if (action.result.flags === 'e') {
         const diff = action.piece === PIECES.PAWNW ? -1 : 1;
         const deleteSquare = action.end[0] + (parseInt(action.end[1], 10) + diff).toString();
         state = state.updateIn([action.board, 'board'], board => board.set(deleteSquare, null));
+        capturedPiece = state.getIn([action.board, 'turn']) === COLORS.WHITE ? PIECES.PAWNB : PIECES.PAWNW;
+      }
+
+      // give the captured pieces to other board
+      if (capturedPiece) {
+        state = state.updateIn([
+          action.board === 'aBoard' ? 'bBoard' : 'aBoard',
+          'freePieces',
+          capturedPiece
+        ], count => {
+          return count + 1;
+        });
       }
 
       return state

@@ -1,6 +1,6 @@
 import Chess from 'chess.js';
 // import {OrderedMap, Record} from 'immutable';
-import {board, PIECES} from '../constants';
+import {board, PIECES, COLORS} from '../constants';
 
 export function getNewBoard () {
   const game = new Chess();
@@ -22,6 +22,17 @@ export function isMoveLegal (engine, start, end, promotion = null) {
 
 export function isPieceMovebale (engine, position) {
   return engine.moves({square: position}).length > 0;
+}
+
+export function filterFreePieces (freePieces, color) {
+  return freePieces.filter((count, piece) => {
+    if (count === 0) return false;
+    if (color === COLORS.WHITE &&
+      [PIECES.PAWNB, PIECES.ROOKB, PIECES.KNIGHTB, PIECES.BISHOPB, PIECES.QUEENB].some(p => p === piece)) return false;
+    if (color === COLORS.BLACK &&
+      [PIECES.PAWNW, PIECES.ROOKW, PIECES.KNIGHTW, PIECES.BISHOPW, PIECES.QUEENW].some(p => p === piece)) return false;
+    return true;
+  });
 }
 
 function translatePiece (piece) {

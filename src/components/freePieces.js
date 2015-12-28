@@ -1,26 +1,35 @@
 import React from 'react';
-import {PIECES} from '../constants';
+import {PIECES, COLORS} from '../constants';
 import Component from 'react-pure-render/component';
 import Piece from './piece';
+import {connect} from 'react-redux';
+import {Record} from 'immutable';
+import {filterFreePieces} from '../lib/chess';
+
+const mapStateToProps = (state) => ({
+  game: state.game
+});
 
 class FreePieces extends Component {
 
   static propTypes = {
-    color: React.PropTypes.string.isRequired
+    color: React.PropTypes.string.isRequired,
+    board: React.PropTypes.string.isRequired,
+    game: React.PropTypes.instanceOf(Record).isRequired
   }
 
   render () {
+    const freePieces = filterFreePieces(this.props.game.getIn([this.props.board, 'freePieces']), this.props.color);
     const rootStyle = {
-      width: '17.5vw',
+      width: `${freePieces.count() * 3.5}vw`,
       height: '3.5vw',
       margin: '0px auto',
-      zIndex: 100,
       display: 'flex',
       flexWrap: 'wrap'
     };
 
     const squareStyle = {
-      width: '20%',
+      width: `${100 / freePieces.count()}%`,
       height: '100%',
       cursor: 'pointer'
     };
@@ -31,19 +40,20 @@ class FreePieces extends Component {
       marginLeft: 3,
       fontSize: 13
     };
+
     return (
       <div style={rootStyle}>
-        <div style={squareStyle}>
-          <Piece type={PIECES.QUEENW} canDrag position='queen' />
-          <div style={indexStyle}>2</div>
-        </div>
-        <div style={squareStyle}>
-          <Piece type={PIECES.QUEENB} canDrag position='queen' />
-          <div style={indexStyle}>2</div>
-        </div>
+        {freePieces.map((count, piece) => {
+          return (
+            <div style={squareStyle}>
+              <Piece type={piece} canDrag position={piece} />
+              <div style={indexStyle}>{count}</div>
+            </div>
+          );
+        })}
       </div>
     );
   }
 }
 
-export default FreePieces;
+export default connect(mapStateToProps)(FreePieces);
