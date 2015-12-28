@@ -850,13 +850,16 @@ export default function Chess(fen) {
     });
   }
 
+  function isDropMove(position) {
+    return ['q', 'r', 'n', 'b', 'p'].some(piece => piece === position)
+  }
+
   function make_move(move) {
     var us = turn;
     var them = swap_color(us);
     push(move);
 
-    var dropMove = ['q', 'r', 'n', 'b', 'p'].some(piece => piece === move.from);
-    if (dropMove) {
+    if (isDropMove(move.from)) {
       board[move.to] = move.from;
     } else {
       board[move.to] = board[move.from];
@@ -899,7 +902,7 @@ export default function Chess(fen) {
     }
 
     /* turn off castling if we move a rook */
-    if (castling[us] && !dropMove) {
+    if (castling[us] && !isDropMove(move.from)) {
       for (var i = 0, len = ROOKS[us].length; i < len; i++) {
         if (move.from === ROOKS[us][i].square &&
             castling[us] & ROOKS[us][i].flag) {
@@ -960,9 +963,8 @@ export default function Chess(fen) {
 
     var us = turn;
     var them = swap_color(turn);
-    var dropMove = ['q', 'r', 'n', 'b', 'p'].some(piece => piece === move.from);
 
-    if (!dropMove) {
+    if (!isDropMove(move.from)) {
       board[move.from] = board[move.to];
       board[move.from].type = move.piece;  // to undo any promotions
     }
@@ -1110,10 +1112,9 @@ export default function Chess(fen) {
   /* pretty = external move object */
   function make_pretty(ugly_move) {
     var move = clone(ugly_move);
-    var dropMove = ['q', 'r', 'n', 'b', 'p'].some(piece => piece === move.from);
     move.san = move_to_san(move);
     move.to = algebraic(move.to);
-    if (!dropMove) {
+    if (!isDropMove(move.from)) {
       move.from = algebraic(move.from);
     }
 
@@ -1125,7 +1126,7 @@ export default function Chess(fen) {
       }
     }
     move.flags = flags;
-    if (dropMove) {
+    if (isDropMove(move.from)) {
       move.flags = 'd';
     }
 
