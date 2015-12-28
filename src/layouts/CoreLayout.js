@@ -14,16 +14,15 @@ import bee from '../assets/bee.png';
 function CoreLayout ({ children }) {
   const topStyle = {
     padding: '15px 30px 15px 30px',
-    width: '100%',
     marginBottom: 15,
-    fontSize: '15px'
+    fontSize: '13px',
+    position: 'absolute'
   };
   return (
     <div className='page-container'>
       <div style={topStyle}>
-        <span style={{fontSize: '20px', marginRight: 20, fontWeight: 'bold'}}>Chess <img src={bee} style={{width: 25, height: 25, marginBottom: -4}} /></span>
-        <a style={{marginRight: 20}} target='_blank' href='https://en.wikipedia.org/wiki/Bughouse_chess'>Game rules</a>
-        <a style={{marginRight: 20}} target='_blank' href='https://en.wikipedia.org/wiki/Bughouse_chess'>About</a>
+        <div style={{fontSize: '20px', marginRight: 20, fontWeight: 'bold'}}>Chess <img src={bee} style={{width: 25, height: 25, marginBottom: -4}} /></div>
+        <div style={{color: 'darkred', marginTop: -5, marginLeft: 20}}>alpha</div>
       </div>
       <div className='view-container'>
         {children}

@@ -1,5 +1,4 @@
 import React from 'react';
-import {PIECES, COLORS} from '../constants';
 import Component from 'react-pure-render/component';
 import Piece from './piece';
 import {connect} from 'react-redux';
@@ -47,7 +46,7 @@ class FreePieces extends Component {
           return (
             <div style={squareStyle}>
               <Piece type={piece} canDrag position={piece} />
-              <div style={indexStyle}>{count}</div>
+              {count > 1 && <div style={indexStyle}>{count}</div>}
             </div>
           );
         })}
