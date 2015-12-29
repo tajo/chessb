@@ -1,7 +1,7 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces, COLORS, PIECES, startingBoard} from '../../constants';
-import {translatePiece, translatePieceReverse} from '../../lib/chess';
+import {translatePieceReverse, getPieceColor} from '../../lib/chess';
 import Chess from '../../lib/engine';
 
 const BoardState = Record({
@@ -16,7 +16,8 @@ const BoardState = Record({
 
 const InitialState = Record({
   aBoard: new BoardState({engine: new Chess()}),
-  bBoard: new BoardState({engine: new Chess()})
+  bBoard: new BoardState({engine: new Chess()}),
+  winner: null
 });
 
 const initialState = new InitialState;
@@ -80,6 +81,11 @@ export default function gameReducer (state = initialState, action) {
       if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
         state = state.updateIn([action.board, 'freePieces', action.piece], counter => counter - 1);
         state.getIn([action.board, 'engine']).removeFreePiece(translatePieceReverse(action.piece).color, action.start);
+      }
+
+      // end of game
+      if (action.gameOver) {
+        state = state.updateIn(['winner'], winner => Map({board: action.board, color: getPieceColor(action.piece)}));
       }
 
       return state

@@ -19,6 +19,10 @@ export function filterFreePieces (freePieces, color) {
   });
 }
 
+export function getPieceColor (piece) {
+  return translatePieceReverse(piece).color === 'w' ? COLORS.WHITE : COLORS.BLACK;
+}
+
 export function translatePiece (piece) {
   if (!piece) return null;
   if (piece.type === 'p' && piece.color === 'b') return PIECES.PAWNB;

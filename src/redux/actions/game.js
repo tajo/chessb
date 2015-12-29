@@ -4,6 +4,7 @@ import click from '../../assets/click.wav';
 export const GAME_MOVE = 'GAME_MOVE';
 export const GAME_SELECT_SQUARE = 'GAME_SELECT_SQUARE';
 export const GAME_SHOW_PROMOTION_POPUP = 'GAME_SHOW_PROMOTION_POPUP';
+export const GAME_END = 'GAME_END';
 
 export const actions = {
   move,
@@ -20,7 +21,6 @@ export function move (engine, board, start, end, piece, promotion = null) {
     return {type: GAME_SHOW_PROMOTION_POPUP, board: board, start: start, end: end};
   }
   const result = engine.move({from: start, to: end, promotion: promotion});
-  console.log(`Game over: ${engine.game_over()}`);
   const clickSound = new Audio(click);
   clickSound.load();
   clickSound.play();
@@ -30,7 +30,8 @@ export function move (engine, board, start, end, piece, promotion = null) {
     start: start,
     end: end,
     piece: piece,
-    result: result
+    result: result,
+    gameOver: engine.game_over()
   };
 }
 
@@ -42,3 +43,4 @@ export function selectSquare (board, position, piece) {
     piece: piece
   };
 }
+
