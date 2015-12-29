@@ -1,5 +1,6 @@
 import {PIECES} from '../../constants';
 import click from '../../assets/click.wav';
+import moment from 'moment';
 
 export const GAME_MOVE = 'GAME_MOVE';
 export const GAME_SELECT_SQUARE = 'GAME_SELECT_SQUARE';
@@ -31,7 +32,8 @@ export function move (engine, board, start, end, piece, promotion = null) {
     end: end,
     piece: piece,
     result: result,
-    gameOver: engine.game_over()
+    gameOver: engine.game_over(),
+    date: moment().format()
   };
 }
 

@@ -3,6 +3,7 @@ import {OrderedMap, Record, List, Map} from 'immutable';
 import {freePieces, COLORS, PIECES, startingBoard} from '../../constants';
 import {translatePieceReverse, getPieceColor} from '../../lib/chess';
 import Chess from '../../lib/engine';
+import moment from 'moment';
 
 const BoardState = Record({
   board: OrderedMap(startingBoard),
@@ -10,6 +11,7 @@ const BoardState = Record({
   turn: COLORS.WHITE,
   promotion: false,
   moves: List(),
+  dates: List(),
   squareSelected: null,
   freePieces: OrderedMap(freePieces)
 });
@@ -17,7 +19,9 @@ const BoardState = Record({
 const InitialState = Record({
   aBoard: new BoardState({engine: new Chess()}),
   bBoard: new BoardState({engine: new Chess()}),
-  winner: null
+  winner: null,
+  startDate: moment().format(),
+  endDate: moment().add('194', 's').format()
 });
 
 const initialState = new InitialState;
@@ -25,6 +29,7 @@ const initialState = new InitialState;
 export default function gameReducer (state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
+      state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
       const move = Map({from: action.start, to: action.end, promotion: action.promotion});
 
       let capturedPiece = state.getIn([action.board, 'board', action.end]);

@@ -3,6 +3,7 @@ import Component from 'react-pure-render/component';
 import Board from '../components/board';
 import FreePieces from '../components/freePieces';
 import {COLORS} from '../constants';
+import Clock from './clock';
 
 import styles from '../styles/button.scss';
 
@@ -22,19 +23,16 @@ class Desk extends Component {
       fontSize: 12
     };
 
-    const clockStyle = {
-      fontSize: 40,
-      fontWeight: 'bold'
-    };
-
     return (
       <div style={barStyle}>
         <div style={{display: 'block', textAlign: 'center'}}>
           <div><a href='#'>tajo (1890)</a></div>
           <button className={styles['pure-button']}>Join Game</button>
-          <div style={clockStyle}>3:14</div>
+          <Clock board={this.props.board}
+                 color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE} />
           <div style={{height: '5vw'}}> </div>
-          <div style={clockStyle}>3:13</div>
+          <Clock board={this.props.board}
+                 color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK} />
           <button className={styles['pure-button']}>Leave Game</button>
           <div><a href='#'>garry (2803)</a></div>
         </div>
