@@ -56,7 +56,9 @@ class Clock extends Component {
       }
       return {counter: prevState.counter};
     });
-    setTimeout(() => this.tick(), 1000);
+    if (this.state.counter !== 0) {
+      setTimeout(() => this.tick(), 1000);
+    }
   }
 
   render () {
