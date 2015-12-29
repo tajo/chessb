@@ -23,8 +23,8 @@ class Board extends Component {
 
   render () {
     const styles = {
-      width: '33vw',
-      height: '33vw',
+      width: '35vw',
+      height: '35vw',
       position: 'relative',
       margin: '5px 15px 5px 15px',
       display: 'flex',

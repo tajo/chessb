@@ -11,7 +11,6 @@ class HomeView extends Component {
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'noWrap',
-      height: '100vmin',
       width: '100%',
       paddingTop: 10,
       justifyContent: 'center'
