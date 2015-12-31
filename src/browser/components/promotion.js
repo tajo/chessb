@@ -11,7 +11,7 @@ import queenw from '../../../assets/chess/queenw.png';
 import rookb from '../../../assets/chess/rookb.png';
 import rookw from '../../../assets/chess/rookw.png';
 
-import styles from './promotion.scss';
+import './promotion.scss';
 
 class Promotion extends Component {
 

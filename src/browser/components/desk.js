@@ -5,7 +5,7 @@ import FreePieces from '../components/freePieces';
 import {COLORS} from '../constants';
 import Clock from './clock';
 
-import styles from '../styles/button.scss';
+import '../styles/button.scss';
 
 class Desk extends Component {
 
