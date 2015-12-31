@@ -1,8 +1,5 @@
 {
   "parser"  : "babel-eslint",
-  "plugins": [
-    "import"
-  ],
   "extends" : ["airbnb"],
   "rules": {
     // Soften rules for legacy projects. Can be removed for clean project.
@@ -20,12 +17,6 @@
     "padded-blocks": 0,
     // React
     "react/sort-comp": 0, // Not ready yet
-    // Import
-    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
-    "import/named": 2,
-    "import/namespace": 2,
-    "import/default": 2,
-    "import/export": 2,
   },
   "globals": {
     "after": false,
@@ -35,21 +26,5 @@
     "describe": false,
     "it": false,
     "require": false
-  },
-  "settings": {
-    "import/ignore": [
-      "node_modules",
-      "\\.json$"
-    ],
-    "import/parser": "babel-eslint",
-    "import/resolve": {
-      "extensions": [
-        ".js",
-        ".jsx",
-        ".json"
-      ]
-    }
   }
 }
-
-
