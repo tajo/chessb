@@ -9,12 +9,12 @@ import {
   createStore
 } from 'redux';
 
-export default function configureStore (initialState) {
+export default function configureStore(initialState) {
   const getUid = () => shortid.generate();
   const now = () => Date.now();
   const dependenciesMiddleware = injectDependencies({fetch, getUid, now});
 
-  let middleware = applyMiddleware(
+  const middleware = applyMiddleware(
     dependenciesMiddleware,
     promiseMiddleware({
       promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
@@ -22,7 +22,14 @@ export default function configureStore (initialState) {
   );
 
   let createStoreWithMiddleware;
-  createStoreWithMiddleware = compose(middleware);
+  if (process.env.NODE_ENV === 'development') {
+    createStoreWithMiddleware = compose(
+      middleware,
+      typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+    );
+  } else {
+    createStoreWithMiddleware = compose(middleware);
+  }
 
   const store = createStoreWithMiddleware(createStore)(rootReducer, initialState);
 

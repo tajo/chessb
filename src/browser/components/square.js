@@ -9,7 +9,7 @@ import {isMoveLegal, isPieceMovebale} from '../lib/chess';
 import Component from 'react-pure-render/component';
 
 const squareTarget = {
-  canDrop (props, monitor) {
+  canDrop(props, monitor) {
     return isMoveLegal(
       props.game.getIn([props.board, 'engine']),
       monitor.getItem().position,
@@ -17,7 +17,7 @@ const squareTarget = {
     ) && props.board === monitor.getItem().board;
   },
 
-  drop (props, monitor) {
+  drop(props, monitor) {
     props.move(
       props.game.getIn([props.board, 'engine']),
       props.board,
@@ -28,7 +28,7 @@ const squareTarget = {
   }
 };
 
-function collect (connect, monitor) {
+function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
@@ -56,7 +56,7 @@ class Square extends Component {
     game: React.PropTypes.instanceOf(Record).isRequired
   }
 
-  render () {
+  render() {
     const styles = {
       backgroundColor: this.props.color === COLORS.BLACK ? '#b58863' : '#f0d9b5',
       color: this.props.color === COLORS.WHITE ? '#b58863' : '#f0d9b5',
@@ -72,19 +72,21 @@ class Square extends Component {
 
     return this.props.connectDropTarget(
       <div style={styles} onClick={(e) => this.handleClick(e)}>
-        {this.props.piece
-         ? <Piece type={this.props.piece}
-                  isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === this.props.position}
-                  overDrop={this.props.isOver && this.props.canDrop}
-                  position={this.props.position}
-                  canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)}
-                  board={this.props.board} />
+        {this.props.piece ?
+          <Piece
+            type={this.props.piece}
+            isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === this.props.position}
+            overDrop={this.props.isOver && this.props.canDrop}
+            position={this.props.position}
+            canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)}
+            board={this.props.board}
+          />
          : <div style={emptySquareStyle} />}
       </div>
     );
   }
 
-  handleClick (e) {
+  handleClick() {
     if (this.props.game.getIn([this.props.board, 'squareSelected'])) {
       if (this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === this.props.position) {
         this.props.selectSquare(this.props.board, null, this.props.piece);

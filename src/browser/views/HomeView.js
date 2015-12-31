@@ -6,7 +6,7 @@ import Desk from '../components/desk';
 
 class HomeView extends Component {
 
-  render () {
+  render() {
     const rootStyles = {
       display: 'flex',
       flexDirection: 'row',
@@ -17,8 +17,8 @@ class HomeView extends Component {
     };
     return (
       <div style={rootStyles}>
-        <Desk board='aBoard' />
-        <Desk board='bBoard' />
+        <Desk board="aBoard" />
+        <Desk board="bBoard" />
       </div>
     );
   }

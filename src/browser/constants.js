@@ -165,7 +165,7 @@ export const squareColors = {
   h1: COLORS.WHITE
 };
 
-export function getSquareColor (square) {
+export function getSquareColor(square) {
   return squareColors[square];
 }
 

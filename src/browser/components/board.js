@@ -21,7 +21,7 @@ class Board extends Component {
     move: React.PropTypes.func.isRequired
   }
 
-  render () {
+  render() {
     const styles = {
       width: '35vw',
       height: '35vw',
@@ -38,31 +38,36 @@ class Board extends Component {
     return (
       <div style={styles}>
         {this.props.game.get('winner') &&
-          <Gameover color={this.props.game.getIn(['winner', 'color'])}
-                    wBoard={this.props.game.getIn(['winner', 'board'])}
-                    board={this.props.board} />
+          <Gameover
+            color={this.props.game.getIn(['winner', 'color'])}
+            wBoard={this.props.game.getIn(['winner', 'board'])}
+            board={this.props.board}
+          />
         }
         {this.props.game.getIn([this.props.board, 'promotion']) &&
-          <Promotion color={this.props.game.getIn([this.props.board, 'turn'])}
-                     finishMove={(promotion) => {
-                       this.props.move(
-                         this.props.game.getIn([this.props.board, 'engine']),
-                         this.props.board,
-                         this.props.game.getIn([this.props.board, 'promotion', 'from']),
-                         this.props.game.getIn([this.props.board, 'promotion', 'to']),
-                         promotion,
-                         translatePieceReverse(promotion).type
-                       );
-                     }}
+          <Promotion
+            color={this.props.game.getIn([this.props.board, 'turn'])}
+            finishMove={(promotion) => {
+              this.props.move(
+                this.props.game.getIn([this.props.board, 'engine']),
+                this.props.board,
+                this.props.game.getIn([this.props.board, 'promotion', 'from']),
+                this.props.game.getIn([this.props.board, 'promotion', 'to']),
+                promotion,
+                translatePieceReverse(promotion).type
+              );
+            }}
           />
         }
         {board.map((piece, position) => {
           return (
-            <Square color={getSquareColor(position)}
-                    key={position}
-                    position={position}
-                    piece={piece}
-                    board={this.props.board} />
+            <Square
+              color={getSquareColor(position)}
+              key={position}
+              position={position}
+              piece={piece}
+              board={this.props.board}
+            />
           );
         })}
       </div>

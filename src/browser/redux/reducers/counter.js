@@ -7,7 +7,7 @@ const InitialState = Record({
 
 const initialState = new InitialState;
 
-export default function counterReducer (state = initialState, action) {
+export default function counterReducer(state = initialState, action) {
   switch (action.type) {
     case actions.COUNTER_INCREMENT: {
       return state.update('counter', counter => counter + 1);

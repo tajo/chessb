@@ -26,7 +26,7 @@ const InitialState = Record({
 
 const initialState = new InitialState;
 
-export default function gameReducer (state = initialState, action) {
+export default function gameReducer(state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
       state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
@@ -90,14 +90,14 @@ export default function gameReducer (state = initialState, action) {
 
       // end of game
       if (action.gameOver) {
-        state = state.updateIn(['winner'], winner => Map({board: action.board, color: getPieceColor(action.piece)}));
+        state = state.updateIn(['winner'], () => Map({board: action.board, color: getPieceColor(action.piece)}));
       }
 
       return state
-        .updateIn([action.board, 'promotion'], promotion => false)
+        .updateIn([action.board, 'promotion'], () => false)
         .updateIn([action.board, 'turn'], turn => turn === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE)
         .updateIn([action.board, 'moves'], board => board.push(move))
-        .updateIn([action.board, 'squareSelected'], square => null)
+        .updateIn([action.board, 'squareSelected'], () => null)
         .updateIn([action.board, 'board'], board => {
           if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
             return board.set(action.end, action.piece);
@@ -109,16 +109,16 @@ export default function gameReducer (state = initialState, action) {
     }
 
     case actions.GAME_SELECT_SQUARE: {
-      if (action.position == null) {
-        return state.updateIn([action.board, 'squareSelected'], square => null);
+      if (action.position === null) {
+        return state.updateIn([action.board, 'squareSelected'], () => null);
       }
       const selected = Map({position: action.position, piece: action.piece});
-      return state.updateIn([action.board, 'squareSelected'], square => selected);
+      return state.updateIn([action.board, 'squareSelected'], () => selected);
     }
 
     case actions.GAME_SHOW_PROMOTION_POPUP: {
       const prom = Map({from: action.start, to: action.end});
-      return state.updateIn([action.board, 'promotion'], promotion => prom);
+      return state.updateIn([action.board, 'promotion'], () => prom);
     }
   }
   return state;

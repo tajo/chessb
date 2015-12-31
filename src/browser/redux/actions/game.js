@@ -11,7 +11,7 @@ export const actions = {
   selectSquare
 };
 
-export function move (engine, board, start, end, piece, promotion = null) {
+export function move(engine, board, start, end, piece, promotion = null) {
   if (promotion === null && piece === PIECES.PAWNW &&
     ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8'].some(pos => pos === end)) {
     return {type: GAME_SHOW_PROMOTION_POPUP, board: board, start: start, end: end};
@@ -36,7 +36,7 @@ export function move (engine, board, start, end, piece, promotion = null) {
   };
 }
 
-export function selectSquare (board, position, piece) {
+export function selectSquare(board, position, piece) {
   return {
     type: GAME_SELECT_SQUARE,
     board: board,
@@ -44,4 +44,3 @@ export function selectSquare (board, position, piece) {
     piece: piece
   };
 }
-

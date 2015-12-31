@@ -17,12 +17,12 @@ class Clock extends Component {
     game: React.PropTypes.instanceOf(Record).isRequired
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {counter: moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate')))};
   }
 
-  componentWillReceiveProps (newProps) {
+  componentWillReceiveProps(newProps) {
     if (newProps.game.getIn([newProps.board, 'dates']).count() === this.props.game.getIn([this.props.board, 'dates']).count()) {
       return;
     }
@@ -42,11 +42,11 @@ class Clock extends Component {
     this.setState({counter: counter});
   }
 
-  componentDidMount () {
+  componentDidMount() {
     setTimeout(() => this.tick(), 1000);
   }
 
-  tick () {
+  tick() {
     this.setState((prevState, props) => {
       if (props.color === COLORS.WHITE && !(props.game.getIn([props.board, 'dates']).count() % 2)) {
         return {counter: prevState.counter - 1000};
@@ -61,7 +61,7 @@ class Clock extends Component {
     }
   }
 
-  render () {
+  render() {
     const clockStyle = {
       fontSize: 40,
       fontWeight: 'bold'

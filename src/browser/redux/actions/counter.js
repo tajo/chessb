@@ -9,14 +9,14 @@ export const actions = {
   doubleAsync
 };
 
-export function increment () {
+export function increment() {
   return {
     type: COUNTER_INCREMENT
   };
 }
 
 const timeout = (interval) => new Promise((resolve) => setTimeout(resolve, interval || 0));
-export function doubleAsync () {
+export function doubleAsync() {
   return {
     type: COUNTER_DOUBLE_INCREMENT,
     payload: {

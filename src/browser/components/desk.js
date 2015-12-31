@@ -13,7 +13,7 @@ class Desk extends Component {
     board: React.PropTypes.string.isRequired
   }
 
-  renderBar () {
+  renderBar() {
     const barStyle = {
       width: '10vw',
       height: '42.5vw',
@@ -26,21 +26,25 @@ class Desk extends Component {
     return (
       <div style={barStyle}>
         <div style={{display: 'block', textAlign: 'center'}}>
-          <div><a href='#'>tajo (1890)</a></div>
-          <button className={styles['pure-button']}>Join Game</button>
-          <Clock board={this.props.board}
-                 color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE} />
+          <div><a href="#">tajo (1890)</a></div>
+          <button className="pureButton">Join Game</button>
+          <Clock
+            board={this.props.board}
+            color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
+          />
           <div style={{height: '5vw'}}> </div>
-          <Clock board={this.props.board}
-                 color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK} />
-          <button className={styles['pure-button']}>Leave Game</button>
-          <div><a href='#'>garry (2803)</a></div>
+          <Clock
+            board={this.props.board}
+            color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
+          />
+          <button className="pureButton">Leave Game</button>
+          <div><a href="#">garry (2803)</a></div>
         </div>
       </div>
     );
   }
 
-  render () {
+  render() {
     const rootStyle = {
       display: 'flex',
       flexWrap: 'wrap'
@@ -49,11 +53,15 @@ class Desk extends Component {
       <div style={rootStyle}>
         {this.props.board === 'aBoard' && this.renderBar()}
         <div>
-          <FreePieces color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
-                      board={this.props.board} />
+          <FreePieces
+            color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
+            board={this.props.board}
+          />
           <Board board={this.props.board} />
-          <FreePieces color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
-                      board={this.props.board} />
+          <FreePieces
+            color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
+            board={this.props.board}
+          />
         </div>
         {this.props.board === 'bBoard' && this.renderBar()}
       </div>

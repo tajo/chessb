@@ -10,23 +10,20 @@ class Gameover extends Component {
     board: React.PropTypes.string.isRequired
   }
 
-  getWinner () {
+  getWinner() {
     if (this.props.board === this.props.wBoard) {
       if (this.props.color === COLORS.WHITE) {
         return 'White wins';
-      } else {
-        return 'Black wins';
       }
-    } else {
-      if (this.props.color === COLORS.WHITE) {
-        return 'Black wins';
-      } else {
-        return 'White wins';
-      }
+      return 'Black wins';
     }
+    if (this.props.color === COLORS.WHITE) {
+      return 'Black wins';
+    }
+    return 'White wins';
   }
 
-  render () {
+  render() {
     const overlayStyle = {
       height: '100%',
       width: '100%',

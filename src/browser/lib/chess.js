@@ -1,14 +1,14 @@
 import {PIECES, COLORS} from '../constants';
 
-export function isMoveLegal (engine, start, end, promotion = null) {
+export function isMoveLegal(engine, start, end) {
   return engine.moves().some(move => move.to === end && move.from === start);
 }
 
-export function isPieceMovebale (engine, position) {
+export function isPieceMovebale(engine, position) {
   return engine.moves().some(move => move.from === position);
 }
 
-export function filterFreePieces (freePieces, color) {
+export function filterFreePieces(freePieces, color) {
   return freePieces.filter((count, piece) => {
     if (count === 0) return false;
     if (color === COLORS.WHITE &&
@@ -19,11 +19,11 @@ export function filterFreePieces (freePieces, color) {
   });
 }
 
-export function getPieceColor (piece) {
+export function getPieceColor(piece) {
   return translatePieceReverse(piece).color === 'w' ? COLORS.WHITE : COLORS.BLACK;
 }
 
-export function translatePiece (piece) {
+export function translatePiece(piece) {
   if (!piece) return null;
   if (piece.type === 'p' && piece.color === 'b') return PIECES.PAWNB;
   if (piece.type === 'p' && piece.color === 'w') return PIECES.PAWNW;
@@ -40,7 +40,7 @@ export function translatePiece (piece) {
   return null;
 }
 
-export function translatePieceReverse (piece) {
+export function translatePieceReverse(piece) {
   if (piece === PIECES.PAWNB) return {type: 'p', color: 'b'};
   if (piece === PIECES.PAWNW) return {type: 'p', color: 'w'};
   if (piece === PIECES.KINGB) return {type: 'k', color: 'b'};
@@ -55,4 +55,3 @@ export function translatePieceReverse (piece) {
   if (piece === PIECES.ROOKW) return {type: 'r', color: 'w'};
   return null;
 }
-

@@ -19,7 +19,7 @@ class FreePieces extends Component {
     selectSquare: React.PropTypes.func.isRequired
   }
 
-  render () {
+  render() {
     const freePieces = filterFreePieces(this.props.game.getIn([this.props.board, 'freePieces']), this.props.color);
     const rootStyle = {
       width: `${freePieces.count() * 3.5}vw`,
@@ -42,13 +42,14 @@ class FreePieces extends Component {
           const color = translatePieceReverse(piece).color;
           return (
             <div style={squareStyle} onClick={() => this.handleClick(position, piece)}>
-              <Piece type={piece}
-                     canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position) && this.props.game.getIn([this.props.board, 'engine']).turn() === color}
-                     position={translatePieceReverse(piece).type}
-                     board={this.props.board}
-                     count={count}
-                     isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position &&
-                       this.props.game.getIn([this.props.board, 'squareSelected', 'piece']) === piece}
+              <Piece
+                type={piece}
+                canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position) && this.props.game.getIn([this.props.board, 'engine']).turn() === color}
+                position={translatePieceReverse(piece).type}
+                board={this.props.board}
+                count={count}
+                isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position &&
+                  this.props.game.getIn([this.props.board, 'squareSelected', 'piece']) === piece}
               />
             </div>
           );
@@ -57,7 +58,7 @@ class FreePieces extends Component {
     );
   }
 
-  handleClick (position, piece) {
+  handleClick(position, piece) {
     let passPosition = position;
     if (this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position) {
       passPosition = null;
