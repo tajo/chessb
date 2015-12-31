@@ -101,10 +101,14 @@ export default function makeConfig(isDevelopment) {
         }),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new webpack.optimize.UglifyJsPlugin({
           compress: {
             screw_ie8: true, // eslint-disable-line camelcase
-            warnings: false // Because uglify reports irrelevant warnings.
+            warnings: false // Because uglify reports irrelevant warnings
+          },
+          output: {
+            comments: false
           }
         })
       );
