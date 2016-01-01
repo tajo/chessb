@@ -1,12 +1,10 @@
 import * as actions from '../actions/game';
-import {OrderedMap, Record, List, Map} from 'immutable';
-import {startingBoard} from '../../constants';
+import {Record, List, Map} from 'immutable';
 import {translatePieceReverse, getPieceColor} from '../../lib/chess';
 import Chess from '../../../common/engine';
 import moment from 'moment';
 
 const BoardState = Record({
-  board: OrderedMap(startingBoard),
   engine: null,
   promotion: false,
   moves: List(),
@@ -24,31 +22,27 @@ const InitialState = Record({
 
 const initialState = new InitialState;
 
-
 export default function gameReducer(state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
       state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
-      const move = Map({from: action.start, to: action.end, promotion: action.promotion});
+      const move = {from: action.start, to: action.end, promotion: action.promotion};
 
-      // update engine state
       const engine = new Chess(state.getIn([action.board, 'engine']));
-      const capturedPiece = engine.get(action.end);
-      engine.move({from: action.start, to: action.end, promotion: action.promotion});
-      state = state.updateIn([action.board, 'engine'], () => engine.getState());
 
       // give the captured pieces to other board
-      if (capturedPiece) {
-        const engine = new Chess(state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
-        engine.addFreePiece(capturedPiece);
-        state = state.updateIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engine.getState());
+      if (engine.get(action.end)) {
+        const engineOther = new Chess(state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
+        engineOther.addFreePiece(engine.get(action.end));
+        state = state.updateIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engineOther.getState());
       }
+
+      // make move
+      engine.move(move);
 
       // drop piece
       if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
-        const engine = new Chess(state.getIn([action.board, 'engine']));
         engine.removeFreePiece(translatePieceReverse(action.piece).color, action.start);
-        state = state.updateIn([action.board, 'engine'], () => engine.getState());
       }
 
       // end of game
@@ -58,16 +52,9 @@ export default function gameReducer(state = initialState, action) {
 
       return state
         .updateIn([action.board, 'promotion'], () => false)
-        .updateIn([action.board, 'moves'], board => board.push(move))
+        .updateIn([action.board, 'moves'], board => board.push(Map(move)))
         .updateIn([action.board, 'squareSelected'], () => null)
-        .updateIn([action.board, 'board'], board => {
-          if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
-            return board.set(action.end, action.piece);
-          }
-          return board
-            .set(action.start, null)
-            .set(action.end, action.piece);
-        });
+        .updateIn([action.board, 'engine'], () => engine.getState());
     }
 
     case actions.GAME_SELECT_SQUARE: {
