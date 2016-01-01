@@ -23,6 +23,26 @@ export function filterFreePieces(freePieces, color) {
   });
 }
 
+export function getFreePieces(engineState, color) {
+  const freePieces = {};
+  if (color === COLORS.WHITE) {
+    [PIECES.QUEENW, PIECES.ROOKW, PIECES.KNIGHTW, PIECES.BISHOPW, PIECES.PAWNW].forEach(piece => {
+      const count = engineState.whiteFreePieces.filter(_piece => _piece === translatePieceReverse(piece).type).length;
+      if (count > 0) {
+        freePieces[piece] = count;
+      }
+    });
+  } else {
+    [PIECES.QUEENB, PIECES.ROOKB, PIECES.KNIGHTB, PIECES.BISHOPB, PIECES.PAWNB].forEach(piece => {
+      const count = engineState.blackFreePieces.filter(_piece => _piece === translatePieceReverse(piece).type).length;
+      if (count > 0) {
+        freePieces[piece] = count;
+      }
+    });
+  }
+  return OrderedMap(freePieces);
+}
+
 export function getPieces(board) {
   function getPiece(num) {
     return board[num] ? translatePiece(board[num]) : null;
