@@ -85,19 +85,6 @@ export const board = {
   h1: null
 };
 
-export const freePieces = {
-  QUEENW: 0,
-  QUEENB: 0,
-  ROOKW: 0,
-  ROOKB: 0,
-  KNIGHTW: 0,
-  KNIGHTB: 0,
-  BISHOPW: 0,
-  BISHOPB: 0,
-  PAWNW: 0,
-  PAWNB: 0
-};
-
 export const squareColors = {
   a8: COLORS.WHITE,
   b8: COLORS.BLACK,

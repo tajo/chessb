@@ -4,7 +4,7 @@ import Piece from './piece';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import {actions as gameActions} from '../redux/actions/game';
-import {filterFreePieces, translatePieceReverse, isPieceMovebale, getFreePieces} from '../lib/chess';
+import {translatePieceReverse, isPieceMovebale, getFreePieces} from '../lib/chess';
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -20,7 +20,6 @@ class FreePieces extends Component {
   }
 
   render() {
-    // const freePieces = filterFreePieces(this.props.game.getIn([this.props.board, 'freePieces']), this.props.color);
     const freePieces = getFreePieces(this.props.game.getIn([this.props.board, 'engine']), this.props.color);
     const rootStyle = {
       width: `${freePieces.count() * 3.5}vw`,

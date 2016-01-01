@@ -714,13 +714,13 @@ export default function Chess(newstate) {
       return get(square);
     },
 
-    addFreePiece: function(color, piece) {
-      if ([KNIGHT, ROOK, BISHOP, QUEEN, PAWN].indexOf(piece) === -1) return;
-      if (color === WHITE) {
-        whiteFreePieces.push(piece)
+    addFreePiece: function(piece) {
+      if ([KNIGHT, ROOK, BISHOP, QUEEN, PAWN].indexOf(piece.type) === -1) return;
+      if (piece.color === WHITE) {
+        whiteFreePieces.push(piece.type)
       }
-      if (color === BLACK) {
-        blackFreePieces.push(piece)
+      if (piece.color === BLACK) {
+        blackFreePieces.push(piece.type)
       }
     },
 
