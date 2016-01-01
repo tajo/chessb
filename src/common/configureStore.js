@@ -9,28 +9,18 @@ import {
   createStore
 } from 'redux';
 
-export default function configureStore(socket, reducer, initialState) {
+export default function configureStore(io, reducer, initialState) {
   const getUid = () => shortid.generate();
   const now = () => Date.now();
   const dependenciesMiddleware = injectDependencies({fetch, getUid, now});
 
-  let middleware;
-  if (socket) {
-    middleware = applyMiddleware(
-      socketMiddleware(socket),
-      dependenciesMiddleware,
-      promiseMiddleware({
-        promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
-      })
-    );
-  } else {
-    middleware = applyMiddleware(
-      dependenciesMiddleware,
-      promiseMiddleware({
-        promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
-      })
-    );
-  }
+  const middleware = applyMiddleware(
+    socketMiddleware(io),
+    dependenciesMiddleware,
+    promiseMiddleware({
+      promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
+    })
+  );
 
   let createStoreWithMiddleware;
   if (process.env.NODE_ENV === 'development') {

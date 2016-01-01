@@ -3,6 +3,7 @@ import Component from 'react-pure-render/component';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Desk from '../components/desk';
+import Onlinecount from '../components/onlinecount';
 
 class HomeView extends Component {
 
@@ -16,9 +17,12 @@ class HomeView extends Component {
       justifyContent: 'center'
     };
     return (
-      <div style={rootStyles}>
-        <Desk board="aBoard" />
-        <Desk board="bBoard" />
+      <div>
+        <div style={rootStyles}>
+          <Desk board="aBoard" />
+          <Desk board="bBoard" />
+        </div>
+        <Onlinecount />
       </div>
     );
   }

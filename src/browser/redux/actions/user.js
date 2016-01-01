@@ -1,13 +1,13 @@
-import Promise from 'bluebird';
-
 export const USER_AUTHENTICATE = 'USER_AUTHENTICATE';
 
 export const actions = {
   authUser
 };
 
-export function authUser(socket) {
+export function authUser(hashId) {
   return {
-    type: USER_AUTHENTICATE
+    type: USER_AUTHENTICATE,
+    hashId: hashId,
+    remote: true
   };
 }

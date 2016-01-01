@@ -1,7 +1,14 @@
-export default socket => store => next => action => {
+export default io => () => next => action => {
   if (action.remote) {
-    console.log(action);
-    socket.emit('action', action);
+    io.emit('action', action);
+  }
+
+  if (action.room) {
+    io.to(action.room).emit('action', action);
+  }
+
+  if (action.broadcast) {
+    io.sockets.emit('action', action);
   }
   return next(action);
 };
