@@ -7,7 +7,7 @@ import {Record} from 'immutable';
 import Component from 'react-pure-render/component';
 import Promotion from './promotion';
 import Gameover from './gameover';
-import {translatePieceReverse} from '../lib/chess';
+import {translatePieceReverse, getPieces} from '../lib/chess';
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -32,8 +32,8 @@ class Board extends Component {
     };
 
     const board = this.props.board === 'bBoard'
-        ? this.props.game.get(this.props.board).get('board').reverse()
-        : this.props.game.get(this.props.board).get('board');
+        ? getPieces(this.props.game.get(this.props.board).get('engine').board).reverse()
+        : getPieces(this.props.game.get(this.props.board).get('engine').board);
 
     return (
       <div style={styles}>

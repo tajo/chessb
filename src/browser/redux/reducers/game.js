@@ -5,10 +5,9 @@ import {translatePieceReverse, getPieceColor} from '../../lib/chess';
 import Chess from '../../../common/engine';
 import moment from 'moment';
 
-const newEngineState = new Chess();
 const BoardState = Record({
   board: OrderedMap(startingBoard),
-  engine: newEngineState.getState(),
+  engine: null,
   turn: COLORS.WHITE,
   promotion: false,
   moves: List(),
@@ -18,8 +17,8 @@ const BoardState = Record({
 });
 
 const InitialState = Record({
-  aBoard: new BoardState(),
-  bBoard: new BoardState(),
+  aBoard: new BoardState({engine: (new Chess()).getState()}),
+  bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
   startDate: moment().format(),
   endDate: moment().add('194', 's').format()
