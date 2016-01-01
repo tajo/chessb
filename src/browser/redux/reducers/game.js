@@ -35,43 +35,10 @@ export default function gameReducer(state = initialState, action) {
 
       // update engine state
       const engine = new Chess(state.getIn([action.board, 'engine']));
-      const result = engine.move({from: action.start, to: action.end, promotion: action.promotion});
+      engine.move({from: action.start, to: action.end, promotion: action.promotion});
       state = state.updateIn([action.board, 'engine'], () => engine.getState());
 
-      let capturedPiece = state.getIn([action.board, 'board', action.end]);
-      // en passant capture
-      if (result.flags === 'e') {
-        const diff = action.piece === PIECES.PAWNW ? -1 : 1;
-        const deleteSquare = action.end[0] + (parseInt(action.end[1], 10) + diff).toString();
-        state = state.updateIn([action.board, 'board'], board => board.set(deleteSquare, null));
-        capturedPiece = state.getIn([action.board, 'turn']) === COLORS.WHITE ? PIECES.PAWNB : PIECES.PAWNW;
-      }
-
-      // king side castling
-      if (result.flags === 'k') {
-        if (state.getIn([action.board, 'turn']) === COLORS.WHITE) {
-          state = state
-            .updateIn([action.board, 'board'], board => board.set('f1', PIECES.ROOKW))
-            .updateIn([action.board, 'board'], board => board.set('h1', null));
-        } else {
-          state = state
-            .updateIn([action.board, 'board'], board => board.set('f8', PIECES.ROOKB))
-            .updateIn([action.board, 'board'], board => board.set('h8', null));
-        }
-      }
-
-      // queen side castling
-      if (result.flags === 'q') {
-        if (state.getIn([action.board, 'turn']) === COLORS.WHITE) {
-          state = state
-            .updateIn([action.board, 'board'], board => board.set('d1', PIECES.ROOKW))
-            .updateIn([action.board, 'board'], board => board.set('a1', null));
-        } else {
-          state = state
-            .updateIn([action.board, 'board'], board => board.set('d8', PIECES.ROOKB))
-            .updateIn([action.board, 'board'], board => board.set('a8', null));
-        }
-      }
+      const capturedPiece = state.getIn([action.board, 'board', action.end]);
 
       // give the captured pieces to other board
       if (capturedPiece) {
