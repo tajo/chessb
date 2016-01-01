@@ -134,11 +134,11 @@ export default function Chess(fen) {
         {square: SQUARES.h8, flag: BITS.KSIDE_CASTLE}]
   };
 
-  var board = new Array(128);
-  var kings = {w: EMPTY, b: EMPTY};
+  var board = [{"type":"r","color":"b"},{"type":"n","color":"b"},{"type":"b","color":"b"},{"type":"q","color":"b"},{"type":"k","color":"b"},{"type":"b","color":"b"},{"type":"n","color":"b"},{"type":"r","color":"b"},null,null,null,null,null,null,null,null,{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},null,null,null,null,null,null,null,null,{"type":"r","color":"w"},{"type":"n","color":"w"},{"type":"b","color":"w"},{"type":"q","color":"w"},{"type":"k","color":"w"},{"type":"b","color":"w"},{"type":"n","color":"w"},{"type":"r","color":"w"},null,null,null,null,null,null,null,null];
+  var kings = {w: 116, b: 4};
   var turn = WHITE;
   var castling = {w: 0, b: 0};
-  var ep_square = EMPTY;
+  var ep_square = -1;
   var half_moves = 0;
   var move_number = 1;
   var history = [];
@@ -147,18 +147,12 @@ export default function Chess(fen) {
   var whiteFreePieces = [];
   var generatedMoves = [];
 
-  /* if the user passes in a fen string, load it, else default to
-   * starting position
-   */
-  if (typeof fen === 'undefined') {
-    load(DEFAULT_POSITION);
-  } else {
-    load(fen);
-  }
+
+  preGenerateMoves();
 
   function clear() {
     board = new Array(128);
-    kings = {w: EMPTY, b: EMPTY};
+    kings = {w: 116, b: 4};
     turn = WHITE;
     castling = {w: 0, b: 0};
     ep_square = EMPTY;
@@ -178,12 +172,10 @@ export default function Chess(fen) {
     var position = tokens[0];
     var square = 0;
 
-    if (!validate_fen(fen).valid) {
-      return false;
-    }
 
-    clear();
+    //clear();
 
+    console.log(board);
     for (var i = 0; i < position.length; i++) {
       var piece = position.charAt(i);
 
@@ -198,26 +190,12 @@ export default function Chess(fen) {
       }
     }
 
-    turn = tokens[1];
 
-    if (tokens[2].indexOf('K') > -1) {
-      castling.w |= BITS.KSIDE_CASTLE;
-    }
-    if (tokens[2].indexOf('Q') > -1) {
-      castling.w |= BITS.QSIDE_CASTLE;
-    }
-    if (tokens[2].indexOf('k') > -1) {
-      castling.b |= BITS.KSIDE_CASTLE;
-    }
-    if (tokens[2].indexOf('q') > -1) {
-      castling.b |= BITS.QSIDE_CASTLE;
-    }
+    //ep_square = (tokens[3] === '-') ? EMPTY : SQUARES[tokens[3]];
+    //half_moves = parseInt(tokens[4], 10);
+    //move_number = parseInt(tokens[5], 10);
 
-    ep_square = (tokens[3] === '-') ? EMPTY : SQUARES[tokens[3]];
-    half_moves = parseInt(tokens[4], 10);
-    move_number = parseInt(tokens[5], 10);
-
-    update_setup(generate_fen());
+    // update_setup(generate_fen());
     preGenerateMoves();
     return true;
   }
@@ -409,10 +387,12 @@ export default function Chess(fen) {
 
     board[sq] = {type: piece.type, color: piece.color};
     if (piece.type === KING) {
+      console.log(piece.color);
+      console.log(sq);
       kings[piece.color] = sq;
     }
 
-    update_setup(generate_fen());
+    // update_setup(generate_fen());
 
     return true;
   }
