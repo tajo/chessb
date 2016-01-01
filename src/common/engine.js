@@ -1,33 +1,4 @@
 /* eslint-disable */
-/*
- * Copyright (c) 2015, Jeff Hlywa (jhlywa@gmail.com)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- *----------------------------------------------------------------------------*/
-
-/* minified license below  */
-
 /* @license
  * Copyright (c) 2015, Jeff Hlywa (jhlywa@gmail.com)
  * Released under the BSD license
@@ -1205,9 +1176,6 @@ export default function Chess(fen) {
     /***************************************************************************
      * PUBLIC API
      **************************************************************************/
-    load: function(fen) {
-      return load(fen);
-    },
 
     getBoard: function() {
       return board;
@@ -1242,281 +1210,12 @@ export default function Chess(fen) {
       return in_checkmate();
     },
 
-    in_stalemate: function() {
-      return in_stalemate();
-    },
-
-    in_draw: function() {
-      return half_moves >= 100 ||
-             in_stalemate() ||
-             insufficient_material() ||
-             in_threefold_repetition();
-    },
-
-    insufficient_material: function() {
-      return insufficient_material();
-    },
-
-    in_threefold_repetition: function() {
-      return in_threefold_repetition();
-    },
-
     game_over: function() {
       return in_checkmate();
     },
 
-    validate_fen: function(fen) {
-      return validate_fen(fen);
-    },
-
     fen: function() {
       return generate_fen();
-    },
-
-    pgn: function(options) {
-      /* using the specification from http://www.chessclub.com/help/PGN-spec
-       * example for html usage: .pgn({ max_width: 72, newline_char: "<br />" })
-       */
-      var newline = (typeof options === 'object' &&
-                     typeof options.newline_char === 'string') ?
-                     options.newline_char : '\n';
-      var max_width = (typeof options === 'object' &&
-                       typeof options.max_width === 'number') ?
-                       options.max_width : 0;
-      var result = [];
-      var header_exists = false;
-
-      /* add the PGN header headerrmation */
-      for (var i in header) {
-        /* TODO: order of enumerated properties in header object is not
-         * guaranteed, see ECMA-262 spec (section 12.6.4)
-         */
-        result.push('[' + i + ' \"' + header[i] + '\"]' + newline);
-        header_exists = true;
-      }
-
-      if (header_exists && history.length) {
-        result.push(newline);
-      }
-
-      /* pop all of history onto reversed_history */
-      var reversed_history = [];
-      while (history.length > 0) {
-        reversed_history.push(undo_move());
-      }
-
-      var moves = [];
-      var move_string = '';
-      var pgn_move_number = 1;
-
-      /* build the list of moves.  a move_string looks like: "3. e3 e6" */
-      while (reversed_history.length > 0) {
-        var move = reversed_history.pop();
-
-        /* if the position started with black to move, start PGN with 1. ... */
-        if (pgn_move_number === 1 && move.color === 'b') {
-          move_string = '1. ...';
-          pgn_move_number++;
-        } else if (move.color === 'w') {
-          /* store the previous generated move_string if we have one */
-          if (move_string.length) {
-            moves.push(move_string);
-          }
-          move_string = pgn_move_number + '.';
-          pgn_move_number++;
-        }
-
-        move_string = move_string + ' ' + move_to_san(move);
-        make_move(move);
-      }
-
-      /* are there any other leftover moves? */
-      if (move_string.length) {
-        moves.push(move_string);
-      }
-
-      /* is there a result? */
-      if (typeof header.Result !== 'undefined') {
-        moves.push(header.Result);
-      }
-
-      /* history should be back to what is was before we started generating PGN,
-       * so join together moves
-       */
-      if (max_width === 0) {
-        return result.join('') + moves.join(' ');
-      }
-
-      /* wrap the PGN output at max_width */
-      var current_width = 0;
-      for (var i = 0; i < moves.length; i++) {
-        /* if the current move will push past max_width */
-        if (current_width + moves[i].length > max_width && i !== 0) {
-
-          /* don't end the line with whitespace */
-          if (result[result.length - 1] === ' ') {
-            result.pop();
-          }
-
-          result.push(newline);
-          current_width = 0;
-        } else if (i !== 0) {
-          result.push(' ');
-          current_width++;
-        }
-        result.push(moves[i]);
-        current_width += moves[i].length;
-      }
-
-      return result.join('');
-    },
-
-    load_pgn: function(pgn, options) {
-      function mask(str) {
-        return str.replace(/\\/g, '\\');
-      }
-
-      /* convert a move from Standard Algebraic Notation (SAN) to 0x88
-       * coordinates
-      */
-      function move_from_san(move) {
-        /* strip off any move decorations: e.g Nf3+?! */
-        var move_replaced = move.replace(/=/,'').replace(/[+#]?[?!]*$/,'');
-        var moves = generate_moves();
-        for (var i = 0, len = moves.length; i < len; i++) {
-          if (move_replaced ===
-              move_to_san(moves[i]).replace(/=/,'').replace(/[+#]?[?!]*$/,'')) {
-            return moves[i];
-          }
-        }
-        return null;
-      }
-
-      function get_move_obj(move) {
-        return move_from_san(trim(move));
-      }
-
-      function has_keys(object) {
-        var has_keys = false;
-        for (var key in object) {
-          has_keys = true;
-        }
-        return has_keys;
-      }
-
-      function parse_pgn_header(header, options) {
-        var newline_char = (typeof options === 'object' &&
-                            typeof options.newline_char === 'string') ?
-                            options.newline_char : '\r?\n';
-        var header_obj = {};
-        var headers = header.split(new RegExp(mask(newline_char)));
-        var key = '';
-        var value = '';
-
-        for (var i = 0; i < headers.length; i++) {
-          key = headers[i].replace(/^\[([A-Z][A-Za-z]*)\s.*\]$/, '$1');
-          value = headers[i].replace(/^\[[A-Za-z]+\s"(.*)"\]$/, '$1');
-          if (trim(key).length > 0) {
-            header_obj[key] = value;
-          }
-        }
-
-        return header_obj;
-      }
-
-      var newline_char = (typeof options === 'object' &&
-                          typeof options.newline_char === 'string') ?
-                          options.newline_char : '\r?\n';
-        var regex = new RegExp('^(\\[(.|' + mask(newline_char) + ')*\\])' +
-                               '(' + mask(newline_char) + ')*' +
-                               '1.(' + mask(newline_char) + '|.)*$', 'g');
-
-      /* get header part of the PGN file */
-      var header_string = pgn.replace(regex, '$1');
-
-      /* no info part given, begins with moves */
-      if (header_string[0] !== '[') {
-        header_string = '';
-      }
-
-     reset();
-
-      /* parse PGN header */
-      var headers = parse_pgn_header(header_string, options);
-      for (var key in headers) {
-        set_header([key, headers[key]]);
-      }
-
-      /* load the starting position indicated by [Setup '1'] and
-      * [FEN position] */
-      if (headers['SetUp'] === '1') {
-          if (!(('FEN' in headers) && load(headers['FEN']))) {
-            return false;
-          }
-      }
-
-      /* delete header to get the moves */
-      var ms = pgn.replace(header_string, '').replace(new RegExp(mask(newline_char), 'g'), ' ');
-
-      /* delete comments */
-      ms = ms.replace(/(\{[^}]+\})+?/g, '');
-
-      /* delete recursive annotation variations */
-      var rav_regex = /(\([^\(\)]+\))+?/g
-      while (rav_regex.test(ms)) {
-        ms = ms.replace(rav_regex, '');
-      }
-
-      /* delete move numbers */
-      ms = ms.replace(/\d+\./g, '');
-
-      /* delete ... indicating black to move */
-      ms = ms.replace(/\.\.\./g, '');
-
-      /* trim and get array of moves */
-      var moves = trim(ms).split(new RegExp(/\s+/));
-
-      /* delete empty entries */
-      moves = moves.join(',').replace(/,,+/g, ',').split(',');
-      var move = '';
-
-      for (var half_move = 0; half_move < moves.length - 1; half_move++) {
-        move = get_move_obj(moves[half_move]);
-
-        /* move not possible! (don't clear the board to examine to show the
-         * latest valid position)
-         */
-        if (move == null) {
-          return false;
-        } else {
-          make_move(move);
-        }
-      }
-
-      /* examine last move */
-      move = moves[moves.length - 1];
-      if (POSSIBLE_RESULTS.indexOf(move) > -1) {
-        if (has_keys(header) && typeof header.Result === 'undefined') {
-          set_header(['Result', move]);
-        }
-      }
-      else {
-        move = get_move_obj(move);
-        if (move == null) {
-          return false;
-        } else {
-          make_move(move);
-        }
-      }
-      return true;
-    },
-
-    header: function() {
-      return set_header(arguments);
-    },
-
-    ascii: function() {
-      return ascii();
     },
 
     turn: function() {
@@ -1581,10 +1280,6 @@ export default function Chess(fen) {
       return (move) ? make_pretty(move) : null;
     },
 
-    clear: function() {
-      return clear();
-    },
-
     put: function(piece, square) {
       return put(piece, square);
     },
@@ -1595,42 +1290,6 @@ export default function Chess(fen) {
 
     remove: function(square) {
       return remove(square);
-    },
-
-    perft: function(depth) {
-      return perft(depth);
-    },
-
-    square_color: function(square) {
-      if (square in SQUARES) {
-        var sq_0x88 = SQUARES[square];
-        return ((rank(sq_0x88) + file(sq_0x88)) % 2 === 0) ? 'light' : 'dark';
-      }
-
-      return null;
-    },
-
-    history: function(options) {
-      var reversed_history = [];
-      var move_history = [];
-      var verbose = (typeof options !== 'undefined' && 'verbose' in options &&
-                     options.verbose);
-
-      while (history.length > 0) {
-        reversed_history.push(undo_move());
-      }
-
-      while (reversed_history.length > 0) {
-        var move = reversed_history.pop();
-        if (verbose) {
-          move_history.push(make_pretty(move));
-        } else {
-          move_history.push(move_to_san(move));
-        }
-        make_move(move);
-      }
-
-      return move_history;
     },
 
     addFreePiece: function(color, piece) {
