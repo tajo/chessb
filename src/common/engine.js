@@ -123,16 +123,13 @@ export default function Chess(newstate) {
         {square: SQUARES.h8, flag: BITS.KSIDE_CASTLE}]
   };
 
+  var history = [];
   if (typeof newstate !== 'undefined') {
     var board = newstate.board;
     var kings = newstate.kings;
     var turn = newstate.turn;
     var castling = newstate.castling;
     var ep_square = newstate.ep_square;
-    var half_moves = newstate.half_moves;
-    var move_number = newstate.move_number;
-    var history = newstate.history;
-    var header = newstate.header;
     var blackFreePieces = newstate.blackFreePieces;
     var whiteFreePieces = newstate.whiteFreePieces;
   } else {
@@ -141,10 +138,6 @@ export default function Chess(newstate) {
     var turn = WHITE;
     var castling = {w: 0, b: 0};
     var ep_square = EMPTY;
-    var half_moves = 0;
-    var move_number = 1;
-    var history = [];
-    var header = {};
     var blackFreePieces = [];
     var whiteFreePieces = [];
     var generatedMoves = [];
@@ -421,9 +414,7 @@ export default function Chess(newstate) {
       kings: {b: kings.b, w: kings.w},
       turn: turn,
       castling: {b: castling.b, w: castling.w},
-      ep_square: ep_square,
-      half_moves: half_moves,
-      move_number: move_number
+      ep_square: ep_square
     });
   }
 
@@ -511,18 +502,6 @@ export default function Chess(newstate) {
       ep_square = EMPTY;
     }
 
-    /* reset the 50 move counter if a pawn is moved or a piece is captured */
-    if (move.piece === PAWN) {
-      half_moves = 0;
-    } else if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
-      half_moves = 0;
-    } else {
-      half_moves++;
-    }
-
-    if (turn === BLACK) {
-      move_number++;
-    }
     turn = swap_color(turn);
   }
 
@@ -535,8 +514,6 @@ export default function Chess(newstate) {
     turn = old.turn;
     castling = old.castling;
     ep_square = old.ep_square;
-    half_moves = old.half_moves;
-    move_number = old.move_number;
 
     var us = turn;
     var them = swap_color(turn);
@@ -729,11 +706,6 @@ export default function Chess(newstate) {
       return pretty_move;
     },
 
-    undo: function() {
-      var move = undo_move();
-      return (move) ? make_pretty(move) : null;
-    },
-
     put: function(piece, square) {
       return put(piece, square);
     },
@@ -784,10 +756,6 @@ export default function Chess(newstate) {
         turn: turn,
         castling: castling,
         ep_square: ep_square,
-        half_moves: half_moves,
-        move_number: move_number,
-        history: history,
-        header: header,
         blackFreePieces: blackFreePieces,
         whiteFreePieces: whiteFreePieces
       }
@@ -799,10 +767,6 @@ export default function Chess(newstate) {
       turn = state.turn;
       castling = state.castling;
       ep_square = state.ep_square;
-      half_moves = state.half_moves;
-      move_number = state.move_number;
-      history = state.history;
-      header = state.header;
       blackFreePieces = state.blackFreePieces;
       whiteFreePieces = state.whiteFreePieces;
       preGenerateMoves();
