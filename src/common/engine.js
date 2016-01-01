@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export default function Chess() {
+export default function Chess(newstate) {
 
   /* jshint indent: false */
 
@@ -123,18 +123,32 @@ export default function Chess() {
         {square: SQUARES.h8, flag: BITS.KSIDE_CASTLE}]
   };
 
-  var board = [{"type":"r","color":"b"},{"type":"n","color":"b"},{"type":"b","color":"b"},{"type":"q","color":"b"},{"type":"k","color":"b"},{"type":"b","color":"b"},{"type":"n","color":"b"},{"type":"r","color":"b"},null,null,null,null,null,null,null,null,{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},null,null,null,null,null,null,null,null,{"type":"r","color":"w"},{"type":"n","color":"w"},{"type":"b","color":"w"},{"type":"q","color":"w"},{"type":"k","color":"w"},{"type":"b","color":"w"},{"type":"n","color":"w"},{"type":"r","color":"w"},null,null,null,null,null,null,null,null];
-  var kings = {w: 116, b: 4};
-  var turn = WHITE;
-  var castling = {w: 0, b: 0};
-  var ep_square = EMPTY;
-  var half_moves = 0;
-  var move_number = 1;
-  var history = [];
-  var header = {};
-  var blackFreePieces = [];
-  var whiteFreePieces = [];
-  var generatedMoves = [];
+  if (typeof newstate !== 'undefined') {
+    var board = newstate.board;
+    var kings = newstate.kings;
+    var turn = newstate.turn;
+    var castling = newstate.castling;
+    var ep_square = newstate.ep_square;
+    var half_moves = newstate.half_moves;
+    var move_number = newstate.move_number;
+    var history = newstate.history;
+    var header = newstate.header;
+    var blackFreePieces = newstate.blackFreePieces;
+    var whiteFreePieces = newstate.whiteFreePieces;
+  } else {
+    var board = [{"type":"r","color":"b"},{"type":"n","color":"b"},{"type":"b","color":"b"},{"type":"q","color":"b"},{"type":"k","color":"b"},{"type":"b","color":"b"},{"type":"n","color":"b"},{"type":"r","color":"b"},null,null,null,null,null,null,null,null,{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},null,null,null,null,null,null,null,null,{"type":"r","color":"w"},{"type":"n","color":"w"},{"type":"b","color":"w"},{"type":"q","color":"w"},{"type":"k","color":"w"},{"type":"b","color":"w"},{"type":"n","color":"w"},{"type":"r","color":"w"},null,null,null,null,null,null,null,null];
+    var kings = {w: 116, b: 4};
+    var turn = WHITE;
+    var castling = {w: 0, b: 0};
+    var ep_square = EMPTY;
+    var half_moves = 0;
+    var move_number = 1;
+    var history = [];
+    var header = {};
+    var blackFreePieces = [];
+    var whiteFreePieces = [];
+    var generatedMoves = [];
+  }
   preGenerateMoves();
 
   function get(square) {
@@ -760,6 +774,37 @@ export default function Chess() {
     },
 
     preLoad: function() {
+      preGenerateMoves();
+    },
+
+    getState: function() {
+      return {
+        board: board,
+        kings: kings,
+        turn: turn,
+        castling: castling,
+        ep_square: ep_square,
+        half_moves: half_moves,
+        move_number: move_number,
+        history: history,
+        header: header,
+        blackFreePieces: blackFreePieces,
+        whiteFreePieces: whiteFreePieces
+      }
+    },
+
+    setState: function(state) {
+      board = state.board;
+      kings = state.kings;
+      turn = state.turn;
+      castling = state.castling;
+      ep_square = state.ep_square;
+      half_moves = state.half_moves;
+      move_number = state.move_number;
+      history = state.history;
+      header = state.header;
+      blackFreePieces = state.blackFreePieces;
+      whiteFreePieces = state.whiteFreePieces;
       preGenerateMoves();
     }
 
