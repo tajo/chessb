@@ -1,6 +1,6 @@
 import * as actions from '../actions/game';
 import {OrderedMap, Record, List, Map} from 'immutable';
-import {COLORS, startingBoard} from '../../constants';
+import {startingBoard} from '../../constants';
 import {translatePieceReverse, getPieceColor} from '../../lib/chess';
 import Chess from '../../../common/engine';
 import moment from 'moment';
@@ -8,7 +8,6 @@ import moment from 'moment';
 const BoardState = Record({
   board: OrderedMap(startingBoard),
   engine: null,
-  turn: COLORS.WHITE,
   promotion: false,
   moves: List(),
   dates: List(),
@@ -59,7 +58,6 @@ export default function gameReducer(state = initialState, action) {
 
       return state
         .updateIn([action.board, 'promotion'], () => false)
-        .updateIn([action.board, 'turn'], turn => turn === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE)
         .updateIn([action.board, 'moves'], board => board.push(move))
         .updateIn([action.board, 'squareSelected'], () => null)
         .updateIn([action.board, 'board'], board => {
