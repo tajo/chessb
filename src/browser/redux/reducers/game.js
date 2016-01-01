@@ -5,9 +5,10 @@ import {translatePieceReverse, getPieceColor} from '../../lib/chess';
 import Chess from '../../../common/engine';
 import moment from 'moment';
 
+const newEngineState = new Chess();
 const BoardState = Record({
   board: OrderedMap(startingBoard),
-  engine: null,
+  engine: newEngineState.getState(),
   turn: COLORS.WHITE,
   promotion: false,
   moves: List(),
@@ -17,8 +18,8 @@ const BoardState = Record({
 });
 
 const InitialState = Record({
-  aBoard: new BoardState({engine: new Chess()}),
-  bBoard: new BoardState({engine: new Chess()}),
+  aBoard: new BoardState(),
+  bBoard: new BoardState(),
   winner: null,
   startDate: moment().format(),
   endDate: moment().add('194', 's').format()
@@ -26,15 +27,21 @@ const InitialState = Record({
 
 const initialState = new InitialState;
 
+
 export default function gameReducer(state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
       state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
       const move = Map({from: action.start, to: action.end, promotion: action.promotion});
 
+      // update engine state
+      const engine = new Chess(state.getIn([action.board, 'engine']));
+      const result = engine.move({from: action.start, to: action.end, promotion: action.promotion});
+      state = state.updateIn([action.board, 'engine'], () => engine.getState());
+
       let capturedPiece = state.getIn([action.board, 'board', action.end]);
       // en passant capture
-      if (action.result.flags === 'e') {
+      if (result.flags === 'e') {
         const diff = action.piece === PIECES.PAWNW ? -1 : 1;
         const deleteSquare = action.end[0] + (parseInt(action.end[1], 10) + diff).toString();
         state = state.updateIn([action.board, 'board'], board => board.set(deleteSquare, null));
@@ -42,7 +49,7 @@ export default function gameReducer(state = initialState, action) {
       }
 
       // king side castling
-      if (action.result.flags === 'k') {
+      if (result.flags === 'k') {
         if (state.getIn([action.board, 'turn']) === COLORS.WHITE) {
           state = state
             .updateIn([action.board, 'board'], board => board.set('f1', PIECES.ROOKW))
@@ -55,7 +62,7 @@ export default function gameReducer(state = initialState, action) {
       }
 
       // queen side castling
-      if (action.result.flags === 'q') {
+      if (result.flags === 'q') {
         if (state.getIn([action.board, 'turn']) === COLORS.WHITE) {
           state = state
             .updateIn([action.board, 'board'], board => board.set('d1', PIECES.ROOKW))
@@ -70,9 +77,9 @@ export default function gameReducer(state = initialState, action) {
       // give the captured pieces to other board
       if (capturedPiece) {
         const translated = translatePieceReverse(capturedPiece);
-        const engine = state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']);
+        const engine = new Chess(state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
         engine.addFreePiece(translated.color, translated.type);
-        engine.preLoad();
+        state = state.updateIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engine.getState());
         state = state.updateIn([
           action.board === 'aBoard' ? 'bBoard' : 'aBoard',
           'freePieces',
@@ -85,11 +92,13 @@ export default function gameReducer(state = initialState, action) {
       // drop piece
       if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
         state = state.updateIn([action.board, 'freePieces', action.piece], counter => counter - 1);
-        state.getIn([action.board, 'engine']).removeFreePiece(translatePieceReverse(action.piece).color, action.start);
+        const engine = new Chess(state.getIn([action.board, 'engine']));
+        engine.removeFreePiece(translatePieceReverse(action.piece).color, action.start);
+        state = state.updateIn([action.board, 'engine'], () => engine.getState());
       }
 
       // end of game
-      if (action.gameOver) {
+      if (engine.game_over()) {
         state = state.updateIn(['winner'], () => Map({board: action.board, color: getPieceColor(action.piece)}));
       }
 

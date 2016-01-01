@@ -1,10 +1,13 @@
 import {PIECES, COLORS} from '../constants';
+import Chess from '../../common/engine';
 
-export function isMoveLegal(engine, start, end) {
+export function isMoveLegal(engineState, start, end) {
+  const engine = new Chess(engineState);
   return engine.moves().some(move => move.to === end && move.from === start);
 }
 
-export function isPieceMovebale(engine, position) {
+export function isPieceMovebale(engineState, position) {
+  const engine = new Chess(engineState);
   return engine.moves().some(move => move.from === position);
 }
 

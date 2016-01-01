@@ -19,7 +19,6 @@ const squareTarget = {
 
   drop(props, monitor) {
     props.move(
-      props.game.getIn([props.board, 'engine']),
       props.board,
       monitor.getItem().position,
       props.position,

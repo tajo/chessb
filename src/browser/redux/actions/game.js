@@ -11,7 +11,7 @@ export const actions = {
   selectSquare
 };
 
-export function move(engine, board, start, end, piece, promotion = null) {
+export function move(board, start, end, piece, promotion = null) {
   if (promotion === null && piece === PIECES.PAWNW &&
     ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8'].some(pos => pos === end)) {
     return {type: GAME_SHOW_PROMOTION_POPUP, board: board, start: start, end: end};
@@ -20,7 +20,7 @@ export function move(engine, board, start, end, piece, promotion = null) {
     ['a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'].some(pos => pos === end)) {
     return {type: GAME_SHOW_PROMOTION_POPUP, board: board, start: start, end: end};
   }
-  const result = engine.move({from: start, to: end, promotion: promotion});
+
   const clickSound = new Audio('/assets/click.wav');
   clickSound.load();
   clickSound.play();
@@ -30,8 +30,6 @@ export function move(engine, board, start, end, piece, promotion = null) {
     start: start,
     end: end,
     piece: piece,
-    result: result,
-    gameOver: engine.game_over(),
     date: moment().format()
   };
 }

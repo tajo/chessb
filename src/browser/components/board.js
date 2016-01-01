@@ -49,7 +49,6 @@ class Board extends Component {
             color={this.props.game.getIn([this.props.board, 'turn'])}
             finishMove={(promotion) => {
               this.props.move(
-                this.props.game.getIn([this.props.board, 'engine']),
                 this.props.board,
                 this.props.game.getIn([this.props.board, 'promotion', 'from']),
                 this.props.game.getIn([this.props.board, 'promotion', 'to']),
