@@ -5,6 +5,8 @@ import express from 'express';
 import frontend from './frontend';
 import http from 'http';
 import socketIo from 'socket.io';
+import configureStore from '../common/configureStore';
+import rootReducer from './redux/reducers';
 
 const {port} = config;
 const app = express();
@@ -15,13 +17,14 @@ server.listen(port, () => {
   console.log('Server started at port %d', port);
 });
 
+const store = configureStore(false, rootReducer);
+// store.subscribe(() => io.emit('action', store.getState().toJS()))
+
+io.on('connection', (socket) => {
+  socket.emit('action', {type: 'HELLO'});
+  socket.on('action', (action) => store.dispatch(action));
+});
+
 app.use('/api/v1', api);
 app.use(frontend);
 app.use(errorHandler);
-
-io.on('connection', (socket) => {
-  socket.emit('news', {hello: 'worldddd'});
-  socket.on('my other event', (data) => {
-    console.log(data);
-  });
-});

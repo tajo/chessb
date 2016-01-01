@@ -3,18 +3,20 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import config from '../config';
 import getAppAssetFilenamesAsync from './assets';
-import configureStore from '../../browser/redux/configureStore';
+// import configureStore from '../../browser/redux/configureStore';
 import serialize from 'serialize-javascript';
 import {HOT_RELOAD_PORT} from '../../../webpack/constants';
 
 export default function render(req, res) {
-  const store = configureStore();
+  // const store = configureStore();
+  const store = {};
   const html = renderPage(store, req);
   res.send(html);
 }
 
 function renderPage(store, req) { // eslint-disable-line space-before-function-paren
-  const clientState = store.getState();
+  // const clientState = store.getState();
+  const clientState = store;
   const {headers, hostname} = req;
   const {
     css: appCssFilename,

@@ -4,11 +4,16 @@ import createBrowserHistory from 'history/lib/createBrowserHistory';
 import {syncReduxAndRouter} from 'redux-simple-router';
 import routes from './routes';
 import Root from './containers/Root';
-import configureStore from './redux/configureStore';
+import configureStore from '../common/configureStore';
+import io from 'socket.io-client';
+import rootReducer from './redux/reducers';
 
+const socket = io();
 const history = createBrowserHistory();
-const store = configureStore();
-// const store = configureStore(window.__INITIAL_STATE__);
+const store = configureStore(socket, rootReducer);
+
+socket.on('action', action => store.dispatch(action));
+
 
 syncReduxAndRouter(history, store, (state) => state.router);
 
