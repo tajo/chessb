@@ -124,6 +124,7 @@ export default function Chess(newstate) {
   };
 
   var history = [];
+  var generatedMoves = [];
   if (typeof newstate !== 'undefined') {
     var board = newstate.board;
     var kings = newstate.kings;
@@ -136,11 +137,10 @@ export default function Chess(newstate) {
     var board = [{"type":"r","color":"b"},{"type":"n","color":"b"},{"type":"b","color":"b"},{"type":"q","color":"b"},{"type":"k","color":"b"},{"type":"b","color":"b"},{"type":"n","color":"b"},{"type":"r","color":"b"},null,null,null,null,null,null,null,null,{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},null,null,null,null,null,null,null,null,{"type":"r","color":"w"},{"type":"n","color":"w"},{"type":"b","color":"w"},{"type":"q","color":"w"},{"type":"k","color":"w"},{"type":"b","color":"w"},{"type":"n","color":"w"},{"type":"r","color":"w"},null,null,null,null,null,null,null,null];
     var kings = {w: 116, b: 4};
     var turn = WHITE;
-    var castling = {w: 0, b: 0};
+    var castling = {w: 96, b: 96};
     var ep_square = EMPTY;
     var blackFreePieces = [];
     var whiteFreePieces = [];
-    var generatedMoves = [];
   }
   preGenerateMoves();
 
@@ -221,7 +221,6 @@ export default function Chess(newstate) {
 
     var first_sq = SQUARES.a8;
     var last_sq = SQUARES.h1;
-    var single_square = false;
 
     /* do we want legal moves? */
     var legal = (typeof options !== 'undefined' && 'legal' in options) ?
@@ -287,41 +286,36 @@ export default function Chess(newstate) {
 
     addFreePieceMoves(board, us);
 
-    /* check for castling if: a) we're generating all moves, or b) we're doing
-     * single square move generation on the king's square
-     */
-    if ((!single_square) || last_sq === kings[us]) {
-      /* king-side castling */
-      if (castling[us] & BITS.KSIDE_CASTLE) {
-        var castling_from = kings[us];
-        var castling_to = castling_from + 2;
-
-        if (board[castling_from + 1] == null &&
-            board[castling_to]       == null &&
-            !attacked(them, kings[us]) &&
-            !attacked(them, castling_from + 1) &&
-            !attacked(them, castling_to)) {
-          add_move(board, moves, kings[us] , castling_to,
-                   BITS.KSIDE_CASTLE);
-        }
-      }
-
-      /* queen-side castling */
-      if (castling[us] & BITS.QSIDE_CASTLE) {
-        var castling_from = kings[us];
-        var castling_to = castling_from - 2;
-
-        if (board[castling_from - 1] == null &&
-            board[castling_from - 2] == null &&
-            board[castling_from - 3] == null &&
-            !attacked(them, kings[us]) &&
-            !attacked(them, castling_from - 1) &&
-            !attacked(them, castling_to)) {
-          add_move(board, moves, kings[us], castling_to,
-                   BITS.QSIDE_CASTLE);
-        }
+    /* king-side castling */
+    if (castling[us] & BITS.KSIDE_CASTLE) {
+      var castling_from = kings[us];
+      var castling_to = castling_from + 2;
+      if (board[castling_from + 1] == null &&
+          board[castling_to]       == null &&
+          !attacked(them, kings[us]) &&
+          !attacked(them, castling_from + 1) &&
+          !attacked(them, castling_to)) {
+        add_move(board, moves, kings[us] , castling_to,
+                 BITS.KSIDE_CASTLE);
       }
     }
+
+    /* queen-side castling */
+    if (castling[us] & BITS.QSIDE_CASTLE) {
+      var castling_from = kings[us];
+      var castling_to = castling_from - 2;
+
+      if (board[castling_from - 1] == null &&
+          board[castling_from - 2] == null &&
+          board[castling_from - 3] == null &&
+          !attacked(them, kings[us]) &&
+          !attacked(them, castling_from - 1) &&
+          !attacked(them, castling_to)) {
+        add_move(board, moves, kings[us], castling_to,
+                 BITS.QSIDE_CASTLE);
+      }
+    }
+
 
     /* return all pseudo-legal moves (this includes moves that allow the king
      * to be captured)
@@ -629,37 +623,12 @@ export default function Chess(newstate) {
      * PUBLIC API
      **************************************************************************/
 
-    getBoard: function() {
-      return board;
-    },
-
     reset: function() {
       return reset();
     },
 
-    moves: function(options) {
-      /* The internal representation of a chess move is in 0x88 format, and
-       * not meant to be human-readable.  The code below converts the 0x88
-       * square coordinates to algebraic coordinates.  It also prunes an
-       * unnecessary move keys resulting from a verbose call.
-       */
-
-      var ugly_moves = generatedMoves;
-      var moves = [];
-
-      for (var i = 0, len = ugly_moves.length; i < len; i++) {
-        moves.push(make_pretty(ugly_moves[i]));
-      }
-
-      return moves;
-    },
-
     in_check: function() {
       return in_check();
-    },
-
-    in_checkmate: function() {
-      return in_checkmate();
     },
 
     game_over: function() {
@@ -702,7 +671,6 @@ export default function Chess(newstate) {
 
       make_move(move_obj);
       preGenerateMoves();
-
       return pretty_move;
     },
 
@@ -745,10 +713,6 @@ export default function Chess(newstate) {
       }
     },
 
-    preLoad: function() {
-      preGenerateMoves();
-    },
-
     getState: function() {
       return {
         board: board,
@@ -757,7 +721,8 @@ export default function Chess(newstate) {
         castling: castling,
         ep_square: ep_square,
         blackFreePieces: blackFreePieces,
-        whiteFreePieces: whiteFreePieces
+        whiteFreePieces: whiteFreePieces,
+        generatedMoves: generatedMoves.map(move => make_pretty(move))
       }
     },
 
@@ -769,6 +734,10 @@ export default function Chess(newstate) {
       ep_square = state.ep_square;
       blackFreePieces = state.blackFreePieces;
       whiteFreePieces = state.whiteFreePieces;
+      preGenerateMoves();
+    },
+
+    preLoadMoves: function() {
       preGenerateMoves();
     }
 

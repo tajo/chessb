@@ -33,6 +33,7 @@ export default function gameReducer(state = initialState, action) {
       if (engine.get(action.end)) {
         const engineOther = new Chess(state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
         engineOther.addFreePiece(engine.get(action.end));
+        engineOther.preLoadMoves();
         state = state.updateIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engineOther.getState());
       }
 

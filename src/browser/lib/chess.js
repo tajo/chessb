@@ -1,15 +1,12 @@
 import {PIECES, COLORS} from '../constants';
-import Chess from '../../common/engine';
 import {OrderedMap} from 'immutable';
 
 export function isMoveLegal(engineState, start, end) {
-  const engine = new Chess(engineState);
-  return engine.moves().some(move => move.to === end && move.from === start);
+  return engineState.generatedMoves.some(move => move.to === end && move.from === start);
 }
 
 export function isPieceMovebale(engineState, position) {
-  const engine = new Chess(engineState);
-  return engine.moves().some(move => move.from === position);
+  return engineState.generatedMoves.some(move => move.from === position);
 }
 
 export function getColor(engine) {
