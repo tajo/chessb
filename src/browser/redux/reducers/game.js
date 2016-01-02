@@ -26,7 +26,6 @@ export default function gameReducer(state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
       state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
-      const move = {from: action.start, to: action.end, promotion: action.promotion};
 
       const engine = new Chess(state.getIn([action.board, 'engine']));
 
@@ -38,7 +37,7 @@ export default function gameReducer(state = initialState, action) {
       }
 
       // make move
-      engine.move(move);
+      engine.move({from: action.start, to: action.end, promotion: action.promotion});
 
       // drop piece
       if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
@@ -52,7 +51,7 @@ export default function gameReducer(state = initialState, action) {
 
       return state
         .updateIn([action.board, 'promotion'], () => false)
-        .updateIn([action.board, 'moves'], board => board.push(Map(move)))
+        .updateIn([action.board, 'moves'], board => board.push(Map({from: action.start, to: action.end, promotion: action.promotion})))
         .updateIn([action.board, 'squareSelected'], () => null)
         .updateIn([action.board, 'engine'], () => engine.getState());
     }

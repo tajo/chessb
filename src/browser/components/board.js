@@ -7,7 +7,7 @@ import {Record} from 'immutable';
 import Component from 'react-pure-render/component';
 import Promotion from './promotion';
 import Gameover from './gameover';
-import {translatePieceReverse, getPieces} from '../lib/chess';
+import {translatePieceReverse, getPieces, getColor} from '../lib/chess';
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -46,7 +46,7 @@ class Board extends Component {
         }
         {this.props.game.getIn([this.props.board, 'promotion']) &&
           <Promotion
-            color={this.props.game.getIn([this.props.board, 'turn'])}
+            color={getColor(this.props.game.getIn([this.props.board, 'engine']))}
             finishMove={(promotion) => {
               this.props.move(
                 this.props.board,

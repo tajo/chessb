@@ -30,6 +30,7 @@ export function move(board, start, end, piece, promotion = null) {
     start: start,
     end: end,
     piece: piece,
+    promotion: promotion,
     date: moment().format()
   };
 }

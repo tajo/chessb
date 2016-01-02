@@ -12,6 +12,13 @@ export function isPieceMovebale(engineState, position) {
   return engine.moves().some(move => move.from === position);
 }
 
+export function getColor(engine) {
+  if (engine.turn === 'w') {
+    return COLORS.WHITE;
+  }
+  return COLORS.BLACK;
+}
+
 export function filterFreePieces(freePieces, color) {
   return freePieces.filter((count, piece) => {
     if (count === 0) return false;
