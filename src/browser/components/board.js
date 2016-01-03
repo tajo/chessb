@@ -58,13 +58,13 @@ class Board extends Component {
             }}
           />
         }
-        {board.map((piece, position) => {
+        {board.valueSeq().map((piece) => {
           return (
             <Square
-              color={getSquareColor(position)}
-              key={position}
-              position={position}
-              piece={piece}
+              color={getSquareColor(piece.get('position'))}
+              key={piece.get('position')}
+              position={piece.get('position')}
+              piece={piece.get('type')}
               board={this.props.board}
             />
           );

@@ -37,19 +37,19 @@ class FreePieces extends Component {
 
     return (
       <div style={rootStyle}>
-        {freePieces.map((count, piece) => {
-          const position = translatePieceReverse(piece).type;
-          const color = translatePieceReverse(piece).color;
+        {freePieces.valueSeq().map((piece) => {
+          const position = translatePieceReverse(piece.get('type')).type;
+          const color = translatePieceReverse(piece.get('type')).color;
           return (
-            <div style={squareStyle} onClick={() => this.handleClick(position, piece)}>
+            <div key={position + color} style={squareStyle} onClick={() => this.handleClick(position, piece.get('type'))}>
               <Piece
-                type={piece}
+                type={piece.get('type')}
                 canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position) && this.props.game.getIn([this.props.board, 'engine']).turn === color}
-                position={translatePieceReverse(piece).type}
+                position={translatePieceReverse(piece.get('type')).type}
                 board={this.props.board}
-                count={count}
+                count={piece.get('count')}
                 isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position &&
-                  this.props.game.getIn([this.props.board, 'squareSelected', 'piece']) === piece}
+                  this.props.game.getIn([this.props.board, 'squareSelected', 'piece']) === piece.get('type')}
               />
             </div>
           );
