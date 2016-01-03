@@ -1,6 +1,6 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
-import {COLORS, PIECES} from '../constants';
+import {COLORS, PIECES} from '../../common/constants';
 
 import bishopb from '../../../assets/chess/bishopb.png';
 import bishopw from '../../../assets/chess/bishopw.png';

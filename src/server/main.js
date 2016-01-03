@@ -24,7 +24,6 @@ const store = configureStore(io, rootReducer);
 store.subscribe(() => console.log(store.getState()));
 
 io.on('connection', (socket) => {
-  // socket.emit('action', {type: 'HELLO'});
   socket.on('action', (action) => {
     action.socketId = socket.id;
     action.remote = false;
@@ -36,7 +35,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(disconnectUser(socket.id));
     store.dispatch(disconnectUser(socket.id));
     store.dispatch(onlinecountSet(store.getState().users.get('sockets').count()));
   });

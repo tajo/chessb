@@ -1,6 +1,6 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
-import {COLORS} from '../constants';
+import {COLORS} from '../../common/constants';
 
 class Gameover extends Component {
 

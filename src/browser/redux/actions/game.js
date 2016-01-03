@@ -1,4 +1,4 @@
-import {PIECES} from '../../constants';
+import {PIECES} from '../../../common/constants';
 import moment from 'moment';
 
 export const GAME_MOVE = 'GAME_MOVE';

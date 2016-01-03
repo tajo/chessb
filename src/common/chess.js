@@ -1,4 +1,4 @@
-import {PIECES, COLORS} from '../constants';
+import {PIECES, COLORS} from './constants';
 import {OrderedMap, Map} from 'immutable';
 
 export function isMoveLegal(engineState, start, end) {

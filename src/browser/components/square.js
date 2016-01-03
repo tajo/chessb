@@ -1,11 +1,11 @@
 import React from 'react';
-import {COLORS} from '../constants';
+import {COLORS} from '../../common/constants';
 import {DropTarget} from 'react-dnd';
 import {actions as gameActions} from '../redux/actions/game';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import Piece from '../components/piece';
-import {isMoveLegal, isPieceMovebale} from '../lib/chess';
+import {isMoveLegal, isPieceMovebale} from '../../common/chess';
 import Component from 'react-pure-render/component';
 
 const squareTarget = {

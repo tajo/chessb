@@ -2,12 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Square from './square';
 import {actions as gameActions} from '../redux/actions/game';
-import {getSquareColor} from '../constants';
+import {getSquareColor} from '../../common/constants';
 import {Record} from 'immutable';
 import Component from 'react-pure-render/component';
 import Promotion from './promotion';
 import Gameover from './gameover';
-import {translatePieceReverse, getPieces, getColor} from '../lib/chess';
+import {translatePieceReverse, getPieces, getColor} from '../../common/chess';
 
 const mapStateToProps = (state) => ({
   game: state.game

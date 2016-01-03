@@ -3,7 +3,7 @@ import Component from 'react-pure-render/component';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import moment from 'moment';
-import {COLORS} from '../constants';
+import {COLORS} from '../../common/constants';
 
 const mapStateToProps = (state) => ({
   game: state.game

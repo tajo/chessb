@@ -2,7 +2,7 @@ import React from 'react';
 import Component from 'react-pure-render/component';
 import Board from '../components/board';
 import FreePieces from '../components/freePieces';
-import {COLORS} from '../constants';
+import {COLORS} from '../../common/constants';
 import Clock from './clock';
 
 import '../styles/button.scss';

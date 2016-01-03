@@ -1,5 +1,5 @@
 import React from 'react';
-import {PIECES} from '../constants';
+import {PIECES} from '../../common/constants';
 import {DragSource} from 'react-dnd';
 import Component from 'react-pure-render/component';
 
