@@ -1,4 +1,0 @@
-export const GAME_MOVE = 'GAME_MOVE';
-export const GAME_SELECT_SQUARE = 'GAME_SELECT_SQUARE';
-export const GAME_SHOW_PROMOTION_POPUP = 'GAME_SHOW_PROMOTION_POPUP';
-export const GAME_END = 'GAME_END';

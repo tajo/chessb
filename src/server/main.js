@@ -6,10 +6,8 @@ import frontend from './frontend';
 import http from 'http';
 import socketIo from 'socket.io';
 import configureStore from '../common/configureStore';
-import rootReducer from './redux/reducers';
-import {disconnectUser} from './redux/actions/users';
-import {onlinecountSet} from './redux/actions/meta';
-
+import rootReducer from './redux/reducer';
+import * as actions from './redux/actions';
 
 const {port} = config;
 const app = express();
@@ -21,7 +19,10 @@ server.listen(port, () => {
 });
 
 const store = configureStore(io, rootReducer);
-store.subscribe(() => console.log(store.getState()));
+store.subscribe(() => {
+  console.log('=============***====================================');
+  console.log(store.getState());
+});
 
 io.on('connection', (socket) => {
   socket.on('action', (action) => {
@@ -30,13 +31,14 @@ io.on('connection', (socket) => {
     console.log(action);
     store.dispatch(action);
     if (action.type === 'USER_AUTHENTICATE') {
-      store.dispatch(onlinecountSet(store.getState().users.get('sockets').count()));
+      store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
+      store.dispatch(actions.addPlayer(store.getState().getIn(['sockets', socket.id])));
     }
   });
 
   socket.on('disconnect', () => {
-    store.dispatch(disconnectUser(socket.id));
-    store.dispatch(onlinecountSet(store.getState().users.get('sockets').count()));
+    store.dispatch(actions.disconnectUser(socket.id));
+    store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
   });
 });
 
