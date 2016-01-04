@@ -3,17 +3,18 @@ export const USER_DISCONNECT = 'USER_DISCONNECT';
 export const META_ONLINECOUNTSET = 'META_ONLINECOUNTSET';
 export const GAME_MOVE = 'GAME_MOVE';
 export const GAMES_ADD_PLAYER = 'GAMES_ADD_PLAYER';
+export const GAMES_FIND_SEAT = 'GAMES_FIND_SEAT';
 
 export const actions = {
   authUser,
   disconnectUser,
   onlinecountSet,
-  addPlayer,
+  findSeat
 };
 
-export function addPlayer(userId) {
+export function findSeat(userId) {
   return {
-    type: GAMES_ADD_PLAYER,
+    type: GAMES_FIND_SEAT,
     userId: userId
   };
 }

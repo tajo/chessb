@@ -30,9 +30,11 @@ io.on('connection', (socket) => {
     action.remote = false;
     console.log(action);
     store.dispatch(action);
+    const userId = store.getState().getIn(['sockets', socket.id]);
     if (action.type === 'USER_AUTHENTICATE') {
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
-      store.dispatch(actions.addPlayer(store.getState().getIn(['sockets', socket.id])));
+      store.dispatch(actions.findSeat(userId));
+      store.dispatch({type: 'JOIN_GAME', room: socket.id, gameId: store.getState().getIn(['users', userId, 'gameId'])});
     }
   });
 
