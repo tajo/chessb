@@ -69,6 +69,7 @@ export default function gameReducer(state = initialState, action) {
       const prom = Map({from: action.start, to: action.end});
       return state.updateIn([action.board, 'promotion'], () => prom);
     }
+
   }
   return state;
 }

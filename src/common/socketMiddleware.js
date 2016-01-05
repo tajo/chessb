@@ -10,5 +10,6 @@ export default io => () => next => action => {
   if (action.broadcast) {
     io.sockets.emit('action', action);
   }
+
   return next(action);
 };

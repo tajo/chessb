@@ -12,5 +12,6 @@ import HomeView from '../views/HomeView';
 export default (
   <Route path="/" component={CoreLayout}>
     <IndexRoute component={HomeView} />
+    <Route path="/game/:gameId" component={HomeView} />
   </Route>
 );

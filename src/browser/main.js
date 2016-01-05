@@ -15,8 +15,8 @@ const store = configureStore(socket, rootReducer);
 
 store.dispatch(authUser(store.getState().user.get('hashId')));
 socket.on('action', action => {
-  action.broadcast = false;
-  action.room = false;
+  if (action.broadcast) delete action.broadcast;
+  if (action.room) delete action.room;
   return store.dispatch(action);
 });
 

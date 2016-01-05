@@ -27,13 +27,14 @@ store.subscribe(() => {
 io.on('connection', (socket) => {
   socket.on('action', (action) => {
     action.socketId = socket.id;
-    action.remote = false;
+    if (action.remote) delete action.remote;
     console.log(action);
     store.dispatch(action);
     const userId = store.getState().getIn(['sockets', socket.id]);
     if (action.type === 'USER_AUTHENTICATE') {
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
+      store.dispatch({type: '@@router/UPDATE_PATH', payload: {path: `/game/${store.getState().getIn(['users', userId, 'gameId'])}`, state: null, replace: false, avoidRouterUpdate: false}, room: socket.id});
       store.dispatch({type: 'JOIN_GAME', room: socket.id, gameId: store.getState().getIn(['users', userId, 'gameId'])});
     }
   });
