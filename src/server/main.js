@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     if (action.type === 'USER_AUTHENTICATE') {
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
-      store.dispatch({type: '@@router/UPDATE_PATH', payload: {path: `/game/${store.getState().getIn(['users', userId, 'gameId'])}`, state: null, replace: false, avoidRouterUpdate: false}, room: socket.id});
+      store.dispatch({type: '@@router/UPDATE_PATH', payload: {path: `/game/${store.getState().getIn(['users', userId, 'gameId'])}`, state: null, replace: true, avoidRouterUpdate: false}, room: socket.id});
       store.dispatch({type: 'JOIN_GAME', room: socket.id, gameId: store.getState().getIn(['users', userId, 'gameId'])});
     }
   });
