@@ -3,7 +3,7 @@ import Component from 'react-pure-render/component';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import moment from 'moment';
-import {COLORS} from '../../common/constants';
+import {COLORS, GAME_TIME} from '../../common/constants';
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -19,7 +19,11 @@ class Clock extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {counter: moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate')))};
+    if (!this.props.game.get('startDate') || moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate')) < 0)) {
+      this.state = {counter: GAME_TIME};
+    } else {
+      this.state = {counter: moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate')))};
+    }
   }
 
   componentWillReceiveProps(newProps) {
@@ -47,6 +51,13 @@ class Clock extends Component {
   }
 
   tick() {
+    if (moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate'))) < 0) {
+      return;
+    }
+    if (!this.props.game.get('startDate')) {
+      setTimeout(() => this.tick(), 1000);
+      return;
+    }
     this.setState((prevState, props) => {
       if (props.color === COLORS.WHITE && !(props.game.getIn([props.board, 'dates']).count() % 2)) {
         return {counter: prevState.counter - 1000};

@@ -1,3 +1,5 @@
+export const GAME_TIME = 194000;
+
 export const COLORS = {
   BLACK: 'BLACK',
   WHITE: 'WHITE'

@@ -2,7 +2,6 @@ import * as actions from '../actions/game';
 import {Record, List, Map} from 'immutable';
 import {translatePieceReverse, getPieceColor} from '../../../common/chess';
 import Chess from '../../../common/engine';
-import moment from 'moment';
 
 const BoardState = Record({
   engine: null,
@@ -16,8 +15,8 @@ const InitialState = Record({
   aBoard: new BoardState({engine: (new Chess()).getState()}),
   bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
-  startDate: moment().format(),
-  endDate: moment().add('194', 's').format()
+  startDate: null,
+  endDate: null
 });
 
 const initialState = new InitialState;
@@ -25,7 +24,7 @@ const initialState = new InitialState;
 export default function gameReducer(state = initialState, action) {
   switch (action.type) {
     case actions.GAME_MOVE: {
-      state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
+      // state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
 
       const engine = new Chess(state.getIn([action.board, 'engine']));
 
