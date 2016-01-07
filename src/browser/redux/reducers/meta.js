@@ -1,4 +1,4 @@
-import * as actions from '../../../server/redux/actions/meta';
+import * as actions from '../actions/meta';
 import {Record} from 'immutable';
 
 const InitialState = Record({
