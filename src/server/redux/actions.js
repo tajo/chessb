@@ -4,6 +4,7 @@ export const META_ONLINECOUNTSET = 'META_ONLINECOUNTSET';
 export const GAME_MOVE = 'GAME_MOVE';
 export const GAMES_ADD_PLAYER = 'GAMES_ADD_PLAYER';
 export const GAMES_FIND_SEAT = 'GAMES_FIND_SEAT';
+export const JOIN_BOARD = 'JOIN_BOARD';
 
 export const actions = {
   authUser,
@@ -38,5 +39,26 @@ export function disconnectUser(socketId) {
   return {
     type: USER_DISCONNECT,
     socketId: socketId
+  };
+}
+
+export function pushUrl(socketId, url) {
+  return {
+    type: '@@router/UPDATE_PATH',
+    payload: {
+      path: url,
+      state: null,
+      replace: true,
+      avoidRouterUpdate: false
+    },
+    room: socketId
+  };
+}
+
+export function joinBoard(socketId, game) {
+  return {
+    type: JOIN_BOARD,
+    room: socketId,
+    game: game
   };
 }

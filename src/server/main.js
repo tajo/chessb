@@ -20,7 +20,7 @@ server.listen(port, () => {
 
 const store = configureStore(io, rootReducer);
 store.subscribe(() => {
-  console.log('=============***====================================');
+  console.log('=================================================');
   console.log(store.getState());
 });
 
@@ -34,8 +34,10 @@ io.on('connection', (socket) => {
     if (action.type === 'USER_AUTHENTICATE') {
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
-      store.dispatch({type: '@@router/UPDATE_PATH', payload: {path: `/game/${store.getState().getIn(['users', userId, 'gameId'])}`, state: null, replace: true, avoidRouterUpdate: false}, room: socket.id});
-      store.dispatch({type: 'JOIN_GAME', room: socket.id, gameId: store.getState().getIn(['users', userId, 'gameId'])});
+      const gameId = store.getState().getIn(['users', userId, 'gameId']);
+      store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
+      store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));
+      socket.join(gameId);
     }
   });
 
