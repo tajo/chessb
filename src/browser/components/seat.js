@@ -22,9 +22,10 @@ class Seat extends Component {
     joinLeaveGame: React.PropTypes.func.isRequired
   }
 
-  renderName(userId) {
+  renderName(userId, myUserId) {
+    const you = userId === myUserId ? (<b style={{color: 'darkred'}}>YOU!</b>) : null;
     return (
-      <div>{userId ? (<a href="#">{userId}</a>) : 'empty'}</div>
+      <div>{userId ? (<div><a href="#">{userId}</a> {you}</div>) : 'empty'}</div>
     );
   }
 
@@ -41,15 +42,15 @@ class Seat extends Component {
 
     return (
       <div>
-        {isBefore && this.renderName(userId)}
+        {isBefore && this.renderName(userId, myUserId)}
         <button
           className="pureButton"
-          disabled={(checkA === myUserId || checkB === myUserId)}
+          disabled={(checkA === myUserId || checkB === myUserId || (userId !== myUserId && userId))}
           onClick={() => this.props.joinLeaveGame(this.props.board, this.props.color, this.props.user.gameId)}
         >
-          {userId ? 'Leave Game' : 'Join Game'}
+          {(userId && userId === myUserId) ? 'Leave Game' : 'Join Game'}
         </button>
-        {!isBefore && this.renderName(userId)}
+        {!isBefore && this.renderName(userId, myUserId)}
       </div>
     );
   }

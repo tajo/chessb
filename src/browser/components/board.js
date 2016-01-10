@@ -10,13 +10,15 @@ import Gameover from './gameover';
 import {translatePieceReverse, getPieces, getColor} from '../../common/chess';
 
 const mapStateToProps = (state) => ({
-  game: state.game
+  game: state.game,
+  user: state.user
 });
 
 class Board extends Component {
 
   static propTypes = {
     board: React.PropTypes.string.isRequired,
+    isReversed: React.PropTypes.bool,
     game: React.PropTypes.instanceOf(Record).isRequired,
     move: React.PropTypes.func.isRequired
   }
@@ -31,9 +33,16 @@ class Board extends Component {
       flexWrap: 'wrap'
     };
 
-    const board = this.props.board === 'bBoard'
+    let board = null;
+    if (this.props.isReversed) {
+      board = this.props.board === 'bBoard'
+        ? getPieces(this.props.game.get(this.props.board).get('engine').board)
+        : getPieces(this.props.game.get(this.props.board).get('engine').board).reverse();
+    } else {
+      board = this.props.board === 'bBoard'
         ? getPieces(this.props.game.get(this.props.board).get('engine').board).reverse()
         : getPieces(this.props.game.get(this.props.board).get('engine').board);
+    }
 
     return (
       <div style={styles}>
