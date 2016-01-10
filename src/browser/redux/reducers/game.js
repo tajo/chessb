@@ -1,4 +1,4 @@
-import * as actions from '../actions/game';
+import actions from '../../../common/actionConstants';
 import {Record, List, Map} from 'immutable';
 import {translatePieceReverse, getPieceColor} from '../../../common/chess';
 import Chess from '../../../common/engine';
@@ -72,7 +72,7 @@ export default function gameReducer(state = initialState, action) {
       return state.updateIn([action.board, 'promotion'], () => prom);
     }
 
-    case actions.SEAT_CHANGED: {
+    case actions.SERVER_SEAT_CHANGED: {
       return state.updateIn([action.board, action.color], () => action.userId);
     }
 

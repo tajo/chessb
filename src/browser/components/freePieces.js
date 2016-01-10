@@ -3,7 +3,7 @@ import Component from 'react-pure-render/component';
 import Piece from './piece';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
-import {actions as gameActions} from '../redux/actions/game';
+import {actionCreators as gameActions} from '../redux/actions/game';
 import {translatePieceReverse, isPieceMovebale, getFreePieces} from '../../common/chess';
 
 const mapStateToProps = (state) => ({

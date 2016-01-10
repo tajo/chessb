@@ -63,6 +63,7 @@
     "ip": "^1.0.2",
     "isomorphic-fetch": "^2.1.1",
     "jsdom": "^7.0.2",
+    "keymirror": "^0.1.1",
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
     "make-error": "^1.0.4",

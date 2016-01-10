@@ -1,26 +1,8 @@
-export const USER_AUTHENTICATE = 'USER_AUTHENTICATE';
-export const USER_DISCONNECT = 'USER_DISCONNECT';
-export const META_ONLINECOUNTSET = 'META_ONLINECOUNTSET';
-export const GAME_MOVE = 'GAME_MOVE';
-export const GAMES_ADD_PLAYER = 'GAMES_ADD_PLAYER';
-export const GAMES_FIND_SEAT = 'GAMES_FIND_SEAT';
-export const JOIN_BOARD = 'JOIN_BOARD';
-export const GAME_JOIN_LEAVE = 'GAME_JOIN_LEAVE';
-export const SEAT_CHANGED = 'SEAT_CHANGED';
-
-export const actions = {
-  authUser,
-  disconnectUser,
-  onlinecountSet,
-  findSeat,
-  pushUrl,
-  joinBoard,
-  seatChanged
-};
+import actions from '../../common/actionConstants';
 
 export function findSeat(userId) {
   return {
-    type: GAMES_FIND_SEAT,
+    type: actions.SERVER_GAMES_FIND_SEAT,
     userId: userId
   };
 }
@@ -28,7 +10,7 @@ export function findSeat(userId) {
 
 export function onlinecountSet(count) {
   return {
-    type: META_ONLINECOUNTSET,
+    type: actions.SERVER_META_ONLINECOUNTSET,
     onlinecount: count,
     broadcast: true
   };
@@ -36,7 +18,7 @@ export function onlinecountSet(count) {
 
 export function authUser(socketId, userId) {
   return {
-    type: USER_AUTHENTICATE,
+    type: actions.SERVER_USER_AUTHENTICATE,
     userId: userId,
     room: socketId
   };
@@ -44,7 +26,7 @@ export function authUser(socketId, userId) {
 
 export function disconnectUser(socketId) {
   return {
-    type: USER_DISCONNECT,
+    type: actions.SERVER_USER_DISCONNECT,
     socketId: socketId
   };
 }
@@ -64,7 +46,7 @@ export function pushUrl(socketId, url) {
 
 export function joinBoard(socketId, game) {
   return {
-    type: JOIN_BOARD,
+    type: actions.SERVER_JOIN_BOARD,
     room: socketId,
     game: game
   };
@@ -72,7 +54,7 @@ export function joinBoard(socketId, game) {
 
 export function seatChanged(gameId, board, color, userId) {
   return {
-    type: SEAT_CHANGED,
+    type: actions.SERVER_SEAT_CHANGED,
     room: gameId,
     gameId: gameId,
     board: board,

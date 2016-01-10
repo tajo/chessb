@@ -56,6 +56,7 @@ io.on('connection', (socket) => {
   });
 });
 
+
 app.use('/api/v1', api);
 app.use(frontend);
 app.use(errorHandler);

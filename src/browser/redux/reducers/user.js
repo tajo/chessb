@@ -1,4 +1,4 @@
-import * as actions from '../actions/user';
+import actions from '../../../common/actionConstants';
 import shortid from 'shortid';
 import {Record} from 'immutable';
 
@@ -24,12 +24,12 @@ const initialState = new InitialState;
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
-    case actions.USER_AUTHENTICATE: {
+    case actions.SERVER_USER_AUTHENTICATE: {
       if (!action.userId) break;
       return state.update('userId', () => action.userId);
     }
 
-    case actions.JOIN_BOARD: {
+    case actions.SERVER_JOIN_BOARD: {
       return state.update('gameId', () => action.game.gameId);
     }
   }

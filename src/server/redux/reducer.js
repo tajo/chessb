@@ -1,4 +1,4 @@
-import * as actions from './actions';
+import actions from '../../common/actionConstants';
 import {Record, List, Map, OrderedMap} from 'immutable';
 // import {translatePieceReverse, getPieceColor} from '../../common/chess';
 import Chess from '../../common/engine';
@@ -40,6 +40,7 @@ const initialState = new InitialState;
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.USER_AUTHENTICATE: {
+      console.log('auth called');
       return state
         .update('sockets', sockets => sockets.set(action.socketId, action.hashId))
         .update('users', users => users.set(action.hashId, new UserRecord({
@@ -49,12 +50,11 @@ export default function reducer(state = initialState, action) {
         })));
     }
 
-    case actions.USER_DISCONNECT: {
+    case actions.SERVER_USER_DISCONNECT: {
       return state.update('sockets', sockets => sockets.delete(action.socketId));
     }
 
-    case actions.GAMES_FIND_SEAT: {
-      console.log('hola');
+    case actions.SERVER_GAMES_FIND_SEAT: {
       const freeSeatBoards = state.get('games').filter(game => {
         return !game.getIn(['aBoard', 'white']) ||
                !game.getIn(['aBoard', 'black']) ||
@@ -73,13 +73,9 @@ export default function reducer(state = initialState, action) {
     }
 
     case actions.GAME_JOIN_LEAVE: {
-      console.log('shit');
       const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
       const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
-      console.log(checkA);
-      console.log(checkB);
       if (checkA !== action.userId && checkB !== action.userId) {
-        console.log('jsem tady');
         return state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
           if (!userId) return action.userId;
           if (userId === action.userId) return null;

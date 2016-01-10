@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Square from './square';
-import {actions as gameActions} from '../redux/actions/game';
+import {actionCreators as gameActions} from '../redux/actions/game';
 import {getSquareColor} from '../../common/constants';
 import {Record} from 'immutable';
 import Component from 'react-pure-render/component';

@@ -3,7 +3,7 @@ import Component from 'react-pure-render/component';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import {COLORS} from '../../common/constants';
-import {actions as gameActions} from '../redux/actions/game';
+import {actionCreators as gameActions} from '../redux/actions/game';
 
 import '../styles/button.scss';
 

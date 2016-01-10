@@ -1,13 +1,12 @@
-export const USER_AUTHENTICATE = 'USER_AUTHENTICATE';
-export const JOIN_BOARD = 'JOIN_BOARD';
+import actions from '../../../common/actionConstants';
 
-export const actions = {
+export const actionCreators = {
   authUser
 };
 
 export function authUser(hashId) {
   return {
-    type: USER_AUTHENTICATE,
+    type: actions.USER_AUTHENTICATE,
     hashId: hashId,
     remote: true
   };
