@@ -73,7 +73,10 @@ export default function gameReducer(state = initialState, action) {
     }
 
     case actions.SERVER_SEAT_CHANGED: {
-      return state.updateIn([action.board, action.color], () => action.userId);
+      return state
+        .updateIn(['startDate'], () => action.startDate)
+        .updateIn(['endDate'], () => action.endDate)
+        .updateIn([action.board, action.color], () => action.userId);
     }
 
     case actions.SERVER_SYNC_BOARD: {

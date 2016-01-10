@@ -7,6 +7,8 @@ import {Record} from 'immutable';
 import Component from 'react-pure-render/component';
 import Promotion from './promotion';
 import Gameover from './gameover';
+import Startcounter from './startcounter';
+import moment from 'moment';
 import {translatePieceReverse, getPieces, getColor} from '../../common/chess';
 
 const mapStateToProps = (state) => ({
@@ -44,6 +46,14 @@ class Board extends Component {
         : getPieces(this.props.game.get(this.props.board).get('engine').board);
     }
 
+    let counter = 0;
+    if (this.props.game.get('startDate')) {
+      const diff = moment(this.props.game.get('startDate')).diff(moment());
+      if (diff > 0) {
+        counter = diff;
+      }
+    }
+
     return (
       <div style={styles}>
         {this.props.game.get('winner') &&
@@ -53,6 +63,7 @@ class Board extends Component {
             board={this.props.board}
           />
         }
+        <Startcounter counter={counter} />
         {this.props.game.getIn([this.props.board, 'promotion']) &&
           <Promotion
             color={getColor(this.props.game.getIn([this.props.board, 'engine']))}

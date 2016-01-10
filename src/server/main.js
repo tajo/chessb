@@ -20,7 +20,7 @@ server.listen(port, () => {
 
 const store = configureStore(io, rootReducer);
 store.subscribe(() => {
-  console.log('=================================================');
+  console.log('================================================');
   console.log(store.getState());
 });
 
@@ -46,7 +46,9 @@ io.on('connection', (socket) => {
 
     if (action.type === 'JOIN_LEAVE_GAME') {
       const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
-      store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId));
+      const startDate = store.getState().getIn(['games', action.gameId, 'startDate']);
+      const endDate = store.getState().getIn(['games', action.gameId, 'endDate']);
+      store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate, endDate));
     }
   });
 

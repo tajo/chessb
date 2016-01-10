@@ -1,9 +1,9 @@
 import actions from '../../common/actionConstants';
 import {Record, List, Map, OrderedMap} from 'immutable';
-// import {translatePieceReverse, getPieceColor} from '../../common/chess';
 import Chess from '../../common/engine';
 import shortid from 'shortid';
-import {COLORS} from '../../common/constants';
+import {COLORS, GAME_TIME, GAME_DELAY} from '../../common/constants';
+import moment from 'moment';
 
 const BoardState = Record({
   engine: null,
@@ -76,13 +76,36 @@ export default function reducer(state = initialState, action) {
       const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
       const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
       if (checkA !== action.userId && checkB !== action.userId) {
-        return state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
+        state = state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
           if (!userId) return action.userId;
           if (userId === action.userId) return null;
           return userId;
         });
       }
+
+      // if game is full start it!
+      const aBoardWhite = state.getIn(['games', action.gameId, 'aBoard', COLORS.WHITE]);
+      const aBoardBlack = state.getIn(['games', action.gameId, 'aBoard', COLORS.BLACK]);
+      const bBoardWhite = state.getIn(['games', action.gameId, 'bBoard', COLORS.WHITE]);
+      const bBoardBlack = state.getIn(['games', action.gameId, 'bBoard', COLORS.BLACK]);
+      const startDate = state.getIn(['games', action.gameId, 'startDate']);
+
+      if (aBoardWhite && aBoardBlack && bBoardWhite && bBoardBlack) {
+        if (!startDate) {
+          state = state
+            .updateIn(['games', action.gameId, 'startDate'], () => moment().add(GAME_DELAY, 'ms').format())
+            .updateIn(['games', action.gameId, 'endDate'], () => moment().add(GAME_TIME + GAME_DELAY, 'ms').format());
+        }
+      } else {
+        if (startDate && moment(startDate).diff(moment()) > 0) {
+          state = state
+            .updateIn(['games', action.gameId, 'startDate'], () => null)
+            .updateIn(['games', action.gameId, 'endDate'], () => null);
+        }
+      }
+      return state;
     }
+
   }
   return state;
 }

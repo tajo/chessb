@@ -34,9 +34,9 @@ class Gameover extends Component {
     return (
       <div style={overlayStyle}>
         <div style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
-          <div style={{backgroundColor: 'rgba(255, 255, 255, 0.8)', fontSize: 30, padding: 20, fontWeight: 'bold'}}>
+          <div style={{backgroundColor: 'rgba(255, 255, 255, 0.8)', fontSize: '2vw', padding: 20, fontWeight: 'bold'}}>
             GAME OVER
-            <div style={{fontSize: 20, textAlign: 'center'}}>
+            <div style={{fontSize: '1.5vw', textAlign: 'center'}}>
               {this.getWinner()}
             </div>
           </div>
