@@ -29,7 +29,7 @@ export default function userReducer(state = initialState, action) {
       return state.update('userId', () => action.userId);
     }
 
-    case actions.SERVER_JOIN_BOARD: {
+    case actions.SERVER_SYNC_BOARD: {
       return state.update('gameId', () => action.game.gameId);
     }
   }

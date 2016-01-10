@@ -46,7 +46,7 @@ export function pushUrl(socketId, url) {
 
 export function joinBoard(socketId, game) {
   return {
-    type: actions.SERVER_JOIN_BOARD,
+    type: actions.SERVER_SYNC_BOARD,
     room: socketId,
     game: game
   };

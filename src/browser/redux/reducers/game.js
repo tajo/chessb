@@ -76,6 +76,33 @@ export default function gameReducer(state = initialState, action) {
       return state.updateIn([action.board, action.color], () => action.userId);
     }
 
+    case actions.SERVER_SYNC_BOARD: {
+      return new InitialState({
+        gameId: action.game.gameId,
+        aBoard: new BoardState({
+          engine: action.game.aBoard.engine,
+          promotion: false,
+          moves: List(action.game.aBoard.moves),
+          dates: List(action.game.aBoard.dates),
+          squareSelected: null,
+          WHITE: action.game.aBoard.WHITE,
+          BLACK: action.game.aBoard.BLACK
+        }),
+        bBoard: new BoardState({
+          engine: action.game.bBoard.engine,
+          promotion: false,
+          moves: List(action.game.bBoard.moves),
+          dates: List(action.game.bBoard.dates),
+          squareSelected: null,
+          WHITE: action.game.bBoard.WHITE,
+          BLACK: action.game.bBoard.BLACK
+        }),
+        winner: action.game.winner,
+        startDate: action.game.startDate,
+        endDate: action.game.endDate
+      });
+    }
+
   }
   return state;
 }
