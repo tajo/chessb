@@ -8,10 +8,13 @@ const BoardState = Record({
   promotion: false,
   moves: List(),
   dates: List(),
-  squareSelected: null
+  squareSelected: null,
+  WHITE: null,
+  BLACK: null
 });
 
 const InitialState = Record({
+  gameId: null,
   aBoard: new BoardState({engine: (new Chess()).getState()}),
   bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
@@ -67,6 +70,10 @@ export default function gameReducer(state = initialState, action) {
     case actions.GAME_SHOW_PROMOTION_POPUP: {
       const prom = Map({from: action.start, to: action.end});
       return state.updateIn([action.board, 'promotion'], () => prom);
+    }
+
+    case actions.SEAT_CHANGED: {
+      return state.updateIn([action.board, action.color], () => action.userId);
     }
 
   }

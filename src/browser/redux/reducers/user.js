@@ -15,15 +15,22 @@ function getHashId() {
 }
 
 const InitialState = Record({
-  hashId: getHashId()
+  hashId: getHashId(),
+  userId: null,
+  gameId: null
 });
 
 const initialState = new InitialState;
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
-    case actions.COUNTER_INCREMENT: {
-      return state.update('counter', counter => counter + 1);
+    case actions.USER_AUTHENTICATE: {
+      if (!action.userId) break;
+      return state.update('userId', () => action.userId);
+    }
+
+    case actions.JOIN_BOARD: {
+      return state.update('gameId', () => action.game.gameId);
     }
   }
   return state;

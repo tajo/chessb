@@ -5,10 +5,13 @@ export const GAME_MOVE = 'GAME_MOVE';
 export const GAME_SELECT_SQUARE = 'GAME_SELECT_SQUARE';
 export const GAME_SHOW_PROMOTION_POPUP = 'GAME_SHOW_PROMOTION_POPUP';
 export const GAME_END = 'GAME_END';
+export const GAME_JOIN_LEAVE = 'GAME_JOIN_LEAVE';
+export const SEAT_CHANGED = 'SEAT_CHANGED';
 
 export const actions = {
   move,
-  selectSquare
+  selectSquare,
+  joinLeaveGame
 };
 
 export function move(board, start, end, piece, promotion = null) {
@@ -41,5 +44,15 @@ export function selectSquare(board, position, piece) {
     board: board,
     position: position,
     piece: piece
+  };
+}
+
+export function joinLeaveGame(board, color, gameId) {
+  return {
+    type: GAME_JOIN_LEAVE,
+    board: board,
+    color: color,
+    gameId: gameId,
+    remote: true
   };
 }

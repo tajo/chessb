@@ -3,13 +3,14 @@ import {Record, List, Map, OrderedMap} from 'immutable';
 // import {translatePieceReverse, getPieceColor} from '../../common/chess';
 import Chess from '../../common/engine';
 import shortid from 'shortid';
+import {COLORS} from '../../common/constants';
 
 const BoardState = Record({
   engine: null,
   moves: List(),
   dates: List(),
-  white: null,
-  black: null
+  WHITE: null,
+  BLACK: null
 });
 
 const Game = Record({
@@ -47,9 +48,11 @@ export default function reducer(state = initialState, action) {
           socketId: action.socketId
         })));
     }
+
     case actions.USER_DISCONNECT: {
       return state.update('sockets', sockets => sockets.delete(action.socketId));
     }
+
     case actions.GAMES_FIND_SEAT: {
       console.log('hola');
       const freeSeatBoards = state.get('games').filter(game => {
@@ -67,6 +70,22 @@ export default function reducer(state = initialState, action) {
       return state
         .updateIn(['users', action.userId, 'gameId'], () => newGameId)
         .update('games', games => games.set(newGameId, new Game({gameId: newGameId})));
+    }
+
+    case actions.GAME_JOIN_LEAVE: {
+      console.log('shit');
+      const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
+      const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
+      console.log(checkA);
+      console.log(checkB);
+      if (checkA !== action.userId && checkB !== action.userId) {
+        console.log('jsem tady');
+        return state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
+          if (!userId) return action.userId;
+          if (userId === action.userId) return null;
+          return userId;
+        });
+      }
     }
   }
   return state;

@@ -28,16 +28,25 @@ io.on('connection', (socket) => {
   socket.on('action', (action) => {
     action.socketId = socket.id;
     if (action.remote) delete action.remote;
-    console.log(action);
+    let userId = store.getState().getIn(['sockets', socket.id]);
+    action.userId = userId;
     store.dispatch(action);
-    const userId = store.getState().getIn(['sockets', socket.id]);
+    console.log(action);
+    if (!userId) userId = store.getState().getIn(['sockets', socket.id]);
+
     if (action.type === 'USER_AUTHENTICATE') {
+      store.dispatch(actions.authUser(socket.id, userId));
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
       const gameId = store.getState().getIn(['users', userId, 'gameId']);
       store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
       store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));
       socket.join(gameId);
+    }
+
+    if (action.type === 'GAME_JOIN_LEAVE') {
+      const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
+      store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId));
     }
   });
 

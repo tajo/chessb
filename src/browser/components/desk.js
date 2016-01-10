@@ -4,8 +4,7 @@ import Board from '../components/board';
 import FreePieces from '../components/freePieces';
 import {COLORS} from '../../common/constants';
 import Clock from './clock';
-
-import '../styles/button.scss';
+import Seat from './seat';
 
 class Desk extends Component {
 
@@ -26,8 +25,10 @@ class Desk extends Component {
     return (
       <div style={barStyle}>
         <div style={{display: 'block', textAlign: 'center'}}>
-          <div><a href="#">tajo (1890)</a></div>
-          <button className="pureButton">Join Game</button>
+          <Seat
+            board={this.props.board}
+            color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
+          />
           <Clock
             board={this.props.board}
             color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
@@ -37,8 +38,10 @@ class Desk extends Component {
             board={this.props.board}
             color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
           />
-          <button className="pureButton">Leave Game</button>
-          <div><a href="#">garry (2803)</a></div>
+          <Seat
+            board={this.props.board}
+            color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
+          />
         </div>
       </div>
     );
