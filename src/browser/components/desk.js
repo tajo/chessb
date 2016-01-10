@@ -8,6 +8,7 @@ import {COLORS} from '../../common/constants';
 import Clock from './clock';
 import Seat from './seat';
 
+
 const mapStateToProps = (state) => ({
   game: state.game,
   user: state.user
@@ -18,7 +19,8 @@ class Desk extends Component {
   static propTypes = {
     board: React.PropTypes.string.isRequired,
     game: React.PropTypes.instanceOf(Record).isRequired,
-    user: React.PropTypes.instanceOf(Record).isRequired
+    user: React.PropTypes.instanceOf(Record).isRequired,
+    counter: React.PropTypes.number
   }
 
   renderBar(isReversed) {
@@ -78,7 +80,7 @@ class Desk extends Component {
             color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
             board={this.props.board}
           />
-          <Board board={this.props.board} isReversed={isReversed} />
+          <Board board={this.props.board} isReversed={isReversed} counter={this.props.counter} />
           <FreePieces
             color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
             board={this.props.board}

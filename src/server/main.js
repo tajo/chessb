@@ -20,7 +20,7 @@ server.listen(port, () => {
 
 const store = configureStore(io, rootReducer);
 store.subscribe(() => {
-  console.log('================================================');
+  console.log('=================================================');
   console.log(store.getState());
 });
 
