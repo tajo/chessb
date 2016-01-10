@@ -2,7 +2,7 @@ import actions from '../../common/actionConstants';
 
 export function findSeat(userId) {
   return {
-    type: actions.SERVER_GAMES_FIND_SEAT,
+    type: actions.SERVER_FIND_SEAT,
     userId: userId
   };
 }
@@ -10,7 +10,7 @@ export function findSeat(userId) {
 
 export function onlinecountSet(count) {
   return {
-    type: actions.SERVER_META_ONLINECOUNTSET,
+    type: actions.SERVER_ONLINECOUNT_UPDATE,
     onlinecount: count,
     broadcast: true
   };

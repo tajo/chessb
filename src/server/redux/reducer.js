@@ -54,7 +54,7 @@ export default function reducer(state = initialState, action) {
       return state.update('sockets', sockets => sockets.delete(action.socketId));
     }
 
-    case actions.SERVER_GAMES_FIND_SEAT: {
+    case actions.SERVER_FIND_SEAT: {
       const freeSeatBoards = state.get('games').filter(game => {
         return !game.getIn(['aBoard', 'white']) ||
                !game.getIn(['aBoard', 'black']) ||
@@ -72,7 +72,7 @@ export default function reducer(state = initialState, action) {
         .update('games', games => games.set(newGameId, new Game({gameId: newGameId})));
     }
 
-    case actions.GAME_JOIN_LEAVE: {
+    case actions.JOIN_LEAVE_GAME: {
       const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
       const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
       if (checkA !== action.userId && checkB !== action.userId) {

@@ -9,7 +9,7 @@ const initialState = new InitialState;
 
 export default function counterReducer(state = initialState, action) {
   switch (action.type) {
-    case actions.SERVER_META_ONLINECOUNTSET: {
+    case actions.SERVER_ONLINECOUNT_UPDATE: {
       return state.update('onlinecount', () => action.onlinecount);
     }
   }
