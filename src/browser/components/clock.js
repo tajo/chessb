@@ -45,10 +45,7 @@ class Clock extends Component {
   }
 
   tick() {
-    if (moment(this.props.game.get('startDate')).isAfter(moment())) {
-      return;
-    }
-    if (!this.props.game.get('startDate')) {
+    if (!this.props.game.get('startDate') || moment(this.props.game.get('startDate')).isAfter(moment())) {
       setTimeout(() => this.tick(), 1000);
       return;
     }
