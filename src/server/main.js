@@ -47,8 +47,7 @@ io.on('connection', (socket) => {
     if (action.type === 'JOIN_LEAVE_GAME') {
       const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
       const startDate = store.getState().getIn(['games', action.gameId, 'startDate']);
-      const endDate = store.getState().getIn(['games', action.gameId, 'endDate']);
-      store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate, endDate));
+      store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
     }
   });
 

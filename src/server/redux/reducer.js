@@ -19,7 +19,7 @@ const Game = Record({
   bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
   startDate: null,
-  endDate: null
+  gameTime: GAME_TIME
 });
 
 const UserRecord = Record({
@@ -92,15 +92,11 @@ export default function reducer(state = initialState, action) {
 
       if (aBoardWhite && aBoardBlack && bBoardWhite && bBoardBlack) {
         if (!startDate) {
-          state = state
-            .updateIn(['games', action.gameId, 'startDate'], () => moment().add(GAME_DELAY, 'ms').format())
-            .updateIn(['games', action.gameId, 'endDate'], () => moment().add(GAME_TIME + GAME_DELAY, 'ms').format());
+          state = state.updateIn(['games', action.gameId, 'startDate'], () => moment().add(GAME_DELAY, 'ms').format());
         }
       } else {
         if (startDate && moment(startDate).diff(moment()) > 0) {
-          state = state
-            .updateIn(['games', action.gameId, 'startDate'], () => null)
-            .updateIn(['games', action.gameId, 'endDate'], () => null);
+          state = state.updateIn(['games', action.gameId, 'startDate'], () => null);
         }
       }
       return state;

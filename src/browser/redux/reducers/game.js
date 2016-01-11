@@ -2,6 +2,7 @@ import actions from '../../../common/actionConstants';
 import {Record, List, Map} from 'immutable';
 import {translatePieceReverse, getPieceColor} from '../../../common/chess';
 import Chess from '../../../common/engine';
+import {GAME_TIME} from '../../../common/constants';
 
 const BoardState = Record({
   engine: null,
@@ -19,7 +20,7 @@ const InitialState = Record({
   bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
   startDate: null,
-  endDate: null
+  gameTime: GAME_TIME
 });
 
 const initialState = new InitialState;
@@ -75,7 +76,6 @@ export default function gameReducer(state = initialState, action) {
     case actions.SERVER_SEAT_CHANGED: {
       return state
         .updateIn(['startDate'], () => action.startDate)
-        .updateIn(['endDate'], () => action.endDate)
         .updateIn([action.board, action.color], () => action.userId);
     }
 
@@ -101,8 +101,7 @@ export default function gameReducer(state = initialState, action) {
           BLACK: action.game.bBoard.BLACK
         }),
         winner: action.game.winner,
-        startDate: action.game.startDate,
-        endDate: action.game.endDate
+        startDate: action.game.startDate
       });
     }
 

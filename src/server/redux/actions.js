@@ -52,7 +52,7 @@ export function joinBoard(socketId, game) {
   };
 }
 
-export function seatChanged(gameId, board, color, userId, startDate, endDate) {
+export function seatChanged(gameId, board, color, userId, startDate) {
   return {
     type: actions.SERVER_SEAT_CHANGED,
     room: gameId,
@@ -60,7 +60,6 @@ export function seatChanged(gameId, board, color, userId, startDate, endDate) {
     board: board,
     color: color,
     userId: userId,
-    startDate: startDate,
-    endDate: endDate
+    startDate: startDate
   };
 }

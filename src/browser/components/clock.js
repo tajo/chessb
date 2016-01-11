@@ -19,20 +19,14 @@ class Clock extends Component {
 
   constructor(props) {
     super(props);
-    if (!this.props.game.get('startDate') || moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate')) < 0)) {
-      this.state = {counter: GAME_TIME};
-    } else {
-      this.state = {counter: moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate')))};
-    }
+    this.state = {counter: GAME_TIME};
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.game.getIn([newProps.board, 'dates']).count() === this.props.game.getIn([this.props.board, 'dates']).count()) {
       return;
     }
-    const end = moment(this.props.game.get('endDate'));
-    const start = moment(this.props.game.get('startDate'));
-    const interval = end.diff(start);
+    const interval = this.props.game.get('gameTime');
     let counter = interval;
     newProps.game.getIn([newProps.board, 'dates']).unshift(newProps.game.get('startDate')).forEach((val, index, arr) => {
       if (newProps.color === COLORS.WHITE && (index % 2) && index) {
@@ -51,7 +45,7 @@ class Clock extends Component {
   }
 
   tick() {
-    if (moment(this.props.game.get('endDate')).diff(moment(this.props.game.get('startDate'))) < 0) {
+    if (moment(this.props.game.get('startDate')).isAfter(moment())) {
       return;
     }
     if (!this.props.game.get('startDate')) {
