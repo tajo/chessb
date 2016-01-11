@@ -7,6 +7,7 @@ import http from 'http';
 import socketIo from 'socket.io';
 import configureStore from '../common/configureStore';
 import rootReducer from './redux/reducer';
+import moment from 'moment';
 import * as actions from './redux/actions';
 
 const {port} = config;
@@ -30,11 +31,11 @@ io.on('connection', (socket) => {
     if (action.remote) delete action.remote;
     let userId = store.getState().getIn(['sockets', socket.id]);
     action.userId = userId;
-    store.dispatch(action);
     console.log(action);
-    if (!userId) userId = store.getState().getIn(['sockets', socket.id]);
 
     if (action.type === 'USER_AUTHENTICATE') {
+      store.dispatch(action);
+      userId = store.getState().getIn(['sockets', socket.id]);
       store.dispatch(actions.authUser(socket.id, userId));
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
@@ -45,10 +46,27 @@ io.on('connection', (socket) => {
     }
 
     if (action.type === 'JOIN_LEAVE_GAME') {
+      store.dispatch(action);
       const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
       const startDate = store.getState().getIn(['games', action.gameId, 'startDate']);
       store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
     }
+
+    if (action.type === 'MOVE') {
+      action.gameId = store.getState().getIn(['users', userId, 'gameId']);
+      action.date = moment().format();
+      if (action.gameId) {
+        const datesBefore = store.getState().getIn(['games', action.gameId, action.board, 'dates']);
+        store.dispatch(action);
+        const datesAfter = store.getState().getIn(['games', action.gameId, action.board, 'dates']);
+        if (datesAfter.count() > datesBefore.count()) {
+          action.room = action.gameId;
+          store.dispatch(action);
+        }
+      }
+    }
+
+
   });
 
   socket.on('disconnect', () => {

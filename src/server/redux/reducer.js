@@ -1,6 +1,7 @@
 import actions from '../../common/actionConstants';
 import {Record, List, Map, OrderedMap} from 'immutable';
 import Chess from '../../common/engine';
+import {translatePieceReverse, getPieceColor} from '../../common/chess';
 import shortid from 'shortid';
 import {COLORS, GAME_TIME, GAME_DELAY} from '../../common/constants';
 import moment from 'moment';
@@ -40,7 +41,6 @@ const initialState = new InitialState;
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.USER_AUTHENTICATE: {
-      console.log('auth called');
       return state
         .update('sockets', sockets => sockets.set(action.socketId, action.hashId))
         .update('users', users => users.set(action.hashId, new UserRecord({
@@ -100,6 +100,41 @@ export default function reducer(state = initialState, action) {
         }
       }
       return state;
+    }
+
+    case actions.MOVE: {
+      if (action.room) return state;
+      const engine = new Chess(state.getIn(['games', action.gameId, action.board, 'engine']));
+
+      // give the captured pieces to other board
+      const endPiece = engine.get(action.end);
+
+      // make move
+      const result = engine.move({from: action.start, to: action.end, promotion: action.promotion});
+      if (!result) return state;
+
+      state = state.updateIn(['games', action.gameId, action.board, 'dates'], dates => dates.push(action.date));
+
+      if (endPiece) {
+        const engineOther = new Chess(state.getIn(['games', action.gameId, action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
+        engineOther.addFreePiece(endPiece);
+        engineOther.preLoadMoves();
+        state = state.updateIn(['games', action.gameId, action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engineOther.getState());
+      }
+
+      // drop piece
+      if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {
+        engine.removeFreePiece(translatePieceReverse(action.piece).color, action.start);
+      }
+
+      // end of game
+      if (engine.game_over()) {
+        state = state.updateIn(['games', action.gameId, 'winner'], () => Map({board: action.board, color: getPieceColor(action.piece)}));
+      }
+
+      return state
+        .updateIn(['games', action.gameId, action.board, 'moves'], board => board.push(Map({from: action.start, to: action.end, promotion: action.promotion})))
+        .updateIn(['games', action.gameId, action.board, 'engine'], () => engine.getState());
     }
 
   }

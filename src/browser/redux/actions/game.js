@@ -1,6 +1,5 @@
 import {PIECES} from '../../../common/constants';
 import actions from '../../../common/actionConstants';
-import moment from 'moment';
 
 export const actionCreators = {
   move,
@@ -28,7 +27,7 @@ export function move(board, start, end, piece, promotion = null) {
     end: end,
     piece: piece,
     promotion: promotion,
-    date: moment().format()
+    remote: true
   };
 }
 

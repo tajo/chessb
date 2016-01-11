@@ -28,7 +28,14 @@ const initialState = new InitialState;
 export default function gameReducer(state = initialState, action) {
   switch (action.type) {
     case actions.MOVE: {
-      // state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
+      // move is coming from the server bc it has date
+      if (action.date) {
+        state = state.updateIn([action.board, 'dates'], dates => dates.push(action.date));
+        // we originated this move, so we don't have to play it again
+        if (state.getIn([action.board, 'moves']).count() === state.getIn([action.board, 'dates']).count()) {
+          return state;
+        }
+      }
 
       const engine = new Chess(state.getIn([action.board, 'engine']));
 
