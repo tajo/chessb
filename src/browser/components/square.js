@@ -5,7 +5,7 @@ import {actionCreators as gameActions} from '../redux/actions/game';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import Piece from '../components/piece';
-import {isMoveLegal, isPieceMovebale} from '../../common/chess';
+import {isMoveLegal, isPieceMovebale, isItMyGame} from '../../common/chess';
 import Component from 'react-pure-render/component';
 
 const squareTarget = {
@@ -36,7 +36,8 @@ function collect(connect, monitor) {
 }
 
 const mapStateToProps = (state) => ({
-  game: state.game
+  game: state.game,
+  user: state.user
 });
 
 class Square extends Component {
@@ -52,7 +53,8 @@ class Square extends Component {
     move: React.PropTypes.func.isRequired,
     selectSquare: React.PropTypes.func.isRequired,
     board: React.PropTypes.string.isRequired,
-    game: React.PropTypes.instanceOf(Record).isRequired
+    game: React.PropTypes.instanceOf(Record).isRequired,
+    user: React.PropTypes.instanceOf(Record).isRequired
   }
 
   render() {
@@ -77,7 +79,8 @@ class Square extends Component {
             isSelected={this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === this.props.position}
             overDrop={this.props.isOver && this.props.canDrop}
             position={this.props.position}
-            canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)}
+            canDrag={isItMyGame(this.props.board, this.props.game, this.props.user.get('userId'))
+              && isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)}
             board={this.props.board}
           />
          : <div style={emptySquareStyle} />}
@@ -104,12 +107,14 @@ class Square extends Component {
           this.props.game.getIn([this.props.board, 'squareSelected', 'piece'])
         );
       } else {
-        if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
+        if (isItMyGame(this.props.board, this.props.game, this.props.user.get('userId'))
+          && isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
           this.props.selectSquare(this.props.board, this.props.position, this.props.piece);
         }
       }
     } else {
-      if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
+      if (isItMyGame(this.props.board, this.props.game, this.props.user.get('userId'))
+        && isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), this.props.position)) {
         this.props.selectSquare(this.props.board, this.props.position, this.props.piece);
       }
     }

@@ -9,6 +9,14 @@ export function isPieceMovebale(engineState, position) {
   return engineState.generatedMoves.some(move => move.from === position);
 }
 
+export function isItMyGame(board, game, userId) {
+  const color = getColor(game.getIn([board, 'engine']));
+  if (game.getIn([board, color]) === userId) {
+    return true;
+  }
+  return false;
+}
+
 export function getColor(engine) {
   if (engine.turn === 'w') {
     return COLORS.WHITE;
