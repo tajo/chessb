@@ -23,7 +23,7 @@ class Desk extends Component {
     counter: React.PropTypes.number
   }
 
-  renderBar(isReversed) {
+  renderBar(colorA, colorB) {
     const barStyle = {
       width: '10vw',
       height: '42.5vw',
@@ -32,9 +32,6 @@ class Desk extends Component {
       justifyContent: 'center',
       fontSize: 12
     };
-
-    const colorA = isReversed ? COLORS.BLACK : COLORS.WHITE;
-    const colorB = isReversed ? COLORS.WHITE : COLORS.BLACK;
 
     return (
       <div style={barStyle}>
@@ -71,22 +68,24 @@ class Desk extends Component {
     const aBoardBlack = this.props.game.getIn(['aBoard', COLORS.BLACK]);
     const bBoardWhite = this.props.game.getIn(['bBoard', COLORS.WHITE]);
     const isReversed = (myUserId && (aBoardBlack === myUserId || bBoardWhite === myUserId));
+    const colorA = isReversed ? COLORS.BLACK : COLORS.WHITE;
+    const colorB = isReversed ? COLORS.WHITE : COLORS.BLACK;
 
     return (
       <div style={rootStyle}>
-        {this.props.board === 'aBoard' && this.renderBar(isReversed)}
+        {this.props.board === 'aBoard' && this.renderBar(colorA, colorB)}
         <div>
           <FreePieces
-            color={this.props.board === 'aBoard' ? COLORS.BLACK : COLORS.WHITE}
+            color={this.props.board === 'aBoard' ? colorB : colorA}
             board={this.props.board}
           />
           <Board board={this.props.board} isReversed={isReversed} counter={this.props.counter} />
           <FreePieces
-            color={this.props.board === 'aBoard' ? COLORS.WHITE : COLORS.BLACK}
+            color={this.props.board === 'aBoard' ? colorA : colorB}
             board={this.props.board}
           />
         </div>
-        {this.props.board === 'bBoard' && this.renderBar(isReversed)}
+        {this.props.board === 'bBoard' && this.renderBar(colorA, colorB)}
       </div>
     );
   }
