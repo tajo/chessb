@@ -100,7 +100,6 @@ class Square extends Component {
         this.props.position
       )) {
         this.props.move(
-          this.props.game.getIn([this.props.board, 'engine']),
           this.props.board,
           this.props.game.getIn([this.props.board, 'squareSelected', 'position']),
           this.props.position,
