@@ -7,7 +7,6 @@ import Desk from '../components/desk';
 import Onlinecount from '../components/onlinecount';
 import moment from 'moment';
 import {Record} from 'immutable';
-import Portal from 'react-portal';
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -60,10 +59,6 @@ class HomeView extends Component {
           <Desk board="bBoard" counter={this.state.counter} />
         </div>
         <Onlinecount />
-        <Portal closeOnEsc closeOnOutsideClick openByClickOn={<button>test</button>}>
-          <h2>Pseudo Modal</h2>
-          <p>This react component is appended to the document body.</p>
-        </Portal>
       </div>
     );
   }
