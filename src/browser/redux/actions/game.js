@@ -4,7 +4,8 @@ import actions from '../../../common/actionConstants';
 export const actionCreators = {
   move,
   selectSquare,
-  joinLeaveGame
+  joinLeaveGame,
+  timeRanOut
 };
 
 export function move(board, start, end, piece, promotion = null) {
@@ -46,6 +47,15 @@ export function joinLeaveGame(board, color, gameId) {
     board: board,
     color: color,
     gameId: gameId,
+    remote: true
+  };
+}
+
+export function timeRanOut(board, color) {
+  return {
+    type: actions.TIME_RAN_OUT,
+    board: board,
+    color: color,
     remote: true
   };
 }

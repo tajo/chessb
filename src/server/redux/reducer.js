@@ -137,6 +137,34 @@ export default function reducer(state = initialState, action) {
         .updateIn(['games', action.gameId, action.board, 'engine'], () => engine.getState());
     }
 
+    case actions.TIME_RAN_OUT: {
+      if (state.getIn(['games', action.gameId, 'winner'])) {
+        return state;
+      }
+      const interval = state.getIn(['games', action.gameId, 'gameTime']);
+      const startDate = state.getIn(['games', action.gameId, 'startDate']);
+      let counter = interval;
+      state
+        .getIn(['games', action.gameId, action.board, 'dates'])
+        .push(moment(startDate).add(interval, 'ms').format())
+        .unshift(startDate)
+        .forEach((val, index, arr) => {
+          if (action.color === COLORS.WHITE && (index % 2) && index) {
+            counter = counter - moment(val).diff(moment(arr.get(index - 1)));
+          }
+          if (action.color === COLORS.BLACK && !(index % 2) && index) {
+            counter = counter - moment(val).diff(moment(arr.get(index - 1)));
+          }
+        });
+      if (counter <= 0) {
+        return state.updateIn(['games', action.gameId, 'winner'], () => {
+          return Map({board: action.board, color: action.color === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE});
+        });
+      }
+
+      return state;
+    }
+
   }
   return state;
 }

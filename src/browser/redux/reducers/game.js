@@ -86,6 +86,10 @@ export default function gameReducer(state = initialState, action) {
         .updateIn([action.board, action.color], () => action.userId);
     }
 
+    case actions.SERVER_WINNER: {
+      return state.updateIn(['winner'], () => Map(action.winner));
+    }
+
     case actions.SERVER_SYNC_BOARD: {
       return new InitialState({
         gameId: action.game.gameId,

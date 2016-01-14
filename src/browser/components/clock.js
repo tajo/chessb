@@ -4,6 +4,9 @@ import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import moment from 'moment';
 import {COLORS, GAME_TIME} from '../../common/constants';
+import {actionCreators as gameActions} from '../redux/actions/game';
+
+const UPDATE_TIME = 500;
 
 const mapStateToProps = (state) => ({
   game: state.game
@@ -14,7 +17,8 @@ class Clock extends Component {
   static propTypes = {
     color: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired,
-    game: React.PropTypes.instanceOf(Record).isRequired
+    game: React.PropTypes.instanceOf(Record).isRequired,
+    timeRanOut: React.PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -41,25 +45,30 @@ class Clock extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.tick(), 1000);
+    setTimeout(() => this.tick(), UPDATE_TIME);
   }
 
   tick() {
+    if (this.props.game.get('winner')) {
+      return;
+    }
     if (!this.props.game.get('startDate') || moment(this.props.game.get('startDate')).isAfter(moment())) {
-      setTimeout(() => this.tick(), 1000);
+      setTimeout(() => this.tick(), UPDATE_TIME);
       return;
     }
     this.setState((prevState, props) => {
       if (props.color === COLORS.WHITE && !(props.game.getIn([props.board, 'dates']).count() % 2)) {
-        return {counter: prevState.counter - 1000};
+        return {counter: prevState.counter - UPDATE_TIME};
       }
       if (props.color === COLORS.BLACK && props.game.getIn([props.board, 'dates']).count() % 2) {
-        return {counter: prevState.counter - 1000};
+        return {counter: prevState.counter - UPDATE_TIME};
       }
       return {counter: prevState.counter};
     });
-    if (this.state.counter !== 0) {
-      setTimeout(() => this.tick(), 1000);
+    if (this.state.counter === 0) {
+      this.props.timeRanOut(this.props.board, this.props.color);
+    } else {
+      setTimeout(() => this.tick(), UPDATE_TIME);
     }
   }
 
@@ -77,4 +86,4 @@ class Clock extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Clock);
+export default connect(mapStateToProps, gameActions)(Clock);

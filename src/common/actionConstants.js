@@ -9,11 +9,13 @@ export default Keymirror({
   SERVER_SYNC_BOARD: null,
   SERVER_USER_AUTHENTICATE: null,
   SERVER_USER_DISCONNECT: null,
+  SERVER_WINNER: null,
   JOIN_BOARD: null,
   JOIN_LEAVE_GAME: null,
   MOVE: null,
   SEAT_CHANGED: null,
   SELECT_SQUARE: null,
   SHOW_PROMOTION_POPUP: null,
+  TIME_RAN_OUT: null,
   USER_AUTHENTICATE: null
 });

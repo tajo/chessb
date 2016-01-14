@@ -63,3 +63,11 @@ export function seatChanged(gameId, board, color, userId, startDate) {
     startDate: startDate
   };
 }
+
+export function winner(gameId, winner) {
+  return {
+    type: actions.SERVER_WINNER,
+    room: gameId,
+    winner: winner
+  };
+}

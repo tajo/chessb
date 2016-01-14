@@ -66,6 +66,15 @@ io.on('connection', (socket) => {
       }
     }
 
+    if (action.type === 'TIME_RAN_OUT') {
+      action.gameId = store.getState().getIn(['users', userId, 'gameId']);
+      action.date = moment().format();
+      if (action.gameId) {
+        store.dispatch(action);
+        store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
+      }
+    }
+
 
   });
 
