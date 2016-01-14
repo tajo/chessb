@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
 
     if (action.type === 'MOVE') {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
-      action.date = moment().format();
+      action.date = moment().toISOString();
       if (action.gameId) {
         const datesBefore = store.getState().getIn(['games', action.gameId, action.board, 'dates']);
         store.dispatch(action);
@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
 
     if (action.type === 'TIME_RAN_OUT') {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
-      action.date = moment().format();
+      action.date = moment().toISOString();
       if (action.gameId) {
         store.dispatch(action);
         store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));

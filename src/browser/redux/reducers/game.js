@@ -2,7 +2,7 @@ import actions from '../../../common/actionConstants';
 import {Record, List, Map} from 'immutable';
 import {translatePieceReverse, getPieceColor} from '../../../common/chess';
 import Chess from '../../../common/engine';
-import {GAME_TIME} from '../../../common/constants';
+import moment from 'moment';
 
 const BoardState = Record({
   engine: null,
@@ -20,7 +20,7 @@ const InitialState = Record({
   bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
   startDate: null,
-  gameTime: GAME_TIME
+  gameTime: null
 });
 
 const initialState = new InitialState;
@@ -111,8 +111,9 @@ export default function gameReducer(state = initialState, action) {
           WHITE: action.game.bBoard.WHITE,
           BLACK: action.game.bBoard.BLACK
         }),
-        winner: action.game.winner,
-        startDate: action.game.startDate
+        winner: action.game.winner ? Map(action.game.winner) : null,
+        startDate: action.game.startDate,
+        gameTime: action.game.gameTime
       });
     }
 
