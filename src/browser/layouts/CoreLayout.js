@@ -3,6 +3,7 @@ import Modal from '../components/modal';
 import FlexModalWrapper from 'react-modal-wrapper';
 import '../styles/core.scss';
 import bee from '../../../assets/bee.png';
+import twitter from '../../../assets/twitter.svg';
 
 // Note: Stateless/function components *will not* hot reload!
 // react-transform *only* works on component classes.
@@ -20,6 +21,13 @@ function CoreLayout({children}) {
     fontSize: '13px',
     position: 'absolute'
   };
+  const topRightStyle = {
+    padding: '15px 30px 15px 30px',
+    marginBottom: 15,
+    fontSize: '13px',
+    position: 'absolute',
+    right: 0
+  };
   const alpha = <div style={{color: 'darkred', marginTop: -5, marginLeft: 27}}><a href="#">alpha</a></div>;
   return (
     <div className="page-container">
@@ -32,13 +40,20 @@ function CoreLayout({children}) {
               <li>we are so excited about this app that we released it asap</li>
               <li>there can be many bugs - <a href="mailto:info@chessb.com">let us know</a>!</li>
               <li>the server (games) can go suddenly down</li>
-              <li>user scores can be reseted</li>
+              <li>user registration will be released with the beta version</li>
+              <li>user scores are not kept yet</li>
+              <li>history of games is not kept yet</li>
               <li>please, be patient until beta and stable versions are released</li>
               <li><b>there are many new features in making</b></li>
               <li>any feedback welcomed, check our <a target="_blank" href="https://twitter.com/bugches">twitter</a></li>
             </ul>
           </Modal>
         </FlexModalWrapper>
+      </div>
+      <div style={topRightStyle}>
+        <a href="https://twitter.com/bugches" target="_blank" title="Follow us on twitter for news and feedback!">
+          <img src={twitter} style={{width: 30, height: 30}} />
+        </a>
       </div>
       <div className="view-container">
         {children}
