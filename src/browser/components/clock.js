@@ -32,7 +32,6 @@ class Clock extends Component {
     }
     const interval = this.props.game.get('gameTime') ? this.props.game.get('gameTime') : newProps.game.get('gameTime');
     let counter = interval;
-    console.log('before' + interval);
     newProps.game.getIn([newProps.board, 'dates']).unshift(newProps.game.get('startDate')).forEach((val, index, arr) => {
       if (newProps.color === COLORS.WHITE && (index % 2) && index) {
         counter = counter - moment(val).diff(moment(arr.get(index - 1)));
@@ -41,7 +40,6 @@ class Clock extends Component {
         counter = counter - moment(val).diff(moment(arr.get(index - 1)));
       }
     });
-    console.log(counter);
 
     this.setState({counter: counter});
   }

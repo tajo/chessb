@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
       store.dispatch(actions.authUser(socket.id, userId));
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
+      store.dispatch(actions.getInitGames(socket.id, store.getState().get('games'), store.getState().get('users')));
       const gameId = store.getState().getIn(['users', userId, 'gameId']);
       store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
       store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));

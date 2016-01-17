@@ -71,3 +71,28 @@ export function winner(gameId, winner) {
     winner: winner
   };
 }
+
+export function getInitGames(socketId, games, users) {
+  const _games = games.map(game => {
+    let players = 0;
+    if (game.aBoard.WHITE) players += 1;
+    if (game.aBoard.BLACK) players += 1;
+    if (game.bBoard.WHITE) players += 1;
+    if (game.bBoard.BLACK) players += 1;
+    let realPlayers = players;
+    if (game.aBoard.WHITE === game.bBoard.BLACK) realPlayers -= 1;
+    if (game.aBoard.BLACK === game.bBoard.WHITE) realPlayers -= 1;
+    return {
+      gameId: game.gameId,
+      startDate: game.startDate,
+      players: players,
+      specs: users.filter(user => user.gameId === game.gameId).count() - realPlayers
+    };
+  });
+
+  return {
+    type: actions.SERVER_GET_INIT_GAMES,
+    room: socketId,
+    games: _games
+  };
+}

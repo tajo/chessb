@@ -23,7 +23,7 @@ class Desk extends Component {
     counter: React.PropTypes.number
   }
 
-  renderBar(colorA, colorB) {
+  renderBar(colorA, colorB, isReversed) {
     const barStyle = {
       width: '10vw',
       height: '42.5vw',
@@ -39,6 +39,7 @@ class Desk extends Component {
           <Seat
             board={this.props.board}
             color={this.props.board === 'aBoard' ? colorB : colorA}
+            isReversed={isReversed}
           />
           <Clock
             board={this.props.board}
@@ -52,6 +53,7 @@ class Desk extends Component {
           <Seat
             board={this.props.board}
             color={this.props.board === 'aBoard' ? colorA : colorB}
+            isReversed={isReversed}
           />
         </div>
       </div>
@@ -73,7 +75,7 @@ class Desk extends Component {
 
     return (
       <div style={rootStyle}>
-        {this.props.board === 'aBoard' && this.renderBar(colorA, colorB)}
+        {this.props.board === 'aBoard' && this.renderBar(colorA, colorB, isReversed)}
         <div>
           <FreePieces
             color={this.props.board === 'aBoard' ? colorB : colorA}
@@ -85,7 +87,7 @@ class Desk extends Component {
             board={this.props.board}
           />
         </div>
-        {this.props.board === 'bBoard' && this.renderBar(colorA, colorB)}
+        {this.props.board === 'bBoard' && this.renderBar(colorA, colorB, isReversed)}
       </div>
     );
   }

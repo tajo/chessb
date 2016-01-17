@@ -5,6 +5,7 @@ import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Desk from '../components/desk';
 import Onlinecount from '../components/onlinecount';
+import Games from '../components/games';
 import moment from 'moment';
 import {Record} from 'immutable';
 
@@ -58,6 +59,7 @@ class HomeView extends Component {
           <Desk board="aBoard" counter={this.state.counter} />
           <Desk board="bBoard" counter={this.state.counter} />
         </div>
+        <Games />
         <Onlinecount />
       </div>
     );

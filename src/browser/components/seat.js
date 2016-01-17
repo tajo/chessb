@@ -17,6 +17,7 @@ class Seat extends Component {
   static propTypes = {
     color: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired,
+    isReversed: React.PropTypes.bool,
     game: React.PropTypes.instanceOf(Record).isRequired,
     user: React.PropTypes.instanceOf(Record).isRequired,
     joinLeaveGame: React.PropTypes.func.isRequired
@@ -30,9 +31,10 @@ class Seat extends Component {
   }
 
   render() {
-    const isBefore =
+    let isBefore =
       (this.props.color === COLORS.BLACK && this.props.board === 'aBoard') ||
       (this.props.color === COLORS.WHITE && this.props.board === 'bBoard');
+    isBefore = this.props.isReversed ? !isBefore : isBefore;
 
     const userId = this.props.game.getIn([this.props.board, this.props.color]);
     const myUserId = this.props.user.get('userId');

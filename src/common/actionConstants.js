@@ -2,6 +2,7 @@ import Keymirror from 'keymirror';
 
 export default Keymirror({
   SERVER_FIND_SEAT: null,
+  SERVER_GET_INIT_GAMES: null,
   SERVER_JOIN_LEAVE_GAME: null,
   SERVER_MOVE: null,
   SERVER_ONLINECOUNT_UPDATE: null,

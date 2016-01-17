@@ -1,22 +1,21 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 import {connect} from 'react-redux';
-import {Record} from 'immutable';
 
 const mapStateToProps = (state) => ({
-  meta: state.meta
+  counter: state.meta.get('onlinecount')
 });
 
 class Onlinecount extends Component {
 
   static propTypes = {
-    meta: React.PropTypes.instanceOf(Record).isRequired
+    counter: React.PropTypes.number.isRequired
   }
 
   render() {
     return (
       <div style={{textAlign: 'center'}}>
-        Online players: {this.props.meta.get('onlinecount')}
+        Online: {this.props.counter}
       </div>
     );
   }
