@@ -73,7 +73,9 @@ io.on('connection', (socket) => {
       action.date = moment().toISOString();
       if (action.gameId) {
         store.dispatch(action);
-        store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
+        if (store.getState().getIn(['games', action.gameId, 'winner'])) {
+          store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
+        }
       }
     }
 

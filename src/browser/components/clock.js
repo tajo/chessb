@@ -65,7 +65,7 @@ class Clock extends Component {
       }
       return {counter: prevState.counter};
     });
-    if (this.state.counter === 0) {
+    if (this.state.counter <= 0) {
       this.props.timeRanOut(this.props.board, this.props.color);
     } else {
       setTimeout(() => this.tick(), UPDATE_TIME);
@@ -80,6 +80,9 @@ class Clock extends Component {
 
     const mins = Math.floor(this.state.counter / 60000);
     const secs = Math.floor((this.state.counter - (Math.floor(this.state.counter / 60000) * 60000)) / 1000);
+    if (this.state.counter <= 0) {
+      return <div style={clockStyle}>0:00</div>;
+    }
     return (
       <div style={clockStyle}>{mins}:{secs < 10 && '0'}{secs}</div>
     );
