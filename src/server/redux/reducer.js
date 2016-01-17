@@ -51,7 +51,19 @@ export default function reducer(state = initialState, action) {
     }
 
     case actions.SERVER_USER_DISCONNECT: {
-      return state.update('sockets', sockets => sockets.delete(action.socketId));
+      const inGame = state.getIn(['users', action.userId, 'gameId']);
+      if (inGame) {
+        state = state
+          .updateIn(['games', inGame, 'aBoard', 'WHITE'], userId => userId === action.userId ? null : userId)
+          .updateIn(['games', inGame, 'aBoard', 'BLACK'], userId => userId === action.userId ? null : userId)
+          .updateIn(['games', inGame, 'bBoard', 'WHITE'], userId => userId === action.userId ? null : userId)
+          .updateIn(['games', inGame, 'bBoard', 'BLACK'], userId => userId === action.userId ? null : userId);
+      }
+      if (!action.userId) return state;
+      return state
+        .update('sockets', sockets => sockets.delete(action.socketId))
+        .updateIn(['users', action.userId, 'gameId'], () => null)
+        .updateIn(['users', action.userId, 'socketId'], () => null);
     }
 
     case actions.SERVER_FIND_SEAT: {

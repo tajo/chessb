@@ -24,10 +24,11 @@ export function authUser(socketId, userId) {
   };
 }
 
-export function disconnectUser(socketId) {
+export function disconnectUser(socketId, userId) {
   return {
     type: actions.SERVER_USER_DISCONNECT,
-    socketId: socketId
+    socketId: socketId,
+    userId: userId
   };
 }
 
@@ -72,16 +73,24 @@ export function winner(gameId, winner) {
   };
 }
 
-export function getInitGames(socketId, games, users) {
-  const _games = games.map(game => {
+export function syncGames(games, users) {
+  return {
+    type: actions.SERVER_SYNC_GAMES,
+    broadcast: true,
+    games: getGameList(games, users)
+  };
+}
+
+function getGameList(games, users) {
+  return games.map(game => {
     let players = 0;
     if (game.aBoard.WHITE) players += 1;
     if (game.aBoard.BLACK) players += 1;
     if (game.bBoard.WHITE) players += 1;
     if (game.bBoard.BLACK) players += 1;
     let realPlayers = players;
-    if (game.aBoard.WHITE === game.bBoard.BLACK) realPlayers -= 1;
-    if (game.aBoard.BLACK === game.bBoard.WHITE) realPlayers -= 1;
+    if (game.aBoard.WHITE && game.aBoard.WHITE === game.bBoard.BLACK) realPlayers -= 1;
+    if (game.aBoard.BLACK && game.aBoard.BLACK === game.bBoard.WHITE) realPlayers -= 1;
     return {
       gameId: game.gameId,
       startDate: game.startDate,
@@ -89,10 +98,4 @@ export function getInitGames(socketId, games, users) {
       specs: users.filter(user => user.gameId === game.gameId).count() - realPlayers
     };
   });
-
-  return {
-    type: actions.SERVER_GET_INIT_GAMES,
-    room: socketId,
-    games: _games
-  };
 }

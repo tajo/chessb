@@ -14,7 +14,7 @@ export default function counterReducer(state = initialState, action) {
       return state.update('onlinecount', () => action.onlinecount);
     }
 
-    case actions.SERVER_GET_INIT_GAMES: {
+    case actions.SERVER_SYNC_GAMES: {
       return state.update('games', () => Immutable.fromJS(action.games));
     }
   }

@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
       store.dispatch(actions.authUser(socket.id, userId));
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
       store.dispatch(actions.findSeat(userId));
-      store.dispatch(actions.getInitGames(socket.id, store.getState().get('games'), store.getState().get('users')));
+      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
       const gameId = store.getState().getIn(['users', userId, 'gameId']);
       store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
       store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));
@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
       store.dispatch(action);
       const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
       const startDate = store.getState().getIn(['games', action.gameId, 'startDate']);
+      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
       store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
     }
 
@@ -80,7 +81,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    store.dispatch(actions.disconnectUser(socket.id));
+    const userId = store.getState().getIn(['sockets', socket.id]);
+    const gameId = store.getState().getIn(['users', userId, 'gameId']);
+    store.dispatch(actions.disconnectUser(socket.id, userId));
+    if (gameId) {
+      store.dispatch(actions.joinBoard(gameId, store.getState().getIn(['games', gameId])));
+    }
+    store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
     store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
   });
 });
