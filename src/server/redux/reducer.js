@@ -68,10 +68,10 @@ export default function reducer(state = initialState, action) {
 
     case actions.SERVER_FIND_SEAT: {
       const freeSeatBoards = state.get('games').filter(game => {
-        return !game.getIn(['aBoard', 'white']) ||
-               !game.getIn(['aBoard', 'black']) ||
-               !game.getIn(['bBoard', 'white']) ||
-               !game.getIn(['bBoard', 'black']);
+        return !game.getIn(['aBoard', 'WHITE']) ||
+               !game.getIn(['aBoard', 'BLACK']) ||
+               !game.getIn(['bBoard', 'WHITE']) ||
+               !game.getIn(['bBoard', 'BLACK']);
       });
       if (freeSeatBoards.first()) {
         return state.updateIn(['users', action.userId, 'gameId'], () => {
