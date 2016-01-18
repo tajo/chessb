@@ -14,7 +14,7 @@ class Games extends Component {
 
   static propTypes = {
     games: React.PropTypes.instanceOf(Map).isRequired
-  }
+  };
 
   render() {
     return (

@@ -17,7 +17,7 @@ class FreePieces extends Component {
     board: React.PropTypes.string.isRequired,
     game: React.PropTypes.instanceOf(Record).isRequired,
     selectSquare: React.PropTypes.func.isRequired
-  }
+  };
 
   render() {
     const freePieces = getFreePieces(this.props.game.getIn([this.props.board, 'engine']), this.props.color);

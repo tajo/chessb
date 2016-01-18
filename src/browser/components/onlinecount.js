@@ -10,7 +10,7 @@ class Onlinecount extends Component {
 
   static propTypes = {
     counter: React.PropTypes.number.isRequired
-  }
+  };
 
   render() {
     return (

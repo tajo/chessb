@@ -7,7 +7,7 @@ export default class Modal extends Component {
   static propTypes = {
     children: React.PropTypes.any.isRequired,
     closeModal: React.PropTypes.func
-  }
+  };
 
   render() {
     return (

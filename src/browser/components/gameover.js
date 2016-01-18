@@ -8,7 +8,7 @@ class Gameover extends Component {
     color: React.PropTypes.string.isRequired,
     wBoard: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired
-  }
+  };
 
   getWinner() {
     if (this.props.board === this.props.wBoard) {

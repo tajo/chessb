@@ -21,7 +21,7 @@ class Seat extends Component {
     game: React.PropTypes.instanceOf(Record).isRequired,
     user: React.PropTypes.instanceOf(Record).isRequired,
     joinLeaveGame: React.PropTypes.func.isRequired
-  }
+  };
 
   renderName(userId, myUserId) {
     const you = userId === myUserId ? (<b style={{color: 'darkred'}}>YOU!</b>) : null;

@@ -18,7 +18,7 @@ class Promotion extends Component {
   static propTypes = {
     color: React.PropTypes.string.isRequired,
     finishMove: React.PropTypes.func.isRequired
-  }
+  };
 
   render() {
     const overlayStyle = {

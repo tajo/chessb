@@ -55,7 +55,7 @@ class Square extends Component {
     board: React.PropTypes.string.isRequired,
     game: React.PropTypes.instanceOf(Record).isRequired,
     user: React.PropTypes.instanceOf(Record).isRequired
-  }
+  };
 
   render() {
     const styles = {

@@ -5,7 +5,7 @@ class Startcounter extends Component {
 
   static propTypes = {
     counter: React.PropTypes.number.isRequired,
-  }
+  };
 
   render() {
     const overlayStyle = {

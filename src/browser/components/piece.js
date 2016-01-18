@@ -49,7 +49,7 @@ class Piece extends Component {
     position: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired,
     count: React.PropTypes.number
-  }
+  };
 
   render() {
     const squareStyle = {

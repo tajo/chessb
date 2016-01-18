@@ -18,7 +18,7 @@ class HomeView extends Component {
 
   static propTypes = {
     game: React.PropTypes.instanceOf(Record).isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);

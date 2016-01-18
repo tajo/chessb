@@ -23,7 +23,7 @@ class Board extends Component {
     game: React.PropTypes.instanceOf(Record).isRequired,
     move: React.PropTypes.func.isRequired,
     counter: React.PropTypes.number
-  }
+  };
 
   render() {
     const styles = {

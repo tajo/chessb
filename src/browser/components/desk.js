@@ -21,7 +21,7 @@ class Desk extends Component {
     game: React.PropTypes.instanceOf(Record).isRequired,
     user: React.PropTypes.instanceOf(Record).isRequired,
     counter: React.PropTypes.number
-  }
+  };
 
   renderBar(colorA, colorB, isReversed) {
     const barStyle = {

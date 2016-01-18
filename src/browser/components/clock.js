@@ -19,7 +19,7 @@ class Clock extends Component {
     board: React.PropTypes.string.isRequired,
     game: React.PropTypes.instanceOf(Record).isRequired,
     timeRanOut: React.PropTypes.func.isRequired
-  }
+  };
 
   constructor(props) {
     super(props);
