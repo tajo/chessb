@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 const todos = {
-  'asdasd': 'asd'
+  asdasd: 'asd'
 };
 
 router.route('/user')

@@ -6,6 +6,7 @@
     "comma-dangle": 0,
     "curly": 0,
     "default-case": 0,
+    "max-len": [2, 160, 4],
     "new-cap": [2, {"capIsNew": false, "newIsCap": true}],
     "no-floating-decimal": 0,
     "no-param-reassign": 0,
@@ -17,6 +18,7 @@
     "padded-blocks": 0,
     // React
     "react/sort-comp": 0, // Not ready yet
+    "react/jsx-no-bind": 0
   },
   "globals": {
     "after": false,

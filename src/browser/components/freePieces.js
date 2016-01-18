@@ -44,7 +44,8 @@ class FreePieces extends Component {
             <div key={position + color} style={squareStyle} onClick={() => this.handleClick(position, piece.get('type'))}>
               <Piece
                 type={piece.get('type')}
-                canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position) && this.props.game.getIn([this.props.board, 'engine']).turn === color}
+                canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)
+                  && this.props.game.getIn([this.props.board, 'engine']).turn === color}
                 position={translatePieceReverse(piece.get('type')).type}
                 board={this.props.board}
                 count={piece.get('count')}
