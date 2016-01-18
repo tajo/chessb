@@ -9,20 +9,20 @@ import {
   createStore
 } from 'redux';
 
-export default function configureStore(io, reducer, reduxRouterMiddleware = null) {
+export default function configureStore(io, reducer, browserMiddlewares = null) {
   const getUid = () => shortid.generate();
   const now = () => Date.now();
   const dependenciesMiddleware = injectDependencies({fetch, getUid, now});
 
-  const middlewares = [
+  let middlewares = [
     socketMiddleware(io),
     dependenciesMiddleware,
     promiseMiddleware({
       promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
     })
   ];
-  if (reduxRouterMiddleware) {
-    middlewares.push(reduxRouterMiddleware);
+  if (browserMiddlewares) {
+    middlewares = middlewares.concat(browserMiddlewares);
   }
   const middleware = applyMiddleware.apply(this, middlewares);
   let createStoreWithMiddleware;

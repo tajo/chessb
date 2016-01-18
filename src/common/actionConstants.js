@@ -17,6 +17,7 @@ export default Keymirror({
   SEAT_CHANGED: null,
   SELECT_SQUARE: null,
   SHOW_PROMOTION_POPUP: null,
+  SWITCH_GAME: null,
   TIME_RAN_OUT: null,
   USER_AUTHENTICATE: null
 });

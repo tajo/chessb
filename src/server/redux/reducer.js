@@ -53,17 +53,19 @@ export default function reducer(state = initialState, action) {
     case actions.SERVER_USER_DISCONNECT: {
       const inGame = state.getIn(['users', action.userId, 'gameId']);
       if (inGame) {
-        state = state
-          .updateIn(['games', inGame, 'aBoard', 'WHITE'], userId => userId === action.userId ? null : userId)
-          .updateIn(['games', inGame, 'aBoard', 'BLACK'], userId => userId === action.userId ? null : userId)
-          .updateIn(['games', inGame, 'bBoard', 'WHITE'], userId => userId === action.userId ? null : userId)
-          .updateIn(['games', inGame, 'bBoard', 'BLACK'], userId => userId === action.userId ? null : userId);
+        state = leaveGame(state, inGame, action.userId);
       }
       if (!action.userId) return state;
       return state
         .update('sockets', sockets => sockets.delete(action.socketId))
         .updateIn(['users', action.userId, 'gameId'], () => null)
         .updateIn(['users', action.userId, 'socketId'], () => null);
+    }
+
+    case actions.SWITCH_GAME: {
+      if (!state.getIn(['games', action.gameId])) return state;
+      return leaveGame(state, state.getIn(['users', action.userId, 'gameId']), action.userId)
+        .updateIn(['users', action.userId, 'gameId'], () => action.gameId);
     }
 
     case actions.SERVER_FIND_SEAT: {
@@ -85,33 +87,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case actions.JOIN_LEAVE_GAME: {
-      const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
-      const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
-      if (checkA !== action.userId && checkB !== action.userId) {
-        state = state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
-          if (!userId) return action.userId;
-          if (userId === action.userId) return null;
-          return userId;
-        });
-      }
-
-      // if game is full start it!
-      const aBoardWhite = state.getIn(['games', action.gameId, 'aBoard', COLORS.WHITE]);
-      const aBoardBlack = state.getIn(['games', action.gameId, 'aBoard', COLORS.BLACK]);
-      const bBoardWhite = state.getIn(['games', action.gameId, 'bBoard', COLORS.WHITE]);
-      const bBoardBlack = state.getIn(['games', action.gameId, 'bBoard', COLORS.BLACK]);
-      const startDate = state.getIn(['games', action.gameId, 'startDate']);
-
-      if (aBoardWhite && aBoardBlack && bBoardWhite && bBoardBlack) {
-        if (!startDate) {
-          state = state.updateIn(['games', action.gameId, 'startDate'], () => moment().add(GAME_DELAY, 'ms').toISOString());
-        }
-      } else {
-        if (startDate && moment(startDate).diff(moment()) > 0) {
-          state = state.updateIn(['games', action.gameId, 'startDate'], () => null);
-        }
-      }
-      return state;
+      return joinLeaveGame(state, action);
     }
 
     case actions.MOVE: {
@@ -181,6 +157,51 @@ export default function reducer(state = initialState, action) {
       return state;
     }
 
+  }
+  return state;
+}
+
+function leaveGame(state, gameId, userId) {
+  state = leaveGameVariant(state, gameId, userId, 'aBoard', COLORS.WHITE);
+  state = leaveGameVariant(state, gameId, userId, 'aBoard', COLORS.BLACK);
+  state = leaveGameVariant(state, gameId, userId, 'bBoard', COLORS.WHITE);
+  state = leaveGameVariant(state, gameId, userId, 'bBoard', COLORS.BLACK);
+  return state;
+}
+
+function leaveGameVariant(state, gameId, userId, board, color) {
+  if (state.getIn(['games', gameId, board, color]) === userId) {
+    return joinLeaveGame(state, {gameId: gameId, userId: userId, board: board, color: color});
+  }
+  return state;
+}
+
+function joinLeaveGame(state, action) {
+  const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
+  const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
+  if (checkA !== action.userId && checkB !== action.userId) {
+    state = state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
+      if (!userId) return action.userId;
+      if (userId === action.userId) return null;
+      return userId;
+    });
+  }
+
+  // if game is full start it!
+  const aBoardWhite = state.getIn(['games', action.gameId, 'aBoard', COLORS.WHITE]);
+  const aBoardBlack = state.getIn(['games', action.gameId, 'aBoard', COLORS.BLACK]);
+  const bBoardWhite = state.getIn(['games', action.gameId, 'bBoard', COLORS.WHITE]);
+  const bBoardBlack = state.getIn(['games', action.gameId, 'bBoard', COLORS.BLACK]);
+  const startDate = state.getIn(['games', action.gameId, 'startDate']);
+
+  if (aBoardWhite && aBoardBlack && bBoardWhite && bBoardBlack) {
+    if (!startDate) {
+      state = state.updateIn(['games', action.gameId, 'startDate'], () => moment().add(GAME_DELAY, 'ms').toISOString());
+    }
+  } else {
+    if (startDate && moment(startDate).diff(moment()) > 0) {
+      state = state.updateIn(['games', action.gameId, 'startDate'], () => null);
+    }
   }
   return state;
 }

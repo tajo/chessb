@@ -8,11 +8,16 @@ import configureStore from '../common/configureStore';
 import io from 'socket.io-client';
 import rootReducer from './redux/reducers';
 import {authUser} from './redux/actions/user';
+import changeRouteMiddleware from './changeRouteMiddleware';
 
 const socket = io();
 const browserHistory = createBrowserHistory();
 const reduxRouterMiddleware = syncHistory(browserHistory);
-const store = configureStore(socket, rootReducer, reduxRouterMiddleware);
+const store = configureStore(
+  socket,
+  rootReducer,
+  [reduxRouterMiddleware, changeRouteMiddleware]
+);
 
 store.dispatch(authUser(store.getState().user.get('hashId')));
 socket.on('action', action => {

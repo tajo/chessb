@@ -46,6 +46,13 @@ io.on('connection', (socket) => {
       socket.join(gameId);
     }
 
+    if (action.type === 'SWITCH_GAME') {
+      socket.leave(store.getState().getIn(['users', userId, 'gameId']));
+      store.dispatch(action);
+      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
+      socket.join(store.getState().getIn(['users', userId, 'gameId']));
+    }
+
     if (action.type === 'JOIN_LEAVE_GAME') {
       store.dispatch(action);
       const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
