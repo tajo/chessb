@@ -92,6 +92,7 @@ export default function reducer(state = initialState, action) {
 
     case actions.MOVE: {
       if (action.room) return state;
+      if (!state.getIn(['games', action.gameId, 'startDate'])) return state;
       const engine = new Chess(state.getIn(['games', action.gameId, action.board, 'engine']));
 
       // give the captured pieces to other board

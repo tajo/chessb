@@ -10,6 +10,7 @@ export function isPieceMovebale(engineState, position) {
 }
 
 export function isItMyGame(board, game, userId) {
+  if (!game.startDate) return false;
   const color = getColor(game.getIn([board, 'engine']));
   if (game.getIn([board, color]) === userId) {
     return true;
