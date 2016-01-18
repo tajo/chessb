@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
-import {syncReduxAndRouter} from 'redux-simple-router';
+import ReactDOM from 'react-dom';
+import {syncHistory} from 'redux-simple-router';
 import routes from './routes';
 import Root from './containers/Root';
 import configureStore from '../common/configureStore';
@@ -10,8 +10,9 @@ import rootReducer from './redux/reducers';
 import {authUser} from './redux/actions/user';
 
 const socket = io();
-const history = createBrowserHistory();
-const store = configureStore(socket, rootReducer);
+const browserHistory = createBrowserHistory();
+const reduxRouterMiddleware = syncHistory(browserHistory);
+const store = configureStore(socket, rootReducer, reduxRouterMiddleware);
 
 store.dispatch(authUser(store.getState().user.get('hashId')));
 socket.on('action', action => {
@@ -20,11 +21,8 @@ socket.on('action', action => {
   return store.dispatch(action);
 });
 
-
-syncReduxAndRouter(history, store, (state) => state.router);
-
 // Render the React application to the DOM
 ReactDOM.render(
-  <Root history={history} routes={routes} store={store} />,
+  <Root history={browserHistory} routes={routes} store={store} />,
   document.getElementById('app')
 );

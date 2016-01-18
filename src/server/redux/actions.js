@@ -1,3 +1,4 @@
+import {routeActions} from 'redux-simple-router';
 import actions from '../../common/actionConstants';
 
 export function findSeat(userId) {
@@ -33,16 +34,9 @@ export function disconnectUser(socketId, userId) {
 }
 
 export function pushUrl(socketId, url) {
-  return {
-    type: '@@router/UPDATE_PATH',
-    payload: {
-      path: url,
-      state: null,
-      replace: true,
-      avoidRouterUpdate: false
-    },
-    room: socketId
-  };
+  const pushAction = routeActions.push(url);
+  pushAction.room = socketId;
+  return pushAction;
 }
 
 export function joinBoard(socketId, game) {
