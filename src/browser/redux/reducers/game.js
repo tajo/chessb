@@ -13,13 +13,19 @@ const BoardState = Record({
   BLACK: null
 });
 
+const MessageState = Record({
+  userId: null,
+  text: ''
+});
+
 const InitialState = Record({
   gameId: null,
   aBoard: new BoardState({engine: (new Chess()).getState()}),
   bBoard: new BoardState({engine: (new Chess()).getState()}),
   winner: null,
   startDate: null,
-  gameTime: null
+  gameTime: null,
+  chat: List()
 });
 
 const initialState = new InitialState;
@@ -113,6 +119,12 @@ export default function gameReducer(state = initialState, action) {
         winner: action.game.winner ? Map(action.game.winner) : null,
         startDate: action.game.startDate,
         gameTime: action.game.gameTime
+      });
+    }
+
+    case actions.SERVER_SEND_CHAT: {
+      return state.updateIn(['chat'], chat => {
+        return chat.push(new MessageState({userId: action.userId, text: action.text}));
       });
     }
 

@@ -83,6 +83,15 @@ export function switchGame(gameId, userId) {
   };
 }
 
+export function sendChat(gameId, userId, text) {
+  return {
+    type: actions.SERVER_SEND_CHAT,
+    userId: userId,
+    room: gameId,
+    text: text
+  };
+}
+
 function getGameList(games, users) {
   return games.map(game => {
     let players = 0;

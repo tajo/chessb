@@ -71,6 +71,11 @@ io.on('connection', (socket) => {
       store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
     }
 
+    if (action.type === 'SEND_CHAT') {
+      const gameId = store.getState().getIn(['users', userId, 'gameId']);
+      store.dispatch(actions.sendChat(gameId, userId, action.text));
+    }
+
     if (action.type === 'MOVE') {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
       action.date = moment().toISOString();

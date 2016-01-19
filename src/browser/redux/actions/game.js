@@ -7,7 +7,8 @@ export const actionCreators = {
   joinLeaveGame,
   timeRanOut,
   addNewGame,
-  switchGame
+  switchGame,
+  sendChat
 };
 
 export function move(board, start, end, piece, promotion = null) {
@@ -74,6 +75,14 @@ export function switchGame(oldGameId, newGameId) {
     type: actions.SWITCH_GAME,
     oldGameId: oldGameId,
     newGameId: newGameId,
+    remote: true
+  };
+}
+
+export function sendChat(text) {
+  return {
+    type: actions.SEND_CHAT,
+    text: text,
     remote: true
   };
 }

@@ -7,6 +7,7 @@ import Desk from '../components/desk';
 import Onlinecount from '../components/onlinecount';
 import Games from '../components/games';
 import MissingPlayers from '../components/missingPlayers';
+import Chat from '../components/chat';
 import moment from 'moment';
 import {Record} from 'immutable';
 
@@ -62,6 +63,7 @@ class HomeView extends Component {
           <Desk board="aBoard" counter={this.state.counter} />
           <Desk board="bBoard" counter={this.state.counter} />
         </div>
+        <Chat />
         <Games />
         <Onlinecount />
       </div>
