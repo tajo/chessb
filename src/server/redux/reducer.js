@@ -149,7 +149,7 @@ export default function reducer(state = initialState, action) {
       let counter = interval;
       state
         .getIn(['games', action.gameId, action.board, 'dates'])
-        .push(moment(startDate).add(interval, 'ms').toISOString())
+        .push(moment().toISOString())
         .unshift(startDate)
         .forEach((val, index, arr) => {
           if (action.color === COLORS.WHITE && (index % 2) && index) {
@@ -159,8 +159,7 @@ export default function reducer(state = initialState, action) {
             counter = counter - moment(val).diff(moment(arr.get(index - 1)));
           }
         });
-      console.log(counter);
-      if (counter <= 0) {
+      if (counter <= 500) {
         return state
           .updateIn(['games', action.gameId, 'aBoard', 'dates'], dates => dates.push(moment(startDate).add(interval, 'ms').toISOString()))
           .updateIn(['games', action.gameId, 'bBoard', 'dates'], dates => dates.push(moment(startDate).add(interval, 'ms').toISOString()))

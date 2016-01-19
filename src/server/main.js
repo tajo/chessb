@@ -21,7 +21,7 @@ server.listen(port, () => {
 
 const store = configureStore(io, rootReducer);
 store.subscribe(() => {
-  console.log('=================================================');
+  console.log('==============================================');
   console.log(store.getState());
 });
 
@@ -93,10 +93,12 @@ io.on('connection', (socket) => {
     if (action.type === 'TIME_RAN_OUT') {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
       action.date = moment().toISOString();
-      if (action.gameId) {
-        store.dispatch(action);
-        if (store.getState().getIn(['games', action.gameId, 'winner'])) {
-          store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
+      if (!store.getState().getIn(['games', action.gameId, 'winner'])) {
+        if (action.gameId) {
+          store.dispatch(action);
+          if (store.getState().getIn(['games', action.gameId, 'winner'])) {
+            store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
+          }
         }
       }
     }
