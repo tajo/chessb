@@ -4,7 +4,6 @@ import del from 'del';
 import eslint from 'gulp-eslint';
 import fs from 'fs';
 import gulp from 'gulp';
-import mochaRunCreator from './test/mochaRunCreator';
 import os from 'os';
 import path from 'path';
 import runSequence from 'run-sequence';
@@ -44,27 +43,6 @@ gulp.task('eslint-ci', () => {
   return runEslint().pipe(eslint.failAfterError());
 });
 
-gulp.task('mocha', () => {
-  mochaRunCreator('process')();
-});
-
-// Enable to run single test file
-// ex. gulp mocha-file --file src/browser/components/__test__/Button.js
-gulp.task('mocha-file', () => {
-  mochaRunCreator('process')({path: path.join(__dirname, args.file)});
-});
-
-// Continuous test running
-gulp.task('mocha-watch', () => {
-  gulp.watch(
-    ['src/browser/**', 'src/common/**', 'src/server/**'],
-    mochaRunCreator('log')
-  );
-});
-
-gulp.task('test', done => {
-  runSequence('eslint-ci', 'mocha', 'build-webpack', done);
-});
 
 gulp.task('server-node', bg('node', './src/server'));
 gulp.task('server-hot', bg('node', './webpack/server'));
