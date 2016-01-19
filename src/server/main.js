@@ -49,6 +49,7 @@ io.on('connection', (socket) => {
     if (action.type === 'SWITCH_GAME') {
       socket.leave(store.getState().getIn(['users', userId, 'gameId']));
       store.dispatch(action);
+      store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', action.newGameId])));
       store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
       socket.join(store.getState().getIn(['users', userId, 'gameId']));
     }

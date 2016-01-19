@@ -18,7 +18,8 @@ class Games extends Component {
   static propTypes = {
     games: React.PropTypes.instanceOf(Map).isRequired,
     gameId: React.PropTypes.string,
-    addNewGame: React.PropTypes.func.isRequired
+    addNewGame: React.PropTypes.func.isRequired,
+    switchGame: React.PropTypes.func.isRequired
   };
 
   render() {
@@ -39,10 +40,15 @@ class Games extends Component {
               return (
                 <tr key={game.get('gameId')}>
                   <td>
-                    <Link to={`/game/${game.get('gameId')}`}>
-                      {game.get('gameId') === this.props.gameId
-                        ? (<b>{game.get('gameId')}</b>) : game.get('gameId')}
+                    {game.get('gameId') === this.props.gameId
+                        ? (<b title="You are in this game.">{game.get('gameId')}</b>) :
+                    <Link
+                      onClick={() => this.switchGame(this.props.gameId, game.get('gameId'))}
+                      to={`/game/${game.get('gameId')}`}
+                    >
+                      {game.get('gameId')}
                     </Link>
+                    }
                   </td>
                   <td>{game.get('startDate') ? 'Running' : 'Idle'}</td>
                   <td>{game.get('players')}/4</td>
@@ -58,10 +64,15 @@ class Games extends Component {
             style={{marginTop: 15}}
             className="pureButton"
           >
-              Add new game
+            Add new game
         </button>}
       </div>
     );
+  }
+
+  switchGame(oldGameId, newGameId) {
+    if (oldGameId === newGameId) return;
+    this.props.switchGame(oldGameId, newGameId);
   }
 }
 

@@ -63,9 +63,9 @@ export default function reducer(state = initialState, action) {
     }
 
     case actions.SWITCH_GAME: {
-      if (!state.getIn(['games', action.gameId])) return state;
+      if (!state.getIn(['games', action.newGameId])) return state;
       return leaveGame(state, state.getIn(['users', action.userId, 'gameId']), action.userId)
-        .updateIn(['users', action.userId, 'gameId'], () => action.gameId);
+        .updateIn(['users', action.userId, 'gameId'], () => action.newGameId);
     }
 
     case actions.SERVER_FIND_SEAT: {

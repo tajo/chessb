@@ -6,7 +6,8 @@ export const actionCreators = {
   selectSquare,
   joinLeaveGame,
   timeRanOut,
-  addNewGame
+  addNewGame,
+  switchGame
 };
 
 export function move(board, start, end, piece, promotion = null) {
@@ -64,6 +65,15 @@ export function timeRanOut(board, color) {
 export function addNewGame() {
   return {
     type: actions.ADD_NEW_GAME,
+    remote: true
+  };
+}
+
+export function switchGame(oldGameId, newGameId) {
+  return {
+    type: actions.SWITCH_GAME,
+    oldGameId: oldGameId,
+    newGameId: newGameId,
     remote: true
   };
 }
