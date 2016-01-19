@@ -75,6 +75,14 @@ export function syncGames(games, users) {
   };
 }
 
+export function switchGame(gameId, userId) {
+  return {
+    type: actions.SWITCH_GAME,
+    userId: userId,
+    newGameId: gameId
+  };
+}
+
 function getGameList(games, users) {
   return games.map(game => {
     let players = 0;

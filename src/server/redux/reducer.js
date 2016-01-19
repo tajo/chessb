@@ -177,6 +177,7 @@ export default function reducer(state = initialState, action) {
 }
 
 function leaveGame(state, gameId, userId) {
+  if (!gameId) return state;
   state = leaveGameVariant(state, gameId, userId, 'aBoard', COLORS.WHITE);
   state = leaveGameVariant(state, gameId, userId, 'aBoard', COLORS.BLACK);
   state = leaveGameVariant(state, gameId, userId, 'bBoard', COLORS.WHITE);

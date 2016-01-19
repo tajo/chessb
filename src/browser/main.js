@@ -19,7 +19,14 @@ const store = configureStore(
   [reduxRouterMiddleware, changeRouteMiddleware]
 );
 
-store.dispatch(authUser(store.getState().user.get('hashId')));
+// user put in url with game id, let's skip auto find seat
+const initUrl = store.getState().router.location.pathname.split('/');
+let gameId = null;
+if (initUrl.length === 3 && initUrl[1] === 'game' && initUrl[2].length === 9) {
+  gameId = initUrl[2];
+}
+
+store.dispatch(authUser(store.getState().user.get('hashId'), gameId));
 socket.on('action', action => {
   if (action.broadcast) delete action.broadcast;
   if (action.room) delete action.room;

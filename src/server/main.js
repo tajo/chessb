@@ -38,10 +38,14 @@ io.on('connection', (socket) => {
       userId = store.getState().getIn(['sockets', socket.id]);
       store.dispatch(actions.authUser(socket.id, userId));
       store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
-      store.dispatch(actions.findSeat(userId));
+      if (store.getState().get('games').has(action.gameId)) {
+        store.dispatch(actions.switchGame(action.gameId, userId));
+      } else {
+        store.dispatch(actions.findSeat(userId));
+      }
       store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
       const gameId = store.getState().getIn(['users', userId, 'gameId']);
-      store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
+      !store.getState().get('games').has(action.gameId) && store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
       store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));
       socket.join(gameId);
     }
