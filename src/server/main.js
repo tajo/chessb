@@ -61,6 +61,11 @@ io.on('connection', (socket) => {
       store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
     }
 
+    if (action.type === 'ADD_NEW_GAME') {
+      store.dispatch(action);
+      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
+    }
+
     if (action.type === 'MOVE') {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
       action.date = moment().toISOString();

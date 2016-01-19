@@ -11,6 +11,7 @@ export default Keymirror({
   SERVER_USER_AUTHENTICATE: null,
   SERVER_USER_DISCONNECT: null,
   SERVER_WINNER: null,
+  ADD_NEW_GAME: null,
   JOIN_BOARD: null,
   JOIN_LEAVE_GAME: null,
   MOVE: null,

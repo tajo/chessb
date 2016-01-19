@@ -3,17 +3,22 @@ import Component from 'react-pure-render/component';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {Map} from 'immutable';
+import {actionCreators as gameActions} from '../redux/actions/game';
 
 import '../styles/table.scss';
+import '../styles/button.scss';
 
 const mapStateToProps = (state) => ({
-  games: state.meta.get('games')
+  games: state.meta.get('games'),
+  gameId: state.user.get('gameId')
 });
 
 class Games extends Component {
 
   static propTypes = {
-    games: React.PropTypes.instanceOf(Map).isRequired
+    games: React.PropTypes.instanceOf(Map).isRequired,
+    gameId: React.PropTypes.string,
+    addNewGame: React.PropTypes.func.isRequired
   };
 
   render() {
@@ -33,7 +38,12 @@ class Games extends Component {
             {this.props.games.valueSeq().map(game => {
               return (
                 <tr key={game.get('gameId')}>
-                  <td><Link to={`/game/${game.get('gameId')}`}>{game.get('gameId')}</Link></td>
+                  <td>
+                    <Link to={`/game/${game.get('gameId')}`}>
+                      {game.get('gameId') === this.props.gameId
+                        ? (<b>{game.get('gameId')}</b>) : game.get('gameId')}
+                    </Link>
+                  </td>
                   <td>{game.get('startDate') ? 'Running' : 'Idle'}</td>
                   <td>{game.get('players')}/4</td>
                   <td>{game.get('specs')}</td>
@@ -42,9 +52,17 @@ class Games extends Component {
             })}
           </tbody>
         </table>
+        {this.props.games.every(game => game.get('players'))
+          && <button
+            onClick={this.props.addNewGame}
+            style={{marginTop: 15}}
+            className="pureButton"
+          >
+              Add new game
+        </button>}
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(Games);
+export default connect(mapStateToProps, gameActions)(Games);

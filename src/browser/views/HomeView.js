@@ -17,7 +17,7 @@ const mapStateToProps = (state) => ({
 class HomeView extends Component {
 
   static propTypes = {
-    game: React.PropTypes.instanceOf(Record).isRequired,
+    game: React.PropTypes.instanceOf(Record).isRequired
   };
 
   constructor(props) {

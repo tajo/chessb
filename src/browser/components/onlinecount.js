@@ -14,8 +14,8 @@ class Onlinecount extends Component {
 
   render() {
     return (
-      <div style={{textAlign: 'center'}}>
-        Online: {this.props.counter}
+      <div style={{textAlign: 'center', fontSize: 12, padding: 15}}>
+        People online: {this.props.counter}
       </div>
     );
   }

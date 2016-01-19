@@ -5,7 +5,8 @@ export const actionCreators = {
   move,
   selectSquare,
   joinLeaveGame,
-  timeRanOut
+  timeRanOut,
+  addNewGame
 };
 
 export function move(board, start, end, piece, promotion = null) {
@@ -56,6 +57,13 @@ export function timeRanOut(board, color) {
     type: actions.TIME_RAN_OUT,
     board: board,
     color: color,
+    remote: true
+  };
+}
+
+export function addNewGame() {
+  return {
+    type: actions.ADD_NEW_GAME,
     remote: true
   };
 }

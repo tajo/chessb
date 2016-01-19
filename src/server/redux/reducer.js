@@ -90,6 +90,20 @@ export default function reducer(state = initialState, action) {
       return joinLeaveGame(state, action);
     }
 
+    case actions.ADD_NEW_GAME: {
+      if (state.get('games').every(game => {
+        return game.getIn(['aBoard', COLORS.WHITE]) ||
+               game.getIn(['aBoard', COLORS.BLACK]) ||
+               game.getIn(['bBoard', COLORS.WHITE]) ||
+               game.getIn(['bBoard', COLORS.BLACK]);
+      })) {
+        const newGameId = shortid.generate();
+        return state
+          .update('games', games => games.set(newGameId, new Game({gameId: newGameId})));
+      }
+      return state;
+    }
+
     case actions.MOVE: {
       if (action.room) return state;
       if (!state.getIn(['games', action.gameId, 'startDate'])) return state;
