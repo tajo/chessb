@@ -19,13 +19,15 @@ function CoreLayout({children}) {
     padding: '15px 30px 15px 30px',
     marginBottom: 15,
     fontSize: '13px',
-    position: 'absolute'
+    position: 'absolute',
+    zIndex: 100
   };
   const topRightStyle = {
     padding: '15px 30px 15px 30px',
     marginBottom: 15,
     fontSize: '13px',
     position: 'absolute',
+    zIndex: 100,
     right: 0
   };
   const alpha = <div style={{color: 'darkred', marginTop: -5, marginLeft: 27}}><a href="#">alpha</a></div>;

@@ -107,6 +107,7 @@ export default function reducer(state = initialState, action) {
     case actions.MOVE: {
       if (action.room) return state;
       if (!state.getIn(['games', action.gameId, 'startDate'])) return state;
+      if (state.getIn(['games', action.gameId, 'winner'])) return state;
       const engine = new Chess(state.getIn(['games', action.gameId, action.board, 'engine']));
 
       // give the captured pieces to other board
@@ -161,8 +162,8 @@ export default function reducer(state = initialState, action) {
         });
       if (counter <= 500) {
         return state
-          .updateIn(['games', action.gameId, 'aBoard', 'dates'], dates => dates.push(moment(startDate).add(interval, 'ms').toISOString()))
-          .updateIn(['games', action.gameId, 'bBoard', 'dates'], dates => dates.push(moment(startDate).add(interval, 'ms').toISOString()))
+          .updateIn(['games', action.gameId, 'aBoard', 'dates'], dates => dates.push(moment().toISOString()))
+          .updateIn(['games', action.gameId, 'bBoard', 'dates'], dates => dates.push(moment().toISOString()))
           .updateIn(['games', action.gameId, 'winner'], () => {
             return Map({board: action.board, color: action.color === COLORS.WHITE ? COLORS.BLACK : COLORS.WHITE});
           });
