@@ -27,6 +27,12 @@ class Clock extends Component {
   }
 
   componentWillReceiveProps(newProps) {
+    if (this.props.game.get('startDate') &&
+        newProps.game.get('startDate') &&
+        this.props.game.get('startDate') !== newProps.game.get('startDate')) {
+      this.setState({counter: GAME_TIME});
+      return;
+    }
     if (newProps.game.getIn([newProps.board, 'dates']).count() === this.props.game.getIn([this.props.board, 'dates']).count()) {
       return;
     }
@@ -42,6 +48,15 @@ class Clock extends Component {
     });
 
     this.setState({counter: counter});
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.game.get('startDate') &&
+        prevProps.game.get('startDate') &&
+        this.props.game.get('startDate') !== prevProps.game.get('startDate')) {
+      this.tick();
+      return;
+    }
   }
 
   componentDidMount() {
