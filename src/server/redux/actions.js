@@ -92,6 +92,13 @@ export function sendChat(gameId, userId, text) {
   };
 }
 
+export function gameToNewGame(gameId) {
+  return {
+    type: actions.SERVER_GAME_TO_NEW_GAME,
+    gameId: gameId
+  };
+}
+
 function getGameList(games, users) {
   return games.map(game => {
     let players = 0;

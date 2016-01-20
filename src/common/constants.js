@@ -1,6 +1,7 @@
 // export const GAME_TIME = 194000;
 export const GAME_TIME = 21000;
 export const GAME_DELAY = 2000;
+export const INBETWEEN_DELAY = 2000;
 
 export const COLORS = {
   BLACK: 'BLACK',

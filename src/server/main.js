@@ -9,6 +9,7 @@ import configureStore from '../common/configureStore';
 import rootReducer from './redux/reducer';
 import moment from 'moment';
 import * as actions from './redux/actions';
+import {INBETWEEN_DELAY} from '../common/constants';
 
 const {port} = config;
 const app = express();
@@ -98,6 +99,18 @@ io.on('connection', (socket) => {
           store.dispatch(action);
           if (store.getState().getIn(['games', action.gameId, 'winner'])) {
             store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
+            setTimeout(() => {
+              store.dispatch(actions.gameToNewGame(action.gameId));
+              const newGameId = store.getState().getIn(['oldToNewGame', action.gameId]);
+              store.getState().get('users').forEach(user => {
+                if (user.get('gameId') === newGameId) {
+                  io.sockets.adapter.add(user.get('socketId'), newGameId);
+                }
+              });
+              store.dispatch(actions.pushUrl(newGameId, `/game/${newGameId}`));
+              store.dispatch(actions.joinBoard(newGameId, store.getState().getIn(['games', newGameId])));
+              store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
+            }, INBETWEEN_DELAY);
           }
         }
       }

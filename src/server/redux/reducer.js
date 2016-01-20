@@ -33,6 +33,7 @@ const firstGameId = shortid.generate();
 const InitialState = Record({
   users: Map(),
   sockets: Map(),
+  oldToNewGame: Map(),
   games: OrderedMap().set(firstGameId, new Game({gameId: firstGameId}))
 });
 
@@ -172,6 +173,49 @@ export default function reducer(state = initialState, action) {
       return state;
     }
 
+    case actions.SERVER_GAME_TO_NEW_GAME: {
+      const winner = state.getIn(['games', action.gameId, 'winner']);
+      if (!winner) {
+        return state;
+      }
+      const aWhite = state.getIn(['games', action.gameId, 'aBoard', COLORS.WHITE]);
+      const aBlack = state.getIn(['games', action.gameId, 'aBoard', COLORS.BLACK]);
+      const bWhite = state.getIn(['games', action.gameId, 'bBoard', COLORS.WHITE]);
+      const bBlack = state.getIn(['games', action.gameId, 'bBoard', COLORS.BLACK]);
+
+      const winnerTop = (winner.get('board') === 'aBoard' && winner.get('color') === COLORS.BLACK) ||
+                        (winner.get('board') === 'bBoard' && winner.get('color') === COLORS.WHITE);
+      const winnerDown = (winner.get('board') === 'aBoard' && winner.get('color') === COLORS.WHITE) ||
+                         (winner.get('board') === 'bBoard' && winner.get('color') === COLORS.BLACK);
+      const newGameId = shortid.generate();
+      return state
+        .update('games', games => games.set(newGameId, new Game({
+          gameId: newGameId,
+          aBoard: new BoardState({
+            engine: (new Chess()).getState(),
+            WHITE: winnerDown ? aWhite : bBlack,
+            BLACK: winnerTop ? aBlack : bWhite
+          }),
+          bBoard: new BoardState({
+            engine: (new Chess()).getState(),
+            WHITE: winnerTop ? bWhite : aBlack,
+            BLACK: winnerDown ? bBlack : aWhite
+          }),
+          startDate: (aWhite && aBlack && bWhite && bBlack) ? moment().add(GAME_DELAY, 'ms').toISOString() : null
+        })))
+        .update('users', users => {
+          return users.map(user => {
+            if (user.get('gameId') !== action.gameId) return user;
+            return new UserRecord({
+              hashId: user.get('hashId'),
+              gameId: newGameId,
+              socketId: user.get('socketId')
+            });
+          });
+        })
+        .update('games', games => games.delete(action.gameId))
+        .update('oldToNewGame', oldToNewGame => oldToNewGame.set(action.gameId, newGameId));
+    }
   }
   return state;
 }
