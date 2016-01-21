@@ -49,7 +49,6 @@ io.on('connection', (socket) => {
       }
       store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
       const gameId = store.getState().getIn(['users', userId, 'gameId']);
-      console.log(gameId);
       !store.getState().get('games').has(action.gameId) && store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
       store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));
       socket.join(gameId);

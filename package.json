@@ -11,7 +11,7 @@
   "private": true,
   "scripts": {
     "test": "gulp test",
-    "start": "NODE_ENV=production forever src/server"
+    "start": "NODE_ENV=production forever start src/server"
   },
   "dependencies": {
     "autoprefixer": "^6.3.1",
