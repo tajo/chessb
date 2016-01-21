@@ -22,8 +22,8 @@ server.listen(port, () => {
 
 const store = configureStore(io, rootReducer);
 store.subscribe(() => {
-  console.log('==============================================');
-  console.log(store.getState());
+  // console.log('==============================================');
+  // console.log(store.getState());
 });
 
 io.on('connection', (socket) => {
@@ -32,7 +32,6 @@ io.on('connection', (socket) => {
     if (action.remote) delete action.remote;
     let userId = store.getState().getIn(['sockets', socket.id]);
     action.userId = userId;
-    console.log(action);
 
     if (action.type === 'USER_AUTHENTICATE') {
       store.dispatch(action);
@@ -54,7 +53,7 @@ io.on('connection', (socket) => {
     if (action.type === 'SWITCH_GAME') {
       socket.leave(store.getState().getIn(['users', userId, 'gameId']));
       store.dispatch(action);
-      store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', action.newGameId])));
+      store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', action.gameId])));
       store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
       socket.join(store.getState().getIn(['users', userId, 'gameId']));
     }
@@ -88,6 +87,9 @@ io.on('connection', (socket) => {
           action.room = action.gameId;
           store.dispatch(action);
         }
+        if (store.getState().getIn(['games', action.gameId, 'winner'])) {
+          startNewGame(action.gameId, store, io, INBETWEEN_DELAY);
+        }
       }
     }
 
@@ -98,19 +100,7 @@ io.on('connection', (socket) => {
         if (action.gameId) {
           store.dispatch(action);
           if (store.getState().getIn(['games', action.gameId, 'winner'])) {
-            store.dispatch(actions.winner(action.gameId, store.getState().getIn(['games', action.gameId, 'winner'])));
-            setTimeout(() => {
-              store.dispatch(actions.gameToNewGame(action.gameId));
-              const newGameId = store.getState().getIn(['oldToNewGame', action.gameId]);
-              store.getState().get('users').forEach(user => {
-                if (user.get('gameId') === newGameId) {
-                  io.sockets.adapter.add(user.get('socketId'), newGameId);
-                }
-              });
-              store.dispatch(actions.pushUrl(newGameId, `/game/${newGameId}`));
-              store.dispatch(actions.joinBoard(newGameId, store.getState().getIn(['games', newGameId])));
-              store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-            }, INBETWEEN_DELAY);
+            startNewGame(action.gameId, store, io, INBETWEEN_DELAY);
           }
         }
       }
@@ -130,6 +120,22 @@ io.on('connection', (socket) => {
     store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
   });
 });
+
+function startNewGame(gameId, store, io, delay) {
+  store.dispatch(actions.winner(gameId, store.getState().getIn(['games', gameId, 'winner'])));
+  setTimeout(() => {
+    store.dispatch(actions.gameToNewGame(gameId));
+    const newGameId = store.getState().getIn(['oldToNewGame', gameId]);
+    store.getState().get('users').forEach(user => {
+      if (user.get('gameId') === newGameId) {
+        io.sockets.adapter.add(user.get('socketId'), newGameId);
+      }
+    });
+    store.dispatch(actions.pushUrl(newGameId, `/game/${newGameId}`));
+    store.dispatch(actions.joinBoard(newGameId, store.getState().getIn(['games', newGameId])));
+    store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
+  }, delay);
+}
 
 
 app.use('/api/v1', api);

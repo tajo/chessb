@@ -16,8 +16,8 @@ const BoardState = Record({
 
 const Game = Record({
   gameId: null,
-  aBoard: new BoardState({engine: (new Chess()).getState()}),
-  bBoard: new BoardState({engine: (new Chess()).getState()}),
+  aBoard: null,
+  bBoard: null,
   winner: null,
   startDate: null,
   gameTime: GAME_TIME
@@ -34,7 +34,11 @@ const InitialState = Record({
   users: Map(),
   sockets: Map(),
   oldToNewGame: Map(),
-  games: OrderedMap().set(firstGameId, new Game({gameId: firstGameId}))
+  games: OrderedMap().set(firstGameId, new Game({
+    gameId: firstGameId,
+    aBoard: new BoardState({engine: (new Chess()).getState()}),
+    bBoard: new BoardState({engine: (new Chess()).getState()})
+  }))
 });
 
 const initialState = new InitialState;
@@ -64,9 +68,9 @@ export default function reducer(state = initialState, action) {
     }
 
     case actions.SWITCH_GAME: {
-      if (!state.getIn(['games', action.newGameId])) return state;
+      if (!state.getIn(['games', action.gameId])) return state;
       return leaveGame(state, state.getIn(['users', action.userId, 'gameId']), action.userId)
-        .updateIn(['users', action.userId, 'gameId'], () => action.newGameId);
+        .updateIn(['users', action.userId, 'gameId'], () => action.gameId);
     }
 
     case actions.SERVER_FIND_SEAT: {
@@ -84,7 +88,11 @@ export default function reducer(state = initialState, action) {
       const newGameId = shortid.generate();
       return state
         .updateIn(['users', action.userId, 'gameId'], () => newGameId)
-        .update('games', games => games.set(newGameId, new Game({gameId: newGameId})));
+        .update('games', games => games.set(newGameId, new Game({
+          gameId: newGameId,
+          aBoard: new BoardState({engine: (new Chess()).getState()}),
+          bBoard: new BoardState({engine: (new Chess()).getState()})
+        })));
     }
 
     case actions.JOIN_LEAVE_GAME: {
@@ -100,7 +108,11 @@ export default function reducer(state = initialState, action) {
       })) {
         const newGameId = shortid.generate();
         return state
-          .update('games', games => games.set(newGameId, new Game({gameId: newGameId})));
+          .update('games', games => games.set(newGameId, new Game({
+            gameId: newGameId,
+            aBoard: new BoardState({engine: (new Chess()).getState()}),
+            bBoard: new BoardState({engine: (new Chess()).getState()})
+          })));
       }
       return state;
     }

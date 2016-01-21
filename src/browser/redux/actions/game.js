@@ -70,11 +70,10 @@ export function addNewGame() {
   };
 }
 
-export function switchGame(oldGameId, newGameId) {
+export function switchGame(gameId) {
   return {
     type: actions.SWITCH_GAME,
-    oldGameId: oldGameId,
-    newGameId: newGameId,
+    gameId: gameId,
     remote: true
   };
 }

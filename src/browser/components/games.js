@@ -43,7 +43,7 @@ class Games extends Component {
                     {game.get('gameId') === this.props.gameId
                         ? (<b title="You are in this game.">{game.get('gameId')}</b>) :
                     <Link
-                      onClick={() => this.switchGame(this.props.gameId, game.get('gameId'))}
+                      onClick={() => this.switchGame(game.get('gameId'))}
                       to={`/game/${game.get('gameId')}`}
                     >
                       {game.get('gameId')}
@@ -70,9 +70,8 @@ class Games extends Component {
     );
   }
 
-  switchGame(oldGameId, newGameId) {
-    if (oldGameId === newGameId) return;
-    this.props.switchGame(oldGameId, newGameId);
+  switchGame(gameId) {
+    this.props.switchGame(gameId);
   }
 }
 
