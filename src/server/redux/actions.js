@@ -79,7 +79,7 @@ export function switchGame(gameId, userId) {
   return {
     type: actions.SWITCH_GAME,
     userId: userId,
-    newGameId: gameId
+    gameId: gameId
   };
 }
 
