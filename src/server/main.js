@@ -22,8 +22,10 @@ server.listen(port, () => {
 
 const store = configureStore(io, rootReducer);
 store.subscribe(() => {
-  console.log('==============================================');
-  console.log(store.getState());
+  if (process.env.NODE_ENV === 'development') {
+    console.log('==============================================');
+    console.log(store.getState());
+  }
 });
 
 io.on('connection', (socket) => {
@@ -32,7 +34,9 @@ io.on('connection', (socket) => {
     if (action.remote) delete action.remote;
     let userId = store.getState().getIn(['sockets', socket.id]);
     action.userId = userId;
-    console.log(action);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(action);
+    }
     if (action.type === 'USER_AUTHENTICATE') {
       store.dispatch(action);
       userId = store.getState().getIn(['sockets', socket.id]);
