@@ -24,37 +24,31 @@ class Clock extends Component {
   constructor(props) {
     super(props);
     this.state = {counter: GAME_TIME};
+    this.running = false;
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.game.get('startDate') &&
-        newProps.game.get('startDate') &&
-        this.props.game.get('startDate') !== newProps.game.get('startDate')) {
-      this.setState({counter: GAME_TIME});
+    if (newProps.game.getIn([newProps.board, 'dates']).count() ===
+      this.props.game.getIn([this.props.board, 'dates']).count() &&
+      this.props.game.get('gameId') === newProps.game.get('gameId')) {
       return;
     }
-    if (newProps.game.getIn([newProps.board, 'dates']).count() === this.props.game.getIn([this.props.board, 'dates']).count()) {
-      return;
-    }
-    const interval = this.props.game.get('gameTime') ? this.props.game.get('gameTime') : newProps.game.get('gameTime');
-    let counter = interval;
-    newProps.game.getIn([newProps.board, 'dates']).unshift(newProps.game.get('startDate')).forEach((val, index, arr) => {
-      if (newProps.color === COLORS.WHITE && (index % 2) && index) {
-        counter = counter - moment(val).diff(moment(arr.get(index - 1)));
-      }
-      if (newProps.color === COLORS.BLACK && !(index % 2) && index) {
-        counter = counter - moment(val).diff(moment(arr.get(index - 1)));
-      }
-    });
 
-    this.setState({counter: counter});
+    const interval = this.props.game.get('gameTime') ?
+      this.props.game.get('gameTime') : newProps.game.get('gameTime');
+
+    this.setState({counter: this.getCounter(
+      newProps.game.getIn([newProps.board, 'dates']),
+      newProps.color,
+      newProps.game.get('startDate'),
+      interval)});
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.game.get('startDate') &&
-        prevProps.game.get('startDate') &&
-        this.props.game.get('startDate') !== prevProps.game.get('startDate')) {
-      this.tick();
+    if (this.props.game.get('gameId') &&
+        prevProps.game.get('gameId') &&
+        this.props.game.get('gameId') !== prevProps.game.get('gameId')) {
+      if (!this.running) this.tick();
       return;
     }
   }
@@ -63,11 +57,30 @@ class Clock extends Component {
     setTimeout(() => this.tick(), UPDATE_TIME);
   }
 
+  getCounter(dates, color, startDate, interval) {
+    if (!startDate || !interval || !dates.count()) return GAME_TIME;
+    let counter = interval;
+    dates
+      .push(moment().toISOString())
+      .unshift(startDate)
+      .forEach((val, index, arr) => {
+        if (color === COLORS.WHITE && (index % 2) && index) {
+          counter = counter - moment(val).diff(moment(arr.get(index - 1)));
+        }
+        if (color === COLORS.BLACK && !(index % 2) && index) {
+          counter = counter - moment(val).diff(moment(arr.get(index - 1)));
+        }
+      });
+    return counter;
+  }
+
   tick() {
     if (this.props.game.get('winner')) {
+      this.running = false;
       return;
     }
     if (!this.props.game.get('startDate') || moment(this.props.game.get('startDate')).isAfter(moment())) {
+      this.running = true;
       setTimeout(() => this.tick(), UPDATE_TIME);
       return;
     }
@@ -81,8 +94,10 @@ class Clock extends Component {
       return {counter: prevState.counter};
     });
     if (this.state.counter <= 0) {
+      this.running = false;
       this.props.timeRanOut(this.props.board, this.props.color);
     } else {
+      this.running = true;
       setTimeout(() => this.tick(), UPDATE_TIME);
     }
   }
