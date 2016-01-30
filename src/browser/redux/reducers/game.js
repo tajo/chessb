@@ -1,6 +1,6 @@
 import actions from '../../../common/actionConstants';
 import {Record, List, Map} from 'immutable';
-import {translatePieceReverse, getPieceColor, getPieces} from '../../../common/chess';
+import {translatePieceReverse, getPieceColor} from '../../../common/chess';
 import Chess from '../../../common/engine';
 
 const BoardState = Record({

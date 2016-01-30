@@ -46,8 +46,6 @@ class Board extends Component {
         : getPieces(this.props.game.get(this.props.board).get('engine').board);
     }
 
-    //console.log(board.toJS());
-
     return (
       <div style={styles}>
         {this.props.game.get('winner') &&
