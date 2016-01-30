@@ -1,5 +1,8 @@
 # ChessB
 
+[![Dependency Status](https://david-dm.org/tajo/chessb.svg)](https://david-dm.org/tajo/chessb)
+[![Build Status](https://travis-ci.org/tajo/chessb.svg?branch=master)](https://travis-ci.org/tajo/chessb)
+
 ## Requirements
 
 - node.js 4+
