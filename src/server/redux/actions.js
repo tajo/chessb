@@ -1,4 +1,4 @@
-import {routeActions} from 'redux-simple-router';
+import {routeActions} from 'react-router-redux';
 import actions from '../../common/actionConstants';
 
 export function findSeat(userId) {
