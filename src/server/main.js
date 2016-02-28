@@ -10,6 +10,7 @@ import rootReducer from './redux/reducer';
 import moment from 'moment';
 import * as actions from './redux/actions';
 import {INBETWEEN_DELAY} from '../common/constants';
+import actionConstants from '../common/constants';
 
 const {port} = config;
 const app = express();
@@ -37,7 +38,7 @@ io.on('connection', (socket) => {
     if (process.env.NODE_ENV === 'development') {
       console.log(action);
     }
-    if (action.type === 'USER_AUTHENTICATE') {
+    if (action.type === actionConstants.USER_AUTHENTICATE) {
       store.dispatch(action);
       userId = store.getState().getIn(['sockets', socket.id]);
       store.dispatch(actions.authUser(socket.id, userId));
@@ -54,7 +55,7 @@ io.on('connection', (socket) => {
       socket.join(gameId);
     }
 
-    if (action.type === 'SWITCH_GAME') {
+    if (action.type === actionConstants.SWITCH_GAME) {
       socket.leave(store.getState().getIn(['users', userId, 'gameId']));
       store.dispatch(action);
       store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', action.gameId])));
@@ -62,7 +63,7 @@ io.on('connection', (socket) => {
       socket.join(store.getState().getIn(['users', userId, 'gameId']));
     }
 
-    if (action.type === 'JOIN_LEAVE_GAME') {
+    if (action.type === actionConstants.JOIN_LEAVE_GAME) {
       store.dispatch(action);
       const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
       const startDate = store.getState().getIn(['games', action.gameId, 'startDate']);
@@ -70,17 +71,17 @@ io.on('connection', (socket) => {
       store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
     }
 
-    if (action.type === 'ADD_NEW_GAME') {
+    if (action.type === actionConstants.ADD_NEW_GAME) {
       store.dispatch(action);
       store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
     }
 
-    if (action.type === 'SEND_CHAT') {
+    if (action.type === actionConstants.SEND_CHAT) {
       const gameId = store.getState().getIn(['users', userId, 'gameId']);
       store.dispatch(actions.sendChat(gameId, userId, action.text));
     }
 
-    if (action.type === 'MOVE') {
+    if (action.type === actionConstants.MOVE) {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
       action.date = moment().toISOString();
       if (action.gameId) {
@@ -97,7 +98,7 @@ io.on('connection', (socket) => {
       }
     }
 
-    if (action.type === 'TIME_RAN_OUT') {
+    if (action.type === actionConstants.TIME_RAN_OUT) {
       action.gameId = store.getState().getIn(['users', userId, 'gameId']);
       action.date = moment().toISOString();
       if (!store.getState().getIn(['games', action.gameId, 'winner'])) {
@@ -109,8 +110,6 @@ io.on('connection', (socket) => {
         }
       }
     }
-
-
   });
 
   socket.on('disconnect', () => {
