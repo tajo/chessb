@@ -1,4 +1,3 @@
-import api from './api';
 import config from './config';
 import errorHandler from './lib/errorHandler';
 import express from 'express';
@@ -7,10 +6,8 @@ import http from 'http';
 import socketIo from 'socket.io';
 import configureStore from '../common/configureStore';
 import rootReducer from './redux/reducer';
-import moment from 'moment';
-import * as actions from './redux/actions';
-import {INBETWEEN_DELAY} from '../common/constants';
-import actionConstants from '../common/constants';
+import response from './response';
+import constants from '../common/actionConstants';
 
 const {port} = config;
 const app = express();
@@ -29,118 +26,29 @@ store.subscribe(() => {
   }
 });
 
-io.on('connection', (socket) => {
-  socket.on('action', (action) => {
+io.on('connection', socket => {
+  socket.on('action', action => {
     action.socketId = socket.id;
+    action.userId = store.getState().getIn(['sockets', socket.id]);
     if (action.remote) delete action.remote;
-    let userId = store.getState().getIn(['sockets', socket.id]);
-    action.userId = userId;
-    if (process.env.NODE_ENV === 'development') {
-      console.log(action);
-    }
-    if (action.type === actionConstants.USER_AUTHENTICATE) {
-      store.dispatch(action);
-      userId = store.getState().getIn(['sockets', socket.id]);
-      store.dispatch(actions.authUser(socket.id, userId));
-      store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
-      if (store.getState().get('games').has(action.gameId)) {
-        store.dispatch(actions.switchGame(action.gameId, userId));
-      } else {
-        store.dispatch(actions.findSeat(userId));
-      }
-      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-      const gameId = store.getState().getIn(['users', userId, 'gameId']);
-      !store.getState().get('games').has(action.gameId) && store.dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
-      store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', gameId])));
-      socket.join(gameId);
-    }
-
-    if (action.type === actionConstants.SWITCH_GAME) {
-      socket.leave(store.getState().getIn(['users', userId, 'gameId']));
-      store.dispatch(action);
-      store.dispatch(actions.joinBoard(socket.id, store.getState().getIn(['games', action.gameId])));
-      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-      socket.join(store.getState().getIn(['users', userId, 'gameId']));
-    }
-
-    if (action.type === actionConstants.JOIN_LEAVE_GAME) {
-      store.dispatch(action);
-      const takenSeatId = store.getState().getIn(['games', action.gameId, action.board, action.color]);
-      const startDate = store.getState().getIn(['games', action.gameId, 'startDate']);
-      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-      store.dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
-    }
-
-    if (action.type === actionConstants.ADD_NEW_GAME) {
-      store.dispatch(action);
-      store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-    }
-
-    if (action.type === actionConstants.SEND_CHAT) {
-      const gameId = store.getState().getIn(['users', userId, 'gameId']);
-      store.dispatch(actions.sendChat(gameId, userId, action.text));
-    }
-
-    if (action.type === actionConstants.MOVE) {
-      action.gameId = store.getState().getIn(['users', userId, 'gameId']);
-      action.date = moment().toISOString();
-      if (action.gameId) {
-        const datesBefore = store.getState().getIn(['games', action.gameId, action.board, 'dates']);
-        store.dispatch(action);
-        const datesAfter = store.getState().getIn(['games', action.gameId, action.board, 'dates']);
-        if (datesAfter.count() > datesBefore.count()) {
-          action.room = action.gameId;
-          store.dispatch(action);
-        }
-        if (store.getState().getIn(['games', action.gameId, 'winner'])) {
-          startNewGame(action.gameId, store, io, INBETWEEN_DELAY);
-        }
-      }
-    }
-
-    if (action.type === actionConstants.TIME_RAN_OUT) {
-      action.gameId = store.getState().getIn(['users', userId, 'gameId']);
-      action.date = moment().toISOString();
-      if (!store.getState().getIn(['games', action.gameId, 'winner'])) {
-        if (action.gameId) {
-          store.dispatch(action);
-          if (store.getState().getIn(['games', action.gameId, 'winner'])) {
-            startNewGame(action.gameId, store, io, INBETWEEN_DELAY);
-          }
-        }
-      }
-    }
+    if (process.env.NODE_ENV === 'development') console.log(action);
+    response({
+      action,
+      getState: store.getState,
+      dispatch: store.dispatch,
+      socket,
+      socketAdapter: io.sockets.adapter,
+    });
   });
 
-  socket.on('disconnect', () => {
-    const userId = store.getState().getIn(['sockets', socket.id]);
-    const gameId = store.getState().getIn(['users', userId, 'gameId']);
-    store.dispatch(actions.disconnectUser(socket.id, userId));
-    if (gameId) {
-      store.dispatch(actions.joinBoard(gameId, store.getState().getIn(['games', gameId])));
-    }
-    store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-    store.dispatch(actions.onlinecountSet(store.getState().get('sockets').count()));
-  });
+  socket.on('disconnect', () => response({
+    action: {type: constants.DISCONNECT},
+    getState: store.getState,
+    dispatch: store.dispatch,
+    socket,
+    socketAdapter: io.sockets.adapter,
+  }));
 });
 
-function startNewGame(gameId, store, io, delay) {
-  store.dispatch(actions.winner(gameId, store.getState().getIn(['games', gameId, 'winner'])));
-  setTimeout(() => {
-    store.dispatch(actions.gameToNewGame(gameId));
-    const newGameId = store.getState().getIn(['oldToNewGame', gameId]);
-    store.getState().get('users').forEach(user => {
-      if (user.get('gameId') === newGameId) {
-        io.sockets.adapter.add(user.get('socketId'), newGameId);
-      }
-    });
-    store.dispatch(actions.pushUrl(newGameId, `/game/${newGameId}`));
-    store.dispatch(actions.joinBoard(newGameId, store.getState().getIn(['games', newGameId])));
-    store.dispatch(actions.syncGames(store.getState().get('games'), store.getState().get('users')));
-  }, delay);
-}
-
-
-app.use('/api/v1', api);
 app.use(frontend);
 app.use(errorHandler);

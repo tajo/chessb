@@ -8,7 +8,6 @@ export function findSeat(userId) {
   };
 }
 
-
 export function onlinecountSet(count) {
   return {
     type: actions.SERVER_ONLINECOUNT_UPDATE,
