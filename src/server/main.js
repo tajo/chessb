@@ -1,5 +1,4 @@
 import config from './config';
-import errorHandler from './lib/errorHandler';
 import express from 'express';
 import frontend from './frontend';
 import http from 'http';
@@ -51,4 +50,3 @@ io.on('connection', socket => {
 });
 
 app.use(frontend);
-app.use(errorHandler);

@@ -3,19 +3,16 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import config from '../config';
 import getAppAssetFilenamesAsync from './assets';
-// import configureStore from '../../browser/redux/configureStore';
 import serialize from 'serialize-javascript';
 import {HOT_RELOAD_PORT} from '../../../webpack/constants';
 
 export default function render(req, res) {
-  // const store = configureStore();
   const store = {};
   const html = renderPage(store, req);
   res.send(html);
 }
 
-function renderPage(store, req) { // eslint-disable-line space-before-function-paren
-  // const clientState = store.getState();
+function renderPage(store, req) {
   const clientState = store;
   const {headers, hostname} = req;
   const {
@@ -35,7 +32,7 @@ function renderPage(store, req) { // eslint-disable-line space-before-function-p
 }
 
 let appAssetFilenameCache = null;
-function getAppAssetFilenamesCachedAsync() { // eslint-disable-line space-before-function-paren
+function getAppAssetFilenamesCachedAsync() {
   if (appAssetFilenameCache) return appAssetFilenameCache;
   appAssetFilenameCache = getAppAssetFilenamesAsync();
   return appAssetFilenameCache;
@@ -46,8 +43,6 @@ function getScriptHtml(clientState, headers, hostname, appJsFilename) {
     ? `/_assets/${appJsFilename}`
     : `//${hostname}:${HOT_RELOAD_PORT}/build/app.js`;
 
-  // Note how clientState is serialized. JSON.stringify is anti-pattern.
-  // https://github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
   return `
     <script>
       window.__INITIAL_STATE__ = ${serialize(clientState)};
