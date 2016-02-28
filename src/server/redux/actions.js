@@ -1,4 +1,4 @@
-import {routeActions} from 'react-router-redux';
+import {push} from 'react-router-redux';
 import actions from '../../common/actionConstants';
 
 export function findSeat(userId) {
@@ -34,7 +34,7 @@ export function disconnectUser(socketId, userId) {
 }
 
 export function pushUrl(socketId, url) {
-  const pushAction = routeActions.push(url);
+  const pushAction = push(url);
   pushAction.room = socketId;
   return pushAction;
 }
