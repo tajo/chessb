@@ -6,6 +6,8 @@
 
 This is a game called [Bughouse Chess](https://en.wikipedia.org/wiki/Bughouse_chess) - a special variant of chess for 4 players. This project includes both server and client (web interface written in mighty [React](https://facebook.github.io/react/)). **This is still an alpha version / experiment / proof of concept.** Tests, server persistence and more features coming soon.
 
+👉 **[LIVE DEMO - https://chessb.com](https://chessb.com)** 👈
+
 ## Interesting technical solutions
 
 - communication based on [Socket.io](http://socket.io/)
