@@ -1,5 +1,5 @@
 import React from 'react';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
+import {browserHistory} from 'react-router';
 import ReactDOM from 'react-dom';
 import {syncHistory} from 'react-router-redux';
 import routes from './routes';
@@ -10,7 +10,6 @@ import rootReducer from './redux/reducers';
 import {authUser} from './redux/actions/user';
 
 const socket = io();
-const browserHistory = createBrowserHistory();
 const reduxRouterMiddleware = syncHistory(browserHistory);
 const store = configureStore(
   socket,
