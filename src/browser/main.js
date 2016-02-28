@@ -17,7 +17,7 @@ const store = configureStore(
 );
 const history = syncHistoryWithStore(browserHistory, store);
 
-// user put in an url with game id, let's skip auto find seat
+// user put in an url with game id, let's skip automatic seat selection
 const initUrl = store.getState().routing.locationBeforeTransitions.pathname.split('/');
 
 let gameId = null;
@@ -32,7 +32,6 @@ socket.on('action', action => {
   return store.dispatch(action);
 });
 
-// Render the React application to the DOM
 ReactDOM.render(
   <Root history={history} routes={routes} store={store} />,
   document.getElementById('app')

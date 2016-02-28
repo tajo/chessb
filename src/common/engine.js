@@ -1,5 +1,16 @@
 /* eslint-disable */
 
+// ORIGINAL SOURCE
+/* @license
+ * Copyright (c) 2015, Jeff Hlywa (jhlywa@gmail.com)
+ * Released under the BSD license
+ * https://github.com/jhlywa/chess.js/blob/master/LICENSE
+ */
+
+/* HEAVILY MODIFIED (50% of code deleted + many other adaptions to
+ * reflect significant differences between Chess and Bughouse Chess
+ * modified by Vojtech Miksu <vojtech@miksu.cz>, 2016 */
+
 export default function Chess(newstate) {
 
   /* jshint indent: false */
