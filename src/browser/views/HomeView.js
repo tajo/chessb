@@ -77,8 +77,8 @@ function getCounter(startDate) {
     if (diff > 0) {
       return diff;
     }
-    return 0;
   }
+  return 0;
 }
 
 export default connect(mapStateToProps)(DragDropContext(HTML5Backend)(HomeView));

@@ -100,4 +100,5 @@ function getPic(type) {
   if (type === PIECES.QUEENW) return queenw;
   if (type === PIECES.ROOKB) return rookb;
   if (type === PIECES.ROOKW) return rookw;
+  return null;
 }

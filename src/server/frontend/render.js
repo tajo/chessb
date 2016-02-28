@@ -24,14 +24,14 @@ function renderPage(store, req) { // eslint-disable-line space-before-function-p
   } = getAppAssetFilenamesCachedAsync();
   const scriptHtml = getScriptHtml(clientState, headers, hostname, appJsFilename);
 
-  return '<!DOCTYPE html>' + ReactDOMServer.renderToStaticMarkup(
+  return `<!DOCTYPE html>${ReactDOMServer.renderToStaticMarkup(
     <Html
       appCssFilename={appCssFilename}
       bodyHtml={`<div id="app"></div>${scriptHtml}`}
       googleAnalyticsId={config.googleAnalyticsId}
       isProduction={config.isProduction}
     />
-  );
+  )}`;
 }
 
 let appAssetFilenameCache = null;

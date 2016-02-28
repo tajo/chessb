@@ -2,7 +2,6 @@
   "parser"  : "babel-eslint",
   "extends" : ["airbnb"],
   "rules": {
-    // Soften rules for legacy projects. Can be removed for clean project.
     "comma-dangle": 0,
     "curly": 0,
     "default-case": 0,
@@ -16,6 +15,7 @@
     "object-curly-spacing": [2, "never"],
     "object-shorthand": 0,
     "padded-blocks": 0,
+    "arrow-body-style": 0,
     // React
     "react/sort-comp": 0, // Not ready yet
     "react/jsx-no-bind": 0
