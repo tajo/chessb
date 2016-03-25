@@ -2,6 +2,8 @@ import moment from 'moment';
 import * as actions from './redux/actions';
 import {INBETWEEN_DELAY} from '../common/constants';
 import constants from '../common/actionConstants';
+import {UserModel} from './db';
+import faker from 'faker';
 
 export default function response(ctx) {
   const res = {};
@@ -17,21 +19,37 @@ export default function response(ctx) {
 }
 
 export function userAuthenticate({action, getState, dispatch, socket}) {
-  dispatch(action);
-  const userId = getState().getIn(['sockets', socket.id]);
-  dispatch(actions.authUser(socket.id, userId));
-  dispatch(actions.onlinecountSet(getState().get('sockets').count()));
-  if (getState().get('games').has(action.gameId)) {
-    dispatch(actions.switchGame(action.gameId, userId));
-  } else {
-    dispatch(actions.findSeat(userId));
-  }
-  dispatch(actions.syncGames(getState().get('games'), getState().get('users')));
-  const gameId = getState().getIn(['users', userId, 'gameId']);
-  !getState().get('games').has(action.gameId)
-    && dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
-  dispatch(actions.joinBoard(socket.id, getState().getIn(['games', gameId])));
-  socket.join(gameId);
+  UserModel.findOne({ hashId: action.hashId }).exec()
+    .then(user => {
+      if (!user) {
+        const newUser = new UserModel({
+          name: faker.name.findName().replace(/\s+/g, '-').toLowerCase(),
+          hashId: action.hashId,
+          password: null,
+        });
+        return newUser.save();
+      }
+      return user;
+    })
+    .then(user => {
+      action.name = user.name;
+      dispatch(action);
+      const userId = getState().getIn(['sockets', socket.id]);
+      dispatch(actions.authUser(socket.id, userId, user.name));
+      dispatch(actions.onlinecountSet(getState().get('sockets').count()));
+      if (getState().get('games').has(action.gameId)) {
+        dispatch(actions.switchGame(action.gameId, userId));
+      } else {
+        dispatch(actions.findSeat(userId));
+      }
+      dispatch(actions.syncGames(getState().get('games'), getState().get('users')));
+      const gameId = getState().getIn(['users', userId, 'gameId']);
+      !getState().get('games').has(action.gameId)
+        && dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
+      dispatch(actions.joinBoard(socket.id, getState().getIn(['games', gameId])));
+      socket.join(gameId);
+      console.log(user);
+    });
 }
 
 export function switchGame({action, getState, dispatch, socket}) {

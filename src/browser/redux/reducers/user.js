@@ -16,6 +16,7 @@ function getHashId() {
 
 const InitialState = Record({
   hashId: getHashId(),
+  name: null,
   userId: null,
   gameId: null
 });
@@ -26,7 +27,9 @@ export default function userReducer(state = initialState, action) {
   switch (action.type) {
     case actions.SERVER_USER_AUTHENTICATE: {
       if (!action.userId) break;
-      return state.update('userId', () => action.userId);
+      return state
+        .update('userId', () => action.userId)
+        .update('name', () => action.name);
     }
 
     case actions.SERVER_SYNC_BOARD: {

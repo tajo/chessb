@@ -49,6 +49,7 @@ export default function reducer(state = initialState, action) {
       return state
         .update('sockets', sockets => sockets.set(action.socketId, action.hashId))
         .update('users', users => users.set(action.hashId, new UserRecord({
+          name: action.name,
           hashId: action.hashId,
           gameId: null,
           socketId: action.socketId
