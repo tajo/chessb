@@ -25,10 +25,11 @@ if (initUrl.length === 3 && initUrl[1] === 'game' && initUrl[2].length === 9) {
   gameId = initUrl[2];
 }
 
-store.dispatch(authUser(store.getState().user.get('hashId'), gameId));
+store.dispatch(authUser(store.getState().user.get('token'), gameId));
 socket.on('action', action => {
   if (action.broadcast) delete action.broadcast;
   if (action.room) delete action.room;
+  if (action.token) localStorage.setItem('token', action.token);
   return store.dispatch(action);
 });
 

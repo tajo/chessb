@@ -4,10 +4,10 @@ export const actionCreators = {
   authUser
 };
 
-export function authUser(hashId, gameId = null) {
+export function authUser(token, gameId = null) {
   return {
     type: actions.USER_AUTHENTICATE,
-    hashId: hashId,
+    token: token,
     gameId: gameId,
     remote: true
   };

@@ -24,7 +24,8 @@ const Game = Record({
 });
 
 const UserRecord = Record({
-  hashId: '',
+  userId: '',
+  token: '',
   gameId: '',
   socketId: ''
 });
@@ -47,14 +48,15 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.USER_AUTHENTICATE: {
       return state
-        .update('sockets', sockets => sockets.set(action.socketId, action.hashId))
-        .update('users', users => users.set(action.hashId, new UserRecord({
-          name: action.name,
-          hashId: action.hashId,
+        .update('sockets', sockets => sockets.set(action.socketId, action.userId))
+        .update('users', users => users.set(action.userId, new UserRecord({
+          userId: action.userId,
+          token: action.token,
           gameId: null,
           socketId: action.socketId
         })));
     }
+
 
     case actions.SERVER_USER_DISCONNECT: {
       const inGame = state.getIn(['users', action.userId, 'gameId']);
@@ -220,7 +222,8 @@ export default function reducer(state = initialState, action) {
           return users.map(user => {
             if (user.get('gameId') !== action.gameId) return user;
             return new UserRecord({
-              hashId: user.get('hashId'),
+              userId: user.get('userId'),
+              token: user.get('token'),
               gameId: newGameId,
               socketId: user.get('socketId')
             });
@@ -250,12 +253,13 @@ function leaveGameVariant(state, gameId, userId, board, color) {
 }
 
 function joinLeaveGame(state, action) {
+  const userId = state.getIn(['users', action.userId, 'userId']);
   const checkA = state.getIn(['games', action.gameId, action.board === 'bBoard' ? 'aBoard' : 'bBoard', action.color]);
   const checkB = state.getIn(['games', action.gameId, action.board, action.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
-  if (checkA !== action.userId && checkB !== action.userId) {
-    state = state.updateIn(['games', action.gameId, action.board, action.color], (userId) => {
-      if (!userId) return action.userId;
-      if (userId === action.userId) return null;
+  if (checkA !== userId && checkB !== userId) {
+    state = state.updateIn(['games', action.gameId, action.board, action.color], _userId => {
+      if (!_userId) return userId;
+      if (_userId === userId) return null;
       return userId;
     });
   }

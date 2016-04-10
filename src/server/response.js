@@ -4,6 +4,7 @@ import {INBETWEEN_DELAY} from '../common/constants';
 import constants from '../common/actionConstants';
 import {UserModel} from './db';
 import faker from 'faker';
+import shortid from 'shortid';
 
 export default function response(ctx) {
   const res = {};
@@ -19,12 +20,13 @@ export default function response(ctx) {
 }
 
 export function userAuthenticate({action, getState, dispatch, socket}) {
-  UserModel.findOne({ hashId: action.hashId }).exec()
+  if (!action.token) action.token = shortid.generate();
+  UserModel.findOne({ token: action.token }).exec()
     .then(user => {
       if (!user) {
         const newUser = new UserModel({
-          name: faker.name.findName().replace(/\s+/g, '-').toLowerCase(),
-          hashId: action.hashId,
+          userId: faker.name.firstName() + '-' + shortid.generate().substring(0,6),
+          token: action.token,
           password: null,
         });
         return newUser.save();
@@ -32,10 +34,10 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
       return user;
     })
     .then(user => {
-      action.name = user.name;
+      action.userId = user.userId;
       dispatch(action);
       const userId = getState().getIn(['sockets', socket.id]);
-      dispatch(actions.authUser(socket.id, userId, user.name));
+      dispatch(actions.authUser(socket.id, action.token, userId));
       dispatch(actions.onlinecountSet(getState().get('sockets').count()));
       if (getState().get('games').has(action.gameId)) {
         dispatch(actions.switchGame(action.gameId, userId));

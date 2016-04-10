@@ -9,9 +9,9 @@ db.once('open', () => {
 });
 
 const userSchema = Schema({
-  name: String,
+  userId: String,
   password: String,
-  hashId: String,
+  token: String,
   createdAt: { type: Date, default: Date.now },
 });
 

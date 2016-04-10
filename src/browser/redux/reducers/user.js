@@ -1,22 +1,18 @@
 import actions from '../../../common/actionConstants';
-import shortid from 'shortid';
 import {Record} from 'immutable';
 
-function getHashId() {
+function getToken() {
   if (window === 'undefined') {
     return null;
   }
-  if (localStorage.getItem('hashId')) {
-    return localStorage.getItem('hashId');
+  if (localStorage.getItem('token')) {
+    return localStorage.getItem('token');
   }
-  const hashId = shortid.generate();
-  localStorage.setItem('hashId', hashId);
-  return hashId;
+  return null;
 }
 
 const InitialState = Record({
-  hashId: getHashId(),
-  name: null,
+  token: getToken(),
   userId: null,
   gameId: null
 });
@@ -29,7 +25,7 @@ export default function userReducer(state = initialState, action) {
       if (!action.userId) break;
       return state
         .update('userId', () => action.userId)
-        .update('name', () => action.name);
+        .update('token', () => action.token);
     }
 
     case actions.SERVER_SYNC_BOARD: {

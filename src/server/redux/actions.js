@@ -16,11 +16,11 @@ export function onlinecountSet(count) {
   };
 }
 
-export function authUser(socketId, userId, name) {
+export function authUser(socketId, token, userId) {
   return {
     type: actions.SERVER_USER_AUTHENTICATE,
     userId: userId,
-    name: name,
+    token: token,
     room: socketId
   };
 }

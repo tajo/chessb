@@ -29,8 +29,9 @@ This is a game called [Bughouse Chess](https://en.wikipedia.org/wiki/Bughouse_ch
 
 ## Requirements
 
-- node.js 4+
-- npm 3+
+- Node.js 5+
+- Npm 3+
+- MongoDB 3+
 - recommended: [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) and [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
 
 Make sure this works: 
