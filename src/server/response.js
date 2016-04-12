@@ -5,12 +5,10 @@ import constants from '../common/actionConstants';
 import {UserModel} from './db';
 import faker from 'faker';
 import shortid from 'shortid';
-import bcrypt from 'bcrypt';
 
 export default function response(ctx) {
   const res = {};
   res[constants.USER_AUTHENTICATE] = userAuthenticate;
-  res[constants.USER_ADD] = userAdd;
   res[constants.SWITCH_GAME] = switchGame;
   res[constants.JOIN_LEAVE_GAME] = joinLeaveGame;
   res[constants.ADD_NEW_GAME] = addNewGame;
@@ -29,6 +27,7 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
         const newUser = new UserModel({
           userId: faker.name.firstName() + '-' + shortid.generate().substring(0,6),
           token: action.token,
+          email: shortid.generate(),
           password: null,
         });
         return newUser.save();
@@ -54,19 +53,6 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
       socket.join(gameId);
       console.log(user);
     });
-}
-
-export function userAdd({action, getState, dispatch, socket}) {
-  action.token = shortid.generate();
-  const newUser = new UserModel({
-    userId: action.newUserId,
-    token: action.token,
-    password: bcrypt.hashSync(action.password, SALT_ROUNDS),
-    email: action.email,
-  });
-  newUser.save().then(user => {
-    dispatch(action);
-  });
 }
 
 export function switchGame({action, getState, dispatch, socket}) {

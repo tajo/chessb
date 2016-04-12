@@ -24,8 +24,8 @@ function getError(field) {
 }
 
 function submit(addUser) {
-  return values => {
-    addUser(values.email, values.password, values.userId);
+  return (values, dispatch) => {
+    return addUser(values.email, values.password, values.userId);
   };
 }
 

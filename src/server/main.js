@@ -7,6 +7,7 @@ import configureStore from '../common/configureStore';
 import rootReducer from './redux/reducer';
 import response from './response';
 import constants from '../common/actionConstants';
+import api from './api';
 
 const {port} = config;
 const app = express();
@@ -49,4 +50,5 @@ io.on('connection', socket => {
   }));
 });
 
+app.use('/api', api);
 app.use(frontend);

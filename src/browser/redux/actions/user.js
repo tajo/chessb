@@ -15,11 +15,17 @@ export function authUser(token, gameId = null) {
 }
 
 export function addUser(email, password, userId) {
-  return {
-    type: actions.USER_ADD,
-    email: email,
-    password: password,
-    newUserId: userId,
-    remote: true
+  return ({ post }) => {
+    return {
+      type: actions.USER_ADD,
+      payload: {
+        promise: post('/api/user', {
+          email: email,
+          password: password,
+          newUserId: userId,
+        })
+        .then(response => response.json()),
+      },
+    };
   };
 }

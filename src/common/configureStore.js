@@ -1,5 +1,5 @@
-import fetch from './fetch';
 import injectDependencies from './injectDeps';
+import { get, post, put, remove } from '../common/fetch';
 import promiseMiddleware from 'redux-promise-middleware';
 import socketMiddleware from './socketMiddleware';
 import shortid from 'shortid';
@@ -12,11 +12,27 @@ import {
 export default function configureStore(io, reducer, browserMiddlewares = null) {
   const getUid = () => shortid.generate();
   const now = () => Date.now();
-  const dependenciesMiddleware = injectDependencies({fetch, getUid, now});
+
+  // Remember to set SERVER_URL for deployment.
+  const SERVER_URL = process.env.SERVER_URL ||
+    (process.env.IS_BROWSER ? '' : 'http://localhost:8000');
+
+  const injectMiddleware = deps => store => next => action =>
+    next(typeof action === 'function'
+      ? action({ ...deps, store })
+      : action
+    );
 
   let middlewares = [
     socketMiddleware(io),
-    dependenciesMiddleware,
+    injectMiddleware({
+      get: get(SERVER_URL),
+      post: post(SERVER_URL),
+      remove: remove(SERVER_URL),
+      put: put(SERVER_URL),
+      getUid: () => shortid.generate(),
+      now: () => new Date().toISOString(),
+    }),
     promiseMiddleware({
       promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
     })
