@@ -9,9 +9,10 @@ db.once('open', () => {
 });
 
 const userSchema = Schema({
-  userId: String,
+  userId: { type: String, unique : true, required : true, dropDups: true },
+  email: { type: String, unique : true, dropDups: true },
   password: String,
-  token: String,
+  token: { type: String, unique : true, required : true, dropDups: true },
   createdAt: { type: Date, default: Date.now },
 });
 

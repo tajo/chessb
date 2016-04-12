@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from '../components/modal';
+import Account from '../components/account';
 import FlexModalWrapper from 'react-modal-wrapper';
 import '../styles/core.scss';
 import bee from '../../../assets/bee.png';
@@ -44,6 +45,7 @@ function CoreLayout({children}) {
         </FlexModalWrapper>
       </div>
       <div style={topRightStyle}>
+        <Account />
         <a href="https://twitter.com/bugches" target="_blank" title="Follow us on twitter for news and feedback!">
           <img src={twitter} style={{width: 30, height: 30}} />
         </a>

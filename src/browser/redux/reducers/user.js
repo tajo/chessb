@@ -13,6 +13,7 @@ function getToken() {
 
 const InitialState = Record({
   token: getToken(),
+  hasPassword: false,
   userId: null,
   gameId: null
 });
@@ -25,6 +26,7 @@ export default function userReducer(state = initialState, action) {
       if (!action.userId) break;
       return state
         .update('userId', () => action.userId)
+        .update('hasPassword', () => action.hasPassword)
         .update('token', () => action.token);
     }
 

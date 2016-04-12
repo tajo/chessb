@@ -57,7 +57,6 @@ export default function reducer(state = initialState, action) {
         })));
     }
 
-
     case actions.SERVER_USER_DISCONNECT: {
       const inGame = state.getIn(['users', action.userId, 'gameId']);
       if (inGame) {

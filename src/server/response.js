@@ -1,14 +1,16 @@
 import moment from 'moment';
 import * as actions from './redux/actions';
-import {INBETWEEN_DELAY} from '../common/constants';
+import {INBETWEEN_DELAY, SALT_ROUNDS} from '../common/constants';
 import constants from '../common/actionConstants';
 import {UserModel} from './db';
 import faker from 'faker';
 import shortid from 'shortid';
+import bcrypt from 'bcrypt';
 
 export default function response(ctx) {
   const res = {};
   res[constants.USER_AUTHENTICATE] = userAuthenticate;
+  res[constants.USER_ADD] = userAdd;
   res[constants.SWITCH_GAME] = switchGame;
   res[constants.JOIN_LEAVE_GAME] = joinLeaveGame;
   res[constants.ADD_NEW_GAME] = addNewGame;
@@ -37,7 +39,7 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
       action.userId = user.userId;
       dispatch(action);
       const userId = getState().getIn(['sockets', socket.id]);
-      dispatch(actions.authUser(socket.id, action.token, userId));
+      dispatch(actions.authUser(socket.id, action.token, userId, !!user.password));
       dispatch(actions.onlinecountSet(getState().get('sockets').count()));
       if (getState().get('games').has(action.gameId)) {
         dispatch(actions.switchGame(action.gameId, userId));
@@ -52,6 +54,19 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
       socket.join(gameId);
       console.log(user);
     });
+}
+
+export function userAdd({action, getState, dispatch, socket}) {
+  action.token = shortid.generate();
+  const newUser = new UserModel({
+    userId: action.newUserId,
+    token: action.token,
+    password: bcrypt.hashSync(action.password, SALT_ROUNDS),
+    email: action.email,
+  });
+  newUser.save().then(user => {
+    dispatch(action);
+  });
 }
 
 export function switchGame({action, getState, dispatch, socket}) {

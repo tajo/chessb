@@ -24,5 +24,6 @@ export default Keymirror({
   SHOW_PROMOTION_POPUP: null,
   SWITCH_GAME: null,
   TIME_RAN_OUT: null,
+  USER_ADD: null,
   USER_AUTHENTICATE: null
 });
