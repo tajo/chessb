@@ -8,7 +8,7 @@ import '../styles/button.scss';
 
 const fields = [ 'userId', 'email', 'password'];
 
-const validate = values => {
+export const validate = values => {
   const errors = {
     userId: required(values.userId) || basicChars(values.userId) ||  minLength(3)(values.userId),
     password: required(values.password) || minLength(6)(values.password),
@@ -29,7 +29,9 @@ function submit(addUser) {
   };
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  accountError: state.user.get('accountError'),
+});
 
 class Signup extends Component {
 
@@ -39,6 +41,7 @@ class Signup extends Component {
     resetForm: React.PropTypes.func.isRequired,
     submitting: React.PropTypes.bool.isRequired,
     addUser: React.PropTypes.func.isRequired,
+    accountError: React.PropTypes.string,
   };
 
   render() {
@@ -50,6 +53,7 @@ class Signup extends Component {
       } = this.props
     return (
       <form onSubmit={handleSubmit(submit(this.props.addUser))}>
+        {this.props.accountError && <div style={{color: 'darkred'}}>{this.props.accountError}</div>}
         <div>
           <label><b>Email {getError(email)}</b></label>
           <div>

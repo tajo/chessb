@@ -51,7 +51,6 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
         && dispatch(actions.pushUrl(socket.id, `/game/${gameId}`));
       dispatch(actions.joinBoard(socket.id, getState().getIn(['games', gameId])));
       socket.join(gameId);
-      console.log(user);
     });
 }
 

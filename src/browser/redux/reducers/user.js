@@ -16,7 +16,8 @@ const InitialState = Record({
   hasPassword: false,
   userId: null,
   gameId: null,
-  accountAdded: false
+  accountAdded: false,
+  accountError: null,
 });
 
 const initialState = new InitialState;
@@ -36,7 +37,11 @@ export default function userReducer(state = initialState, action) {
     }
 
     case actions.USER_ADD_SUCCESS: {
-      return state.update('accountAdded', () => true);
+      if (action.payload.err) {
+        return state.update('accountError', () => action.payload.err);
+      } else {
+        return state.update('accountAdded', () => true);
+      }
     }
   }
   return state;
