@@ -27,7 +27,11 @@ class Account extends Component {
             {this.props.user.userId}
           </span>
           <br />
-          <b><a href="#" onClick={() => this.props.authUser(null, this.props.user.get('gameId'))}>Sign out</a></b>
+          <b><a href="#" onClick={() => {
+            //this.props.authUser(null, this.props.user.get('gameId'))
+            localStorage.setItem('token', null);
+            document.location.reload(true);
+          }}>Sign out</a></b>
         </div>
       );
     } else {
