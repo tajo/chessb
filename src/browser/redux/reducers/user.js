@@ -49,7 +49,12 @@ export default function userReducer(state = initialState, action) {
       if (action.payload.err) {
         return state.update('signInError', () => action.payload.err);
       } else {
-        return state.update('signInError', () => null);
+        localStorage.setItem('token', action.payload.token);
+        return state
+          .update('userId', () => action.payload.userId)
+          .update('hasPassword', () => true)
+          .update('token', () => action.payload.token)
+          .update('signInError', () => null);
       }
     }
   }
