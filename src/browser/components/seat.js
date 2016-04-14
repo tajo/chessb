@@ -37,7 +37,7 @@ class Seat extends Component {
     isBefore = this.props.isReversed ? !isBefore : isBefore;
 
     const userId = this.props.game.getIn([this.props.board, this.props.color]);
-    const myUserId = this.props.user.get('name');
+    const myUserId = this.props.user.get('userId');
 
     const checkA = this.props.game.getIn([this.props.board === 'bBoard' ? 'aBoard' : 'bBoard', this.props.color]);
     const checkB = this.props.game.getIn([this.props.board, this.props.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
