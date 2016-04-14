@@ -26,5 +26,6 @@ export default Keymirror({
   TIME_RAN_OUT: null,
   USER_ADD: null,
   USER_ADD_SUCCESS: null,
-  USER_AUTHENTICATE: null
+  USER_AUTHENTICATE: null,
+  USER_SIGN_IN: null,
 });

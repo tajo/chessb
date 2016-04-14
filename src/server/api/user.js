@@ -40,4 +40,21 @@ router
       }
     });
 
+router
+  .route('/user/signin')
+    .post((req, res) => {
+      if (!req.body.userId || !req.body.password) {
+        res.status(400).send({ err: 'User name or password cannot be empty!' });
+      } else {
+        UserModel.findOne({$or:[{userId: req.body.userId}, {email: req.body.userId}]},
+          (err, user) => {
+            if (err || !user || !bcrypt.compareSync(req.body.password, user.password)) {
+              res.status(400).send({ err: 'User was not found!' });
+            } else {
+              res.status(200).send({ msg: `User '${req.body.userId}' found.`, payload: user });
+            }
+          });
+      }
+    });
+
 export default router;
