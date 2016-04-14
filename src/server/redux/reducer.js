@@ -65,8 +65,7 @@ export default function reducer(state = initialState, action) {
       if (!action.userId) return state;
       return state
         .update('sockets', sockets => sockets.delete(action.socketId))
-        .updateIn(['users', action.userId, 'gameId'], () => null)
-        .updateIn(['users', action.userId, 'socketId'], () => null);
+        .update('users', users => users.delete(action.userId));
     }
 
     case actions.SWITCH_GAME: {
