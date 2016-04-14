@@ -53,7 +53,7 @@ class Signup extends Component {
       } = this.props
     return (
       <form onSubmit={handleSubmit(submit(this.props.addUser))}>
-        {this.props.accountError && <div style={{color: 'darkred'}}>{this.props.accountError}</div>}
+        {this.props.accountError && <div style={{color: 'darkred'}}><b>{this.props.accountError}</b></div>}
         <div>
           <label><b>Email {getError(email)}</b></label>
           <div>

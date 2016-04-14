@@ -29,7 +29,7 @@ function submit(signInUser) {
 }
 
 const mapStateToProps = (state) => ({
-  //signInError: state.user.get('signInError'),
+  signInError: state.user.get('signInError'),
 });
 
 class Signin extends Component {
@@ -40,6 +40,7 @@ class Signin extends Component {
     resetForm: React.PropTypes.func.isRequired,
     submitting: React.PropTypes.bool.isRequired,
     signInUser: React.PropTypes.func.isRequired,
+    signInError: React.PropTypes.string
   };
 
   render() {
@@ -51,6 +52,7 @@ class Signin extends Component {
       } = this.props
     return (
       <form onSubmit={handleSubmit(submit(this.props.signInUser))}>
+        {this.props.signInError && <div style={{color: 'darkred'}}><b>{this.props.signInError}</b></div>}
         <div>
           <label><b>User or email  {getError(userId)}</b></label>
           <div>

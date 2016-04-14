@@ -28,4 +28,5 @@ export default Keymirror({
   USER_ADD_SUCCESS: null,
   USER_AUTHENTICATE: null,
   USER_SIGN_IN: null,
+  USER_SIGN_IN_SUCCESS: null,
 });
