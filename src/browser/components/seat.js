@@ -26,7 +26,7 @@ class Seat extends Component {
   renderName(userId, myUserId) {
     const you = userId === myUserId ? (<b style={{color: 'darkred'}}>YOU!</b>) : null;
     return (
-      <div>{userId ? (<div><a href="#">{userId}</a> {you}</div>) : 'empty'}</div>
+      <div>{userId ? (<div><b>{userId}</b> [{this.props.user.get('ranking')}] {you}</div>) : 'empty'}</div>
     );
   }
 

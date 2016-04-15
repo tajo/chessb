@@ -16,6 +16,7 @@ const InitialState = Record({
   hasPassword: false,
   userId: null,
   gameId: null,
+  ranking: 1000,
   accountAdded: false,
   accountError: null,
   signInError: null,

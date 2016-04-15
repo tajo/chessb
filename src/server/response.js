@@ -28,6 +28,7 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
           userId: faker.name.firstName() + '-' + shortid.generate().substring(0,6),
           token: action.token,
           email: shortid.generate(),
+          ranking: 1000,
           password: null,
         });
         return newUser.save();

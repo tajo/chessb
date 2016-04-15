@@ -12,6 +12,7 @@ const userSchema = Schema({
   userId: { type: String, unique : true, required : true, dropDups: true },
   email: { type: String, unique : true, dropDups: true },
   password: String,
+  ranking: { type: Number, required : true },
   token: { type: String, unique : true, required : true, dropDups: true },
   createdAt: { type: Date, default: Date.now },
 });

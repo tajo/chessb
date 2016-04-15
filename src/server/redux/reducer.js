@@ -28,7 +28,8 @@ const UserRecord = Record({
   userId: '',
   token: '',
   gameId: '',
-  socketId: ''
+  socketId: '',
+  ranking: 1000
 });
 
 const MessageState = Record({
