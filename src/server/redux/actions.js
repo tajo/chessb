@@ -60,11 +60,15 @@ export function seatChanged(gameId, board, color, userId, startDate) {
   };
 }
 
-export function winner(gameId, winner) {
+export function winner(gameId, winner, heroWhite, heroBlack, villainWhite, villainBlack) {
   return {
     type: actions.SERVER_WINNER,
     room: gameId,
-    winner: winner
+    winner: winner,
+    heroWhite: heroWhite,
+    heroBlack: heroBlack,
+    villainWhite: villainWhite,
+    villainBlack: villainBlack
   };
 }
 
@@ -72,7 +76,8 @@ export function syncGames(games, users) {
   return {
     type: actions.SERVER_SYNC_GAMES,
     broadcast: true,
-    games: getGameList(games, users)
+    games: getGameList(games, users),
+    rankings: getRankings(users)
   };
 }
 
@@ -118,4 +123,12 @@ function getGameList(games, users) {
       specs: users.filter(user => user.gameId === game.gameId).count() - realPlayers
     };
   });
+}
+
+function getRankings(users) {
+  const rankings = {};
+  users.forEach(user => {
+    rankings[user.userId] = user.ranking;
+  });
+  return rankings;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 import {connect} from 'react-redux';
-import {Record} from 'immutable';
+import {Record, Map} from 'immutable';
 import {COLORS} from '../../common/constants';
 import {actionCreators as gameActions} from '../redux/actions/game';
 
@@ -9,7 +9,8 @@ import '../styles/button.scss';
 
 const mapStateToProps = (state) => ({
   game: state.game,
-  user: state.user
+  user: state.user,
+  rankings: state.meta.get('rankings'),
 });
 
 class Seat extends Component {
@@ -20,13 +21,14 @@ class Seat extends Component {
     isReversed: React.PropTypes.bool,
     game: React.PropTypes.instanceOf(Record).isRequired,
     user: React.PropTypes.instanceOf(Record).isRequired,
+    rankings: React.PropTypes.instanceOf(Map).isRequired,
     joinLeaveGame: React.PropTypes.func.isRequired
   };
 
   renderName(userId, myUserId) {
     const you = userId === myUserId ? (<b style={{color: 'darkred'}}>YOU!</b>) : null;
     return (
-      <div>{userId ? (<div><b>{userId}</b> [{this.props.user.get('ranking')}] {you}</div>) : 'empty'}</div>
+      <div>{userId ? (<div><b>{userId}</b> [{this.props.rankings.get(userId)}] {you}</div>) : 'empty'}</div>
     );
   }
 

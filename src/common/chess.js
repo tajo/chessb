@@ -5,6 +5,37 @@ export function isMoveLegal(engineState, start, end) {
   return engineState.generatedMoves.some(move => move.to === end && move.from === start);
 }
 
+export function getElo(
+  heroWhite = 1000,
+  heroBlack = 1000,
+  villainWhite = 1000,
+  villainBlack = 1000,
+  result = 1
+) {
+  // adapted from
+  // https://metinmediamath.wordpress.com/2013/11/27/how-to-calculate-the-elo-rating-including-example/
+  const hero = (heroWhite + heroBlack) / 2;
+  const villain = (villainWhite + villainBlack) / 2;
+
+  const heroAdjusted = Math.pow(10, hero/400);
+  const villainAdjusted = Math.pow(10, villain/400);
+
+  const heroExp = heroAdjusted / (heroAdjusted + villainAdjusted);
+  const villainExp = villainAdjusted / (heroAdjusted + villainAdjusted);
+
+  const changeFactor = 32;
+
+  const heroRes = changeFactor * (result - heroExp);
+  const villainRes = changeFactor * (1 - result - villainExp);
+
+  return {
+    heroWhite: Math.round(heroWhite + heroRes),
+    heroBlack: Math.round(heroBlack + heroRes),
+    villainWhite: Math.round(villainWhite + villainRes),
+    villainBlack: Math.round(villainBlack + villainRes),
+  }
+}
+
 export function isPieceMovebale(engineState, position) {
   return engineState.generatedMoves.some(move => move.from === position);
 }

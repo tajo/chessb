@@ -1,7 +1,7 @@
 import actions from '../../common/actionConstants';
 import {Record, List, Map, OrderedMap} from 'immutable';
 import Chess from '../../common/engine';
-import {translatePieceReverse, getPieceColor} from '../../common/chess';
+import {translatePieceReverse, getPieceColor, getElo} from '../../common/chess';
 import shortid from 'shortid';
 import {COLORS, GAME_TIME, GAME_DELAY} from '../../common/constants';
 import moment from 'moment';
@@ -59,6 +59,7 @@ export default function reducer(state = initialState, action) {
         .update('users', users => users.set(action.userId, new UserRecord({
           userId: action.userId,
           token: action.token,
+          ranking: action.ranking,
           gameId: null,
           socketId: action.socketId
         })));
@@ -230,7 +231,8 @@ export default function reducer(state = initialState, action) {
               userId: user.get('userId'),
               token: user.get('token'),
               gameId: newGameId,
-              socketId: user.get('socketId')
+              socketId: user.get('socketId'),
+              ranking: user.get('ranking')
             });
           });
         })
@@ -242,6 +244,21 @@ export default function reducer(state = initialState, action) {
       return state
           .updateIn(['games', action.gameId, 'chat'], chat =>
             chat.push(new MessageState({userId: action.userId, text: action.text})));
+    }
+
+    case actions.SERVER_WINNER: {
+      const newElo = getElo(
+        state.getIn(['users', action.heroWhite, 'ranking']),
+        state.getIn(['users', action.heroBlack, 'ranking']),
+        state.getIn(['users', action.villainWhite, 'ranking']),
+        state.getIn(['users', action.villainBlack, 'ranking']),
+      );
+      console.log(newElo);
+      return state
+        .update('users', users => users.setIn([action.heroWhite, 'ranking'], newElo.heroWhite))
+        .update('users', users => users.setIn([action.heroBlack, 'ranking'], newElo.heroBlack))
+        .update('users', users => users.setIn([action.villainWhite, 'ranking'], newElo.villainWhite))
+        .update('users', users => users.setIn([action.villainBlack, 'ranking'], newElo.villainBlack));
     }
 
   }

@@ -37,6 +37,7 @@ export function userAuthenticate({action, getState, dispatch, socket}) {
     })
     .then(user => {
       action.userId = user.userId;
+      action.ranking = user.ranking;
       dispatch(action);
       const userId = getState().getIn(['sockets', socket.id]);
       dispatch(actions.authUser(socket.id, action.token, userId, !!user.password));
@@ -123,16 +124,58 @@ export function disconnect({getState, dispatch, socket}) {
 }
 
 function startNewGame(getState, dispatch, gameId, socketAdapter) {
-  dispatch(actions.winner(gameId, getState().getIn(['games', gameId, 'winner'])));
-  const game = new GameModel(getState().getIn(['games', gameId]).toJS());
-  game.markModified('gameId');
-  game.markModified('aBoard');
-  game.markModified('bBoard');
-  game.markModified('winner');
-  game.markModified('startDate');
-  game.markModified('chat');
-  game.markModified('gameTime');
-  game.save();
+  const winner = getState().getIn(['games', gameId, 'winner']);
+  const game = getState().getIn(['games', gameId]);
+  let heroWhite = game.getIn(['aBoard', 'WHITE']);
+  let heroBlack = game.getIn(['bBoard', 'BLACK']);
+  let villainWhite = game.getIn(['bBoard', 'WHITE']);
+  let villainBlack = game.getIn(['aBoard', 'BLACK']);
+
+  if (game.getIn(['bBoard', 'BLACK']) === winner) {
+    heroWhite = heroBlack;
+    heroBlack = winner;
+  }
+
+  if (game.getIn(['aBoard', 'BLACK']) === winner) {
+    heroBlack = winner;
+    const _heroWhite = heroWhite;
+    heroWhite = villainWhite;
+    villainWhite = _heroWhite;
+    villainBlack = heroBlack;
+  }
+
+  if (game.getIn(['bBoard', 'WHITE']) === winner) {
+    heroWhite = winner;
+    const _heroBlack = heroBlack;
+    heroBlack = villainBlack;
+    villainWhite = heroWhite;
+    villainBlack = _heroBlack;
+  }
+
+  dispatch(actions.winner(
+    gameId,
+    getState().getIn(['games', gameId, 'winner']),
+    heroWhite,
+    heroBlack,
+    villainWhite,
+    villainBlack
+  ));
+
+  const gameDB = new GameModel(getState().getIn(['games', gameId]).toJS());
+  gameDB.save();
+
+  UserModel.update({userId: heroWhite}, {ranking: getState().getIn(['users', heroWhite, 'ranking'])}, (err, raw) => {
+    if (err) return console.log(err);
+  });
+  UserModel.update({userId: heroBlack}, {ranking: getState().getIn(['users', heroBlack, 'ranking'])}, (err, raw) => {
+    if (err) return console.log(err);
+  });
+  UserModel.update({userId: villainWhite}, {ranking: getState().getIn(['users', villainWhite, 'ranking'])}, (err, raw) => {
+    if (err) return console.log(err);
+  });
+  UserModel.update({userId: villainBlack}, {ranking: getState().getIn(['users', villainBlack, 'ranking'])}, (err, raw) => {
+    if (err) return console.log(err);
+  });
 
   setTimeout(() => {
     dispatch(actions.gameToNewGame(gameId));
