@@ -16,4 +16,7 @@ const userSchema = Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+const gameSchema = new Schema({}, {strict: false});
+
 export const UserModel = mongoose.model('User', userSchema);
+export const GameModel = mongoose.model('Game', gameSchema);

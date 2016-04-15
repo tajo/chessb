@@ -2,7 +2,7 @@ import moment from 'moment';
 import * as actions from './redux/actions';
 import {INBETWEEN_DELAY, SALT_ROUNDS} from '../common/constants';
 import constants from '../common/actionConstants';
-import {UserModel} from './db';
+import {UserModel, GameModel} from './db';
 import faker from 'faker';
 import shortid from 'shortid';
 
@@ -123,6 +123,16 @@ export function disconnect({getState, dispatch, socket}) {
 
 function startNewGame(getState, dispatch, gameId, socketAdapter) {
   dispatch(actions.winner(gameId, getState().getIn(['games', gameId, 'winner'])));
+  const game = new GameModel(getState().getIn(['games', gameId]).toJS());
+  game.markModified('gameId');
+  game.markModified('aBoard');
+  game.markModified('bBoard');
+  game.markModified('winner');
+  game.markModified('startDate');
+  game.markModified('chat');
+  game.markModified('gameTime');
+  game.save();
+
   setTimeout(() => {
     dispatch(actions.gameToNewGame(gameId));
     const newGameId = getState().getIn(['oldToNewGame', gameId]);
