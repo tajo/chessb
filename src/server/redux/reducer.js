@@ -20,6 +20,7 @@ const Game = Record({
   bBoard: null,
   winner: null,
   startDate: null,
+  chat: List(),
   gameTime: GAME_TIME
 });
 
@@ -28,6 +29,11 @@ const UserRecord = Record({
   token: '',
   gameId: '',
   socketId: ''
+});
+
+const MessageState = Record({
+  userId: null,
+  text: ''
 });
 
 const firstGameId = shortid.generate();
@@ -230,6 +236,13 @@ export default function reducer(state = initialState, action) {
         .update('games', games => games.delete(action.gameId))
         .update('oldToNewGame', oldToNewGame => oldToNewGame.set(action.gameId, newGameId));
     }
+
+    case actions.SERVER_SEND_CHAT: {
+      return state
+          .updateIn(['games', action.gameId, 'chat'], chat =>
+            chat.push(new MessageState({userId: action.userId, text: action.text})));
+    }
+
   }
   return state;
 }

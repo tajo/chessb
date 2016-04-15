@@ -118,7 +118,8 @@ export default function gameReducer(state = initialState, action) {
         }),
         winner: action.game.winner ? Map(action.game.winner) : null,
         startDate: action.game.startDate,
-        gameTime: action.game.gameTime
+        gameTime: action.game.gameTime,
+        chat: List(action.game.chat),
       });
     }
 

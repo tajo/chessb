@@ -88,6 +88,7 @@ export function sendChat(gameId, userId, text) {
   return {
     type: actions.SERVER_SEND_CHAT,
     userId: userId,
+    gameId: gameId,
     room: gameId,
     text: text
   };
