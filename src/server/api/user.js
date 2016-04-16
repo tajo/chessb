@@ -23,6 +23,7 @@ router
           token: shortid.generate(),
           password: bcrypt.hashSync(req.body.password, SALT_ROUNDS),
           email: req.body.email,
+          ranking: 1000
         });
         user.save(err => {
           if (err) {
