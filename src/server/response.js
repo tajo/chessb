@@ -131,12 +131,12 @@ function startNewGame(getState, dispatch, gameId, socketAdapter) {
   let villainWhite = game.getIn(['bBoard', 'WHITE']);
   let villainBlack = game.getIn(['aBoard', 'BLACK']);
 
-  if (game.getIn(['bBoard', 'BLACK']) === winner) {
+  if (winner.get('board') === 'bBoard' && winner.get('color') === 'BLACK') {
     heroWhite = heroBlack;
     heroBlack = winner;
   }
 
-  if (game.getIn(['aBoard', 'BLACK']) === winner) {
+  if (winner.get('board') === 'aBoard' && winner.get('color') === 'BLACK') {
     heroBlack = winner;
     const _heroWhite = heroWhite;
     heroWhite = villainWhite;
@@ -144,7 +144,7 @@ function startNewGame(getState, dispatch, gameId, socketAdapter) {
     villainBlack = heroBlack;
   }
 
-  if (game.getIn(['bBoard', 'WHITE']) === winner) {
+  if (winner.get('board') === 'bBoard' && winner.get('color') === 'WHITE') {
     heroWhite = winner;
     const _heroBlack = heroBlack;
     heroBlack = villainBlack;
