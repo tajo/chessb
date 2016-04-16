@@ -39,6 +39,7 @@ function CoreLayout({children}) {
             </ul>
           </Modal>
         </FlexModalWrapper>
+        <div style={{marginTop: -2, marginLeft: 31}}><a href="https://en.wikipedia.org/wiki/Bughouse_chess" target="_blank">rules</a></div>
       </div>
       <div style={topRightStyle}>
         <Account />
