@@ -89,10 +89,45 @@ export default function reducer(state = initialState, action) {
                !game.getIn(['bBoard', 'WHITE']) ||
                !game.getIn(['bBoard', 'BLACK']);
       });
-      if (freeSeatBoards.first()) {
-        return state.updateIn(['users', action.userId, 'gameId'], () => {
-          return freeSeatBoards.first().get('gameId');
-        });
+
+      const rankedBoards = freeSeatBoards.map(game => {
+        let tableElo = 0;
+        let playersAtTable = 0;
+        if (game.getIn(['aBoard', 'WHITE'])) {
+          tableElo += state.getIn(['users', game.getIn(['aBoard', 'WHITE']), 'ranking']);
+          playersAtTable += 1;
+        }
+        if (game.getIn(['aBoard', 'BLACK'])) {
+          tableElo += state.getIn(['users', game.getIn(['aBoard', 'BLACK']), 'ranking']);
+          playersAtTable += 1;
+        }
+        if (game.getIn(['bBoard', 'WHITE'])) {
+          tableElo += state.getIn(['users', game.getIn(['bBoard', 'WHITE']), 'ranking']);
+          playersAtTable += 1;
+        }
+        if (game.getIn(['bBoard', 'BLACK'])) {
+          tableElo += state.getIn(['users', game.getIn(['bBoard', 'BLACK']), 'ranking']);
+          playersAtTable += 1;
+        }
+        const rank = playersAtTable === 0 ? 0 : tableElo / playersAtTable;
+        return Map({gameId: game.get('gameId'), ranking: rank});
+      });
+
+      const sortedRankedBoards = rankedBoards.sort((gameA, gameB) => {
+        if (gameA.get('ranking') > gameB.get('ranking')) return 1;
+        if (gameB.get('ranking') > gameA.get('ranking')) return -1;
+        return 0;
+      });
+
+      let bestMatch = null;
+      sortedRankedBoards.forEach(game => {
+        if (state.getIn(['users', action.userId, 'ranking']) > (game.get('ranking') - 200)) {
+          bestMatch = game.get('gameId');
+        }
+      });
+
+      if (bestMatch) {
+        return state.updateIn(['users', action.userId, 'gameId'], () => bestMatch);
       }
       const newGameId = shortid.generate();
       return state
