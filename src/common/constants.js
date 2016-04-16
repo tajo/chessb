@@ -1,5 +1,5 @@
-//export const GAME_TIME = 194000;
-export const GAME_TIME = 15000;
+export const GAME_TIME = 194000;
+//export const GAME_TIME = 15000;
 export const GAME_DELAY = 6000;
 export const INBETWEEN_DELAY = 4000;
 export const SALT_ROUNDS = 10;
