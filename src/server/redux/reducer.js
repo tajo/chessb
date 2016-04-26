@@ -70,10 +70,12 @@ export default function reducer(state = initialState, action) {
       if (inGame) {
         state = leaveGame(state, inGame, action.userId);
       }
+
       if (!action.userId) return state;
       return state
-        .update('sockets', sockets => sockets.delete(action.socketId))
-        .update('users', users => users.delete(action.userId));
+        .update('users', users => users.delete(action.userId))
+        .update('games', games => games.filter(game => !!state.get('users').find(user => user.get('gameId') === game.gameId)))
+        .update('sockets', sockets => sockets.delete(action.socketId));
     }
 
     case actions.SWITCH_GAME: {
