@@ -15,7 +15,7 @@ export function authUser(token, gameId = null) {
   };
 }
 
-export function addUser(email, password, userId) {
+export function addUser(email, password, userId, token) {
   return ({ post }) => {
     return {
       type: actions.USER_ADD,
@@ -24,6 +24,7 @@ export function addUser(email, password, userId) {
           email: email,
           password: password,
           newUserId: userId,
+          token: token,
         })
         .then(response => response.json()),
       },

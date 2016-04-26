@@ -18,24 +18,30 @@ router
       } else if (v.email) {
         res.status(400).send({ err: `Email ${v.email}` });
       } else {
-        const user = new UserModel({
-          userId: req.body.newUserId,
-          token: shortid.generate(),
-          password: bcrypt.hashSync(req.body.password, SALT_ROUNDS),
-          email: req.body.email,
-          ranking: 1000
-        });
-        user.save(err => {
-          if (err) {
-            if (err.errmsg.includes('duplicate key error index: chessb.users.$userId')) {
-              res.status(400).send({ err: 'User name already exists!' });
-            } else if (err.errmsg.includes('duplicate key error index: chessb.users.$email')) {
-              res.status(400).send({ err: 'Email already exists!' });
-            } else {
-              res.status(400).send({ err: errmsg });
-            }
+        UserModel.findOne({token: req.body.token}, (anonErr, anonUser) => {
+          if (anonErr) {
+            res.status(400).send({ err: 'Valid token is missing!' });
           } else {
-            res.status(200).send({ msg: `User '${user.userId}' was saved.`, payload: user });
+            const user = new UserModel({
+              userId: req.body.newUserId,
+              token: shortid.generate(),
+              password: bcrypt.hashSync(req.body.password, SALT_ROUNDS),
+              email: req.body.email,
+              ranking: anonUser.ranking
+            });
+            user.save(err => {
+              if (err) {
+                if (err.errmsg.includes('duplicate key error index: chessb.users.$userId')) {
+                  res.status(400).send({ err: 'User name already exists!' });
+                } else if (err.errmsg.includes('duplicate key error index: chessb.users.$email')) {
+                  res.status(400).send({ err: 'Email already exists!' });
+                } else {
+                  res.status(400).send({ err: errmsg });
+                }
+              } else {
+                res.status(200).send({ msg: `User '${user.userId}' was saved.`, payload: user });
+              }
+            });
           }
         });
       }

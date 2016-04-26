@@ -23,14 +23,15 @@ function getError(field) {
   return '';
 }
 
-function submit(addUser) {
+function submit(addUser, token) {
   return (values, dispatch) => {
-    return addUser(values.email, values.password, values.userId);
+    return addUser(values.email, values.password, values.userId, token);
   };
 }
 
 const mapStateToProps = (state) => ({
   accountError: state.user.get('accountError'),
+  token: state.user.get('token'),
 });
 
 class Signup extends Component {
@@ -41,6 +42,7 @@ class Signup extends Component {
     resetForm: React.PropTypes.func.isRequired,
     submitting: React.PropTypes.bool.isRequired,
     addUser: React.PropTypes.func.isRequired,
+    token: React.PropTypes.string.isRequired,
     accountError: React.PropTypes.string,
   };
 
@@ -52,7 +54,7 @@ class Signup extends Component {
       submitting
       } = this.props
     return (
-      <form onSubmit={handleSubmit(submit(this.props.addUser))}>
+      <form onSubmit={handleSubmit(submit(this.props.addUser, this.props.token))}>
         {this.props.accountError && <div style={{color: 'darkred'}}><b>{this.props.accountError}</b></div>}
         <div>
           <label><b>Email {getError(email)}</b></label>
