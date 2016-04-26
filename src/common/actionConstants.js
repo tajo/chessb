@@ -18,6 +18,7 @@ export default Keymirror({
   JOIN_BOARD: null,
   JOIN_LEAVE_GAME: null,
   MOVE: null,
+  RESIGN_GAME: null,
   SEAT_CHANGED: null,
   SELECT_SQUARE: null,
   SEND_CHAT: null,

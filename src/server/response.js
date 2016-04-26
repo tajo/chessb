@@ -11,6 +11,7 @@ export default function response(ctx) {
   res[constants.USER_AUTHENTICATE] = userAuthenticate;
   res[constants.SWITCH_GAME] = switchGame;
   res[constants.JOIN_LEAVE_GAME] = joinLeaveGame;
+  res[constants.RESIGN_GAME] = resignGame;
   res[constants.ADD_NEW_GAME] = addNewGame;
   res[constants.SEND_CHAT] = sendChat;
   res[constants.MOVE] = move;
@@ -70,6 +71,14 @@ export function joinLeaveGame({action, getState, dispatch}) {
   const startDate = getState().getIn(['games', action.gameId, 'startDate']);
   dispatch(actions.syncGames(getState().get('games'), getState().get('users')));
   dispatch(actions.seatChanged(action.gameId, action.board, action.color, takenSeatId, startDate));
+}
+
+export function resignGame({action, getState, dispatch, socketAdapter}) {
+  action.gameId = getState().getIn(['users', action.userId, 'gameId']);
+  dispatch(action);
+  if (getState().getIn(['games', action.gameId, 'winner'])) {
+    startNewGame(getState, dispatch, action.gameId, socketAdapter);
+  }
 }
 
 export function addNewGame({action, getState, dispatch}) {

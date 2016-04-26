@@ -5,6 +5,7 @@ export const actionCreators = {
   move,
   selectSquare,
   joinLeaveGame,
+  resignGame,
   timeRanOut,
   addNewGame,
   switchGame,
@@ -50,6 +51,13 @@ export function joinLeaveGame(board, color, gameId) {
     board: board,
     color: color,
     gameId: gameId,
+    remote: true
+  };
+}
+
+export function resignGame() {
+  return {
+    type: actions.RESIGN_GAME,
     remote: true
   };
 }

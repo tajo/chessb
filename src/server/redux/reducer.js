@@ -82,6 +82,27 @@ export default function reducer(state = initialState, action) {
         .updateIn(['users', action.userId, 'gameId'], () => action.gameId);
     }
 
+    case actions.RESIGN_GAME: {
+      const game = state.getIn(['games', action.gameId]);
+      const aWhite = game.getIn(['aBoard', 'WHITE']);
+      const aBlack = game.getIn(['aBoard', 'BLACK']);
+      const bWhite = game.getIn(['bBoard', 'WHITE']);
+      const bBlack = game.getIn(['bBoard', 'BLACK']);
+
+      if (action.userId === aWhite) {
+        return state.updateIn(['games', action.gameId, 'winner'], () => Map({board: 'aBoard', color: 'BLACK'}));
+      }
+
+      if (action.userId === aBlack) {
+        return state.updateIn(['games', action.gameId, 'winner'], () => Map({board: 'aBoard', color: 'WHITE'}));
+      }
+
+      if (action.userId === bWhite) {
+        return state.updateIn(['games', action.gameId, 'winner'], () => Map({board: 'bBoard', color: 'BLACK'}));
+      }
+      return state.updateIn(['games', action.gameId, 'winner'], () => Map({board: 'bBoard', color: 'WHITE'}));
+    }
+
     case actions.SERVER_FIND_SEAT: {
       const freeSeatBoards = state.get('games').filter(game => {
         return !game.getIn(['aBoard', 'WHITE']) ||

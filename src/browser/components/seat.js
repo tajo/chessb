@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Record, Map} from 'immutable';
 import {COLORS} from '../../common/constants';
 import {actionCreators as gameActions} from '../redux/actions/game';
+import moment from 'moment';
 
 import '../styles/button.scss';
 
@@ -22,6 +23,7 @@ class Seat extends Component {
     game: React.PropTypes.instanceOf(Record).isRequired,
     user: React.PropTypes.instanceOf(Record).isRequired,
     rankings: React.PropTypes.instanceOf(Map).isRequired,
+    resignGame: React.PropTypes.func.isRequired,
     joinLeaveGame: React.PropTypes.func.isRequired
   };
 
@@ -44,16 +46,29 @@ class Seat extends Component {
     const checkA = this.props.game.getIn([this.props.board === 'bBoard' ? 'aBoard' : 'bBoard', this.props.color]);
     const checkB = this.props.game.getIn([this.props.board, this.props.color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK]);
 
+    const isGameRunning = !this.props.game.get('winner') &&
+      this.props.game.get('startDate') && moment(this.props.game.get('startDate')).isBefore(moment());
+
     return (
       <div>
         {isBefore && this.renderName(userId, myUserId)}
-        <button
+        {!isGameRunning && <button
           className="pureButton"
           disabled={(checkA === myUserId || checkB === myUserId || (userId !== myUserId && userId))}
           onClick={() => this.props.joinLeaveGame(this.props.board, this.props.color, this.props.user.gameId)}
         >
-          {(userId && userId === myUserId) ? 'Leave Game' : 'Join Game'}
-        </button>
+          {(userId && userId === myUserId) ? 'Leave' : 'Join'}
+        </button>}
+        {(userId === myUserId && isGameRunning) &&
+          <div style={{ textAlign: 'center' }}>
+            <button
+              className="pureButton"
+              onClick={() => this.props.resignGame()}
+            >
+              Resign
+            </button>
+          </div>
+        }
         {!isBefore && this.renderName(userId, myUserId)}
       </div>
     );
