@@ -188,6 +188,12 @@ export default function reducer(state = initialState, action) {
       if (action.room) return state;
       if (!state.getIn(['games', action.gameId, 'startDate'])) return state;
       if (state.getIn(['games', action.gameId, 'winner'])) return state;
+
+      // check if move is made by player that claims the move
+      if (state.getIn(['games', action.gameId, action.board, getPieceColor(action.piece)]) !== action.userId) {
+        return state;
+      }
+
       const engine = new Chess(state.getIn(['games', action.gameId, action.board, 'engine']));
 
       // give the captured pieces to other board

@@ -4,10 +4,11 @@ import Piece from './piece';
 import {connect} from 'react-redux';
 import {Record} from 'immutable';
 import {actionCreators as gameActions} from '../redux/actions/game';
-import {translatePieceReverse, isPieceMovebale, getFreePieces} from '../../common/chess';
+import {translatePieceReverse, isPieceMovebale, getFreePieces, isItMyGame} from '../../common/chess';
 
 const mapStateToProps = (state) => ({
-  game: state.game
+  game: state.game,
+  user: state.user
 });
 
 class FreePieces extends Component {
@@ -16,7 +17,8 @@ class FreePieces extends Component {
     color: React.PropTypes.string.isRequired,
     board: React.PropTypes.string.isRequired,
     game: React.PropTypes.instanceOf(Record).isRequired,
-    selectSquare: React.PropTypes.func.isRequired
+    selectSquare: React.PropTypes.func.isRequired,
+    user: React.PropTypes.instanceOf(Record).isRequired
   };
 
   render() {
@@ -45,7 +47,7 @@ class FreePieces extends Component {
               <Piece
                 type={piece.get('type')}
                 canDrag={isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)
-                  && this.props.game.getIn([this.props.board, 'engine']).turn === color}
+                  && isItMyGame(this.props.board, this.props.game, this.props.user.get('userId'))}
                 position={translatePieceReverse(piece.get('type')).type}
                 board={this.props.board}
                 count={piece.get('count')}
@@ -64,7 +66,8 @@ class FreePieces extends Component {
     if (this.props.game.getIn([this.props.board, 'squareSelected', 'position']) === position) {
       passPosition = null;
     }
-    if (isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)) {
+    if (isItMyGame(this.props.board, this.props.game, this.props.user.get('userId')) &&
+        isPieceMovebale(this.props.game.getIn([this.props.board, 'engine']), position)) {
       this.props.selectSquare(this.props.board, passPosition, piece);
     }
   }
