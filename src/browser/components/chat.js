@@ -130,6 +130,7 @@ class Chat extends Component {
 
   onEnter(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
+      if (!this.state.text.trim()) return;
       this.props.sendChat(this.state.text);
       this.setState({text: ''});
     }
