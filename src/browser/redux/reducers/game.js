@@ -2,6 +2,7 @@ import actions from '../../../common/actionConstants';
 import {Record, List, Map} from 'immutable';
 import {translatePieceReverse, getPieceColor} from '../../../common/chess';
 import Chess from '../../../common/engine';
+import {COLORS} from '../../../common/constants';
 
 const BoardState = Record({
   engine: null,
@@ -45,15 +46,24 @@ export default function gameReducer(state = initialState, action) {
       const engine = new Chess(state.getIn([action.board, 'engine']));
 
       // give the captured pieces to other board
-      if (engine.get(action.end)) {
+      const endPiece = engine.get(action.end);
+
+      // make the move
+      const result = engine.move({from: action.start, to: action.end, promotion: action.promotion});
+
+      if (endPiece || result.flags === 'e') {
         const engineOther = new Chess(state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
-        engineOther.addFreePiece(engine.get(action.end));
+        if (endPiece) {
+          engineOther.addFreePiece(endPiece);
+        } else {
+          engineOther.addFreePiece({
+            color: getPieceColor(action.piece) === COLORS.WHITE ? 'b' : 'w',
+            type: 'p'
+          });
+        }
         engineOther.preLoadMoves();
         state = state.updateIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engineOther.getState());
       }
-
-      // make move
-      engine.move({from: action.start, to: action.end, promotion: action.promotion});
 
       // drop piece
       if (['p', 'r', 'q', 'n', 'b'].some(p => p === action.start)) {

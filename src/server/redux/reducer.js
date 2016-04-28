@@ -205,9 +205,16 @@ export default function reducer(state = initialState, action) {
 
       state = state.updateIn(['games', action.gameId, action.board, 'dates'], dates => dates.push(action.date));
 
-      if (endPiece) {
+      if (endPiece || result.flags === 'e') {
         const engineOther = new Chess(state.getIn(['games', action.gameId, action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
-        engineOther.addFreePiece(endPiece);
+        if (endPiece) {
+          engineOther.addFreePiece(endPiece);
+        } else {
+          engineOther.addFreePiece({
+            color: getPieceColor(action.piece) === COLORS.WHITE ? 'b' : 'w',
+            type: 'p'
+          });
+        }
         engineOther.preLoadMoves();
         state = state.updateIn(['games', action.gameId, action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engineOther.getState());
       }
