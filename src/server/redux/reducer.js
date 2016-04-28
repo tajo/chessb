@@ -1,7 +1,7 @@
 import actions from '../../common/actionConstants';
 import {Record, List, Map, OrderedMap} from 'immutable';
 import Chess from '../../common/engine';
-import {translatePieceReverse, getPieceColor, getElo} from '../../common/chess';
+import {translatePieceReverse, getPieceColor, getElo, getSquareNum} from '../../common/chess';
 import shortid from 'shortid';
 import {COLORS, GAME_TIME, GAME_DELAY} from '../../common/constants';
 import moment from 'moment';
@@ -198,6 +198,7 @@ export default function reducer(state = initialState, action) {
 
       // give the captured pieces to other board
       const endPiece = engine.get(action.end);
+      const promoted = state.getIn(['games', action.gameId, action.board, 'engine']).promoted.slice(0);
 
       // make move
       const result = engine.move({from: action.start, to: action.end, promotion: action.promotion});
@@ -208,12 +209,14 @@ export default function reducer(state = initialState, action) {
       if (endPiece || result.flags === 'e') {
         const engineOther = new Chess(state.getIn(['games', action.gameId, action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
         if (endPiece) {
-          engineOther.addFreePiece(endPiece);
-        } else {
-          engineOther.addFreePiece({
-            color: getPieceColor(action.piece) === COLORS.WHITE ? 'b' : 'w',
-            type: 'p'
-          });
+          if (promoted.indexOf(getSquareNum(action.end)) > -1) {
+            engineOther.addFreePiece({
+              color: getPieceColor(action.piece) === COLORS.WHITE ? 'b' : 'w',
+              type: 'p'
+            });
+          } else {
+            engineOther.addFreePiece(endPiece);
+          }
         }
         engineOther.preLoadMoves();
         state = state.updateIn(['games', action.gameId, action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine'], () => engineOther.getState());

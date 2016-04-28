@@ -1,6 +1,6 @@
 import actions from '../../../common/actionConstants';
 import {Record, List, Map} from 'immutable';
-import {translatePieceReverse, getPieceColor} from '../../../common/chess';
+import {translatePieceReverse, getPieceColor, getSquareNum} from '../../../common/chess';
 import Chess from '../../../common/engine';
 import {COLORS} from '../../../common/constants';
 
@@ -49,12 +49,20 @@ export default function gameReducer(state = initialState, action) {
       const endPiece = engine.get(action.end);
 
       // make the move
+      const promoted = state.getIn([action.board, 'engine']).promoted.slice(0);
       const result = engine.move({from: action.start, to: action.end, promotion: action.promotion});
 
       if (endPiece || result.flags === 'e') {
         const engineOther = new Chess(state.getIn([action.board === 'aBoard' ? 'bBoard' : 'aBoard', 'engine']));
         if (endPiece) {
-          engineOther.addFreePiece(endPiece);
+          if (promoted.indexOf(getSquareNum(action.end)) > -1) {
+            engineOther.addFreePiece({
+              color: getPieceColor(action.piece) === COLORS.WHITE ? 'b' : 'w',
+              type: 'p'
+            });
+          } else {
+            engineOther.addFreePiece(endPiece);
+          }
         } else {
           engineOther.addFreePiece({
             color: getPieceColor(action.piece) === COLORS.WHITE ? 'b' : 'w',

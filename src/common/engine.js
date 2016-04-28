@@ -137,6 +137,7 @@ export default function Chess(newstate) {
   var history = [];
   var generatedMoves = [];
   if (typeof newstate !== 'undefined') {
+    var promoted = newstate.promoted;
     var board = newstate.board;
     var kings = newstate.kings;
     var turn = newstate.turn;
@@ -145,6 +146,7 @@ export default function Chess(newstate) {
     var blackFreePieces = newstate.blackFreePieces;
     var whiteFreePieces = newstate.whiteFreePieces;
   } else {
+    var promoted = [];
     var board = [{"type":"r","color":"b"},{"type":"n","color":"b"},{"type":"b","color":"b"},{"type":"q","color":"b"},{"type":"k","color":"b"},{"type":"b","color":"b"},{"type":"n","color":"b"},{"type":"r","color":"b"},null,null,null,null,null,null,null,null,{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},{"type":"p","color":"b"},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},{"type":"p","color":"w"},null,null,null,null,null,null,null,null,{"type":"r","color":"w"},{"type":"n","color":"w"},{"type":"b","color":"w"},{"type":"q","color":"w"},{"type":"k","color":"w"},{"type":"b","color":"w"},{"type":"n","color":"w"},{"type":"r","color":"w"},null,null,null,null,null,null,null,null];
     var kings = {w: 116, b: 4};
     var turn = WHITE;
@@ -679,8 +681,22 @@ export default function Chess(newstate) {
        * move is made
        */
       var pretty_move = make_pretty(move_obj);
-
       make_move(move_obj);
+
+      // keeping an array with promoted pieces
+      if (move_obj.promotion) {
+        promoted.push(move_obj.to);
+      } else {
+        const indexFrom = promoted.indexOf(move_obj.from);
+        const indexTo = promoted.indexOf(move_obj.to);
+        if (indexFrom > -1 && indexTo === -1) {
+          promoted[indexFrom] = move_obj.to;
+        } else if (indexFrom === -1 && indexTo > -1) {
+          promoted.splice(indexTo, 1);
+        } else if (indexFrom > -1 && indexTo > -1) {
+          promoted.splice(indexFrom, 1);
+        }
+      }
       preGenerateMoves();
       return pretty_move;
     },
@@ -727,6 +743,7 @@ export default function Chess(newstate) {
     getState: function() {
       return {
         board: board,
+        promoted: promoted,
         kings: kings,
         turn: turn,
         castling: castling,
@@ -739,6 +756,7 @@ export default function Chess(newstate) {
 
     setState: function(state) {
       board = state.board;
+      promoted = state.promoted;
       kings = state.kings;
       turn = state.turn;
       castling = state.castling;
