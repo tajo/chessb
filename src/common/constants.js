@@ -1,7 +1,7 @@
-export const GAME_TIME = 194000;
-//export const GAME_TIME = 15000;
-export const GAME_DELAY = 10000;
-export const INBETWEEN_DELAY = 4000;
+export const isProduction = process.env.NODE_ENV === 'production';
+export const GAME_TIME = isProduction ? 194000 : 60000;
+export const GAME_DELAY = isProduction ? 10000 : 1000;
+export const INBETWEEN_DELAY = isProduction ? 7000 : 3000;
 export const SALT_ROUNDS = 10;
 
 export const COLORS = {
