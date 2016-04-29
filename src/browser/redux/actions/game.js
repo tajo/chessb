@@ -22,9 +22,6 @@ export function move(board, start, end, piece, promotion = null) {
     return {type: actions.SHOW_PROMOTION_POPUP, board: board, start: start, end: end};
   }
 
-  const clickSound = new Audio('/assets/click.wav');
-  clickSound.load();
-  clickSound.play();
   return {
     type: actions.MOVE,
     board: board,

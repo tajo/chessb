@@ -25,6 +25,15 @@ class Board extends Component {
     counter: React.PropTypes.number
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.counter !== nextProps.counter && Math.round(nextProps.counter / 1000) === 3) {
+      const startSound = new Audio('/assets/start.wav');
+      startSound.load();
+      startSound.volume = 0.2;
+      startSound.play();
+    }
+  }
+
   render() {
     const styles = {
       width: '35vw',
