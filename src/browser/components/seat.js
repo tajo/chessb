@@ -52,7 +52,7 @@ class Seat extends Component {
     return (
       <div>
         {isBefore && this.renderName(userId, myUserId)}
-        {!isGameRunning && <button
+        {(!isGameRunning || !userId) && <button
           className="pureButton"
           disabled={(checkA === myUserId || checkB === myUserId || (userId !== myUserId && userId))}
           onClick={() => this.props.joinLeaveGame(this.props.board, this.props.color, this.props.user.gameId)}
