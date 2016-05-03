@@ -1,5 +1,4 @@
-import injectDependencies from './injectDeps';
-import { get, post, put, remove } from '../common/fetch';
+import {get, post, put, remove} from '../common/fetch';
 import promiseMiddleware from 'redux-promise-middleware';
 import socketMiddleware from './socketMiddleware';
 import shortid from 'shortid';
@@ -10,16 +9,13 @@ import {
 } from 'redux';
 
 export default function configureStore(io, reducer, browserMiddlewares = null) {
-  const getUid = () => shortid.generate();
-  const now = () => Date.now();
-
   // Remember to set SERVER_URL for deployment.
   const SERVER_URL = process.env.SERVER_URL ||
     (process.env.IS_BROWSER ? '' : 'http://localhost:8000');
 
   const injectMiddleware = deps => store => next => action =>
     next(typeof action === 'function'
-      ? action({ ...deps, store })
+      ? action({...deps, store})
       : action
     );
 
@@ -57,7 +53,9 @@ export default function configureStore(io, reducer, browserMiddlewares = null) {
   if (module.hot) { // eslint-disable-line no-undef
     // Enable Webpack hot module replacement for reducers.
     module.hot.accept('../browser/redux/reducers', () => { // eslint-disable-line no-undef
+      /* eslint-disable */
       const nextAppReducer = require('../browser/redux/reducers'); // eslint-disable-line no-undef
+      /* eslint-enable */
       store.replaceReducer(nextAppReducer);
     });
   }

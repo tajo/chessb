@@ -40,24 +40,22 @@ export default function userReducer(state = initialState, action) {
     case actions.USER_ADD_SUCCESS: {
       if (action.payload.err) {
         return state.update('accountError', () => action.payload.err);
-      } else {
-        return state.update('accountAdded', () => true);
       }
+      return state.update('accountAdded', () => true);
     }
 
     case actions.USER_SIGN_IN_SUCCESS: {
       if (action.payload.err) {
         return state.update('signInError', () => action.payload.err);
-      } else {
-        localStorage.setItem('token', action.payload.payload.token);
-        // NASTY HACK: alright, this sucks ass, but I dont have time now to make it w/o refreshing
-        document.location.reload(true);
-        return state
-          .update('userId', () => action.payload.payload.userId)
-          .update('hasPassword', () => true)
-          .update('token', () => action.payload.payload.token)
-          .update('signInError', () => null);
       }
+      localStorage.setItem('token', action.payload.payload.token);
+      // NASTY HACK: alright, this sucks ass, but I dont have time now to make it w/o refreshing
+      document.location.reload(true);
+      return state
+        .update('userId', () => action.payload.payload.userId)
+        .update('hasPassword', () => true)
+        .update('token', () => action.payload.payload.token)
+        .update('signInError', () => null);
     }
   }
   return state;

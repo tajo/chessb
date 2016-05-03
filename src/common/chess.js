@@ -17,8 +17,8 @@ export function getElo(
   const hero = (heroWhite + heroBlack) / 2;
   const villain = (villainWhite + villainBlack) / 2;
 
-  const heroAdjusted = Math.pow(10, hero/400);
-  const villainAdjusted = Math.pow(10, villain/400);
+  const heroAdjusted = Math.pow(10, hero / 400);
+  const villainAdjusted = Math.pow(10, villain / 400);
 
   const heroExp = heroAdjusted / (heroAdjusted + villainAdjusted);
   const villainExp = villainAdjusted / (heroAdjusted + villainAdjusted);
@@ -33,7 +33,7 @@ export function getElo(
     heroBlack: Math.round(heroBlack + heroRes),
     villainWhite: Math.round(villainWhite + villainRes),
     villainBlack: Math.round(villainBlack + villainRes),
-  }
+  };
 }
 
 export function isPieceMovebale(engineState, position) {

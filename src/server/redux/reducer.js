@@ -89,7 +89,6 @@ export default function reducer(state = initialState, action) {
       const aWhite = game.getIn(['aBoard', 'WHITE']);
       const aBlack = game.getIn(['aBoard', 'BLACK']);
       const bWhite = game.getIn(['bBoard', 'WHITE']);
-      const bBlack = game.getIn(['bBoard', 'BLACK']);
 
       if (action.userId === aWhite) {
         return state.updateIn(['games', action.gameId, 'winner'], () => Map({board: 'aBoard', color: 'BLACK'}));

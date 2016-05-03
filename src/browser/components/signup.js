@@ -6,11 +6,11 @@ import {actionCreators as userActions} from '../redux/actions/user';
 import {email, required, basicChars, minLength} from '../../common/validation';
 import '../styles/button.scss';
 
-const fields = [ 'userId', 'email', 'password'];
+const fields = ['userId', 'email', 'password'];
 
 export const validate = values => {
   const errors = {
-    userId: required(values.userId) || basicChars(values.userId) ||  minLength(3)(values.userId),
+    userId: required(values.userId) || basicChars(values.userId) || minLength(3)(values.userId),
     password: required(values.password) || minLength(6)(values.password),
     email: required(values.email) || email(values.email),
   };
@@ -24,7 +24,7 @@ function getError(field) {
 }
 
 function submit(addUser, token) {
-  return (values, dispatch) => {
+  return values => {
     return addUser(values.email, values.password, values.userId, token);
   };
 }
@@ -48,30 +48,29 @@ class Signup extends Component {
 
   render() {
     const {
-      fields: { userId, email, password },
+      fields: {userId, email, password},
       handleSubmit,
-      resetForm,
       submitting
-      } = this.props
+      } = this.props;
     return (
       <form onSubmit={handleSubmit(submit(this.props.addUser, this.props.token))}>
         {this.props.accountError && <div style={{color: 'darkred'}}><b>{this.props.accountError}</b></div>}
         <div>
           <label><b>Email {getError(email)}</b></label>
           <div>
-            <input type="email" {...email}/>
+            <input type="email" {...email} />
           </div>
         </div>
         <div style={{marginTop: '5px'}}>
           <label><b>Username {getError(userId)}</b></label>
           <div>
-            <input type="text" {...userId}/>
+            <input type="text" {...userId} />
           </div>
         </div>
         <div style={{marginTop: '5px'}}>
           <label><b>Password {getError(password)}</b></label>
           <div>
-            <input type="password" {...password}/>
+            <input type="password" {...password} />
           </div>
         </div>
         <div style={{marginTop: '5px'}}>

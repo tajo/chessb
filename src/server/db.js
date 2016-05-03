@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://localhost/chessb');
 export const db = mongoose.connection;
@@ -9,12 +9,12 @@ db.once('open', () => {
 });
 
 const userSchema = Schema({
-  userId: { type: String, unique : true, required : true, dropDups: true },
-  email: { type: String, unique : true, dropDups: true },
+  userId: {type: String, unique: true, required: true, dropDups: true},
+  email: {type: String, unique: true, dropDups: true},
   password: String,
-  ranking: { type: Number, required : true },
-  token: { type: String, unique : true, required : true, dropDups: true },
-  createdAt: { type: Date, default: Date.now },
+  ranking: {type: Number, required: true},
+  token: {type: String, unique: true, required: true, dropDups: true},
+  createdAt: {type: Date, default: Date.now},
 });
 
 const gameSchema = new Schema({}, {strict: false});

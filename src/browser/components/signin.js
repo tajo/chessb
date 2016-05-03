@@ -3,10 +3,10 @@ import Component from 'react-pure-render/component';
 import {reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {actionCreators as userActions} from '../redux/actions/user';
-import {email, required, minLength} from '../../common/validation';
+import {required, minLength} from '../../common/validation';
 import '../styles/button.scss';
 
-const fields = [ 'userId', 'password']
+const fields = ['userId', 'password'];
 
 export const validate = values => {
   const errors = {
@@ -23,7 +23,7 @@ function getError(field) {
 }
 
 function submit(signInUser) {
-  return (values, dispatch) => {
+  return values => {
     return signInUser(values.userId, values.password);
   };
 }
@@ -45,24 +45,23 @@ class Signin extends Component {
 
   render() {
     const {
-      fields: { userId, password },
+      fields: {userId, password},
       handleSubmit,
-      resetForm,
       submitting
-      } = this.props
+      } = this.props;
     return (
       <form onSubmit={handleSubmit(submit(this.props.signInUser))}>
         {this.props.signInError && <div style={{color: 'darkred'}}><b>{this.props.signInError}</b></div>}
         <div>
-          <label><b>User or email  {getError(userId)}</b></label>
+          <label><b>User or email {getError(userId)}</b></label>
           <div>
-            <input type="text" {...userId}/>
+            <input type="text" {...userId} />
           </div>
         </div>
         <div style={{marginTop: '5px'}}>
-          <label><b>Password  {getError(password)}</b></label>
+          <label><b>Password {getError(password)}</b></label>
           <div>
-            <input type="password" {...password}/>
+            <input type="password" {...password} />
           </div>
         </div>
         <div style={{marginTop: '5px'}}>

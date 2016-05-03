@@ -7,6 +7,7 @@ export function email(value) {
   if (!isEmpty(value) && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
     return 'Invalid email address';
   }
+  return null;
 }
 
 export function basicChars(value) {
@@ -14,6 +15,7 @@ export function basicChars(value) {
   if (!isEmpty(value) && !/^[a-z0-9_-]+$/.test(value)) {
     return 'Only a-z, 0-9, _ and - allowed';
   }
+  return null;
 }
 
 export function checkUrl(value) {
@@ -22,12 +24,14 @@ export function checkUrl(value) {
   /* eslint-enable max-len */
     return 'Invalid URL';
   }
+  return null;
 }
 
 export function required(value) {
   if (isEmpty(value)) {
     return 'Required';
   }
+  return null;
 }
 
 export function minLength(min) {
@@ -35,6 +39,7 @@ export function minLength(min) {
     if (!isEmpty(value) && value.length < min) {
       return `Min length is ${min}`;
     }
+    return null;
   };
 }
 
@@ -43,6 +48,7 @@ export function maxLength(max) {
     if (!isEmpty(value) && value.length > max) {
       return `Must be no more than ${max} characters`;
     }
+    return null;
   };
 }
 
@@ -50,6 +56,7 @@ export function integer(value) {
   if (!Number.isInteger(Number(value))) {
     return 'Must be an integer';
   }
+  return null;
 }
 
 export function oneOf(enumeration) {
@@ -57,6 +64,7 @@ export function oneOf(enumeration) {
     if (!~enumeration.indexOf(value)) {
       return `Must be one of: ${enumeration.join(', ')}`;
     }
+    return null;
   };
 }
 
@@ -67,6 +75,7 @@ export function match(field) {
         return 'Do not match';
       }
     }
+    return null;
   };
 }
 

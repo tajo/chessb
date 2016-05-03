@@ -32,14 +32,14 @@ socket.on('action', action => {
   if (action.room) delete action.room;
   if (action.token) localStorage.setItem('token', action.token);
   if (action.type === actions.MOVE) {
-      const clickSound = new Audio('/assets/click.wav');
-      clickSound.load();
-      clickSound.play();
+    const clickSound = new Audio('/assets/click.wav');
+    clickSound.load();
+    clickSound.play();
   }
   if (action.type === actions.SERVER_SEAT_CHANGED) {
-      const sitSound = new Audio('/assets/sit.wav');
-      sitSound.load();
-      sitSound.play();
+    const sitSound = new Audio('/assets/sit.wav');
+    sitSound.load();
+    sitSound.play();
   }
 
   return store.dispatch(action);

@@ -16,7 +16,7 @@ export function authUser(token, gameId = null) {
 }
 
 export function addUser(email, password, userId, token) {
-  return ({ post }) => {
+  return ({post}) => {
     return {
       type: actions.USER_ADD,
       payload: {
@@ -33,7 +33,7 @@ export function addUser(email, password, userId, token) {
 }
 
 export function signInUser(userId, password) {
-  return ({ post }) => {
+  return ({post}) => {
     return {
       type: actions.USER_SIGN_IN,
       payload: {

@@ -18,6 +18,8 @@
     "arrow-body-style": 0,
     // React
     "react/sort-comp": 0, // Not ready yet
-    "react/jsx-no-bind": 0
+    "react/jsx-no-bind": 0,
+    "react/prefer-stateless-function": 0,
+    "jsx-a11y/img-has-alt": 0
   }
 }

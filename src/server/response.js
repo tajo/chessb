@@ -1,6 +1,6 @@
 import moment from 'moment';
 import * as actions from './redux/actions';
-import {INBETWEEN_DELAY, SALT_ROUNDS} from '../common/constants';
+import {INBETWEEN_DELAY} from '../common/constants';
 import constants from '../common/actionConstants';
 import {UserModel, GameModel} from './db';
 import faker from 'faker';
@@ -22,11 +22,11 @@ export default function response(ctx) {
 
 export function userAuthenticate({action, getState, dispatch, socket}) {
   if (!action.token) action.token = shortid.generate();
-  UserModel.findOne({ token: action.token }).exec()
+  UserModel.findOne({token: action.token}).exec()
     .then(user => {
       if (!user) {
         const newUser = new UserModel({
-          userId: faker.name.firstName() + '-' + shortid.generate().substring(0,6),
+          userId: `${faker.name.firstName()}-${shortid.generate().substring(0, 6)}`,
           token: action.token,
           email: shortid.generate(),
           ranking: 1000,
@@ -147,18 +147,18 @@ function startNewGame(getState, dispatch, gameId, socketAdapter) {
 
   if (winner.get('board') === 'aBoard' && winner.get('color') === 'BLACK') {
     heroBlack = winner;
-    const _heroWhite = heroWhite;
+    const oldHeroWhite = heroWhite;
     heroWhite = villainWhite;
-    villainWhite = _heroWhite;
+    villainWhite = oldHeroWhite;
     villainBlack = heroBlack;
   }
 
   if (winner.get('board') === 'bBoard' && winner.get('color') === 'WHITE') {
     heroWhite = winner;
-    const _heroBlack = heroBlack;
+    const oldHeroBlack = heroBlack;
     heroBlack = villainBlack;
     villainWhite = heroWhite;
-    villainBlack = _heroBlack;
+    villainBlack = oldHeroBlack;
   }
 
   dispatch(actions.winner(
@@ -173,17 +173,21 @@ function startNewGame(getState, dispatch, gameId, socketAdapter) {
   const gameDB = new GameModel(getState().getIn(['games', gameId]).toJS());
   gameDB.save();
 
-  UserModel.update({userId: heroWhite}, {ranking: getState().getIn(['users', heroWhite, 'ranking'])}, (err, raw) => {
+  UserModel.update({userId: heroWhite}, {ranking: getState().getIn(['users', heroWhite, 'ranking'])}, err => {
     if (err) return console.log(err);
+    return null;
   });
-  UserModel.update({userId: heroBlack}, {ranking: getState().getIn(['users', heroBlack, 'ranking'])}, (err, raw) => {
+  UserModel.update({userId: heroBlack}, {ranking: getState().getIn(['users', heroBlack, 'ranking'])}, err => {
     if (err) return console.log(err);
+    return null;
   });
-  UserModel.update({userId: villainWhite}, {ranking: getState().getIn(['users', villainWhite, 'ranking'])}, (err, raw) => {
+  UserModel.update({userId: villainWhite}, {ranking: getState().getIn(['users', villainWhite, 'ranking'])}, err => {
     if (err) return console.log(err);
+    return null;
   });
-  UserModel.update({userId: villainBlack}, {ranking: getState().getIn(['users', villainBlack, 'ranking'])}, (err, raw) => {
+  UserModel.update({userId: villainBlack}, {ranking: getState().getIn(['users', villainBlack, 'ranking'])}, err => {
     if (err) return console.log(err);
+    return null;
   });
 
   setTimeout(() => {

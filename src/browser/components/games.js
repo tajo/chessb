@@ -42,12 +42,12 @@ class Games extends Component {
                   <td>
                     {game.get('gameId') === this.props.gameId
                         ? (<b title="You are in this game.">{game.get('gameId')}</b>) :
-                    <Link
-                      onClick={() => this.switchGame(game.get('gameId'))}
-                      to={`/game/${game.get('gameId')}`}
-                    >
-                      {game.get('gameId')}
-                    </Link>
+                      <Link
+                        onClick={() => this.switchGame(game.get('gameId'))}
+                        to={`/game/${game.get('gameId')}`}
+                      >
+                        {game.get('gameId')}
+                      </Link>
                     }
                   </td>
                   <td>{game.get('startDate') ? 'Running' : 'Idle'}</td>
@@ -65,7 +65,7 @@ class Games extends Component {
             className="pureButton"
           >
             Add new game
-        </button>}
+          </button>}
       </div>
     );
   }

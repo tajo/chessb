@@ -60,7 +60,7 @@ class Seat extends Component {
           {(userId && userId === myUserId) ? 'Leave' : 'Join'}
         </button>}
         {(userId === myUserId && isGameRunning) &&
-          <div style={{ textAlign: 'center' }}>
+          <div style={{textAlign: 'center'}}>
             <button
               className="pureButton"
               onClick={() => this.props.resignGame()}

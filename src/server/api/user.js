@@ -12,15 +12,15 @@ router
     .post((req, res) => {
       const v = validate({userId: req.body.newUserId, email: req.body.email, password: req.body.password});
       if (v.userId) {
-        res.status(400).send({ err: `Username ${v.userId}` });
+        res.status(400).send({err: `Username ${v.userId}`});
       } else if (v.password) {
-        res.status(400).send({ err: `Password ${v.password}` });
+        res.status(400).send({err: `Password ${v.password}`});
       } else if (v.email) {
-        res.status(400).send({ err: `Email ${v.email}` });
+        res.status(400).send({err: `Email ${v.email}`});
       } else {
         UserModel.findOne({token: req.body.token}, (anonErr, anonUser) => {
           if (anonErr) {
-            res.status(400).send({ err: 'Valid token is missing!' });
+            res.status(400).send({err: 'Valid token is missing!'});
           } else {
             const user = new UserModel({
               userId: req.body.newUserId,
@@ -32,14 +32,14 @@ router
             user.save(err => {
               if (err) {
                 if (err.errmsg.includes('duplicate key error index: chessb.users.$userId')) {
-                  res.status(400).send({ err: 'User name already exists!' });
+                  res.status(400).send({err: 'User name already exists!'});
                 } else if (err.errmsg.includes('duplicate key error index: chessb.users.$email')) {
-                  res.status(400).send({ err: 'Email already exists!' });
+                  res.status(400).send({err: 'Email already exists!'});
                 } else {
-                  res.status(400).send({ err: errmsg });
+                  res.status(400).send({err: err.errmsg});
                 }
               } else {
-                res.status(200).send({ msg: `User '${user.userId}' was saved.`, payload: user });
+                res.status(200).send({msg: `User '${user.userId}' was saved.`, payload: user});
               }
             });
           }
@@ -51,14 +51,14 @@ router
   .route('/user/signin')
     .post((req, res) => {
       if (!req.body.userId || !req.body.password) {
-        res.status(400).send({ err: 'User name or password cannot be empty!' });
+        res.status(400).send({err: 'User name or password cannot be empty!'});
       } else {
-        UserModel.findOne({$or:[{userId: req.body.userId}, {email: req.body.userId}]},
+        UserModel.findOne({$or: [{userId: req.body.userId}, {email: req.body.userId}]},
           (err, user) => {
             if (err || !user || !bcrypt.compareSync(req.body.password, user.password)) {
-              res.status(400).send({ err: 'User was not found!' });
+              res.status(400).send({err: 'User was not found!'});
             } else {
-              res.status(200).send({ msg: `User '${req.body.userId}' found.`, payload: user });
+              res.status(200).send({msg: `User '${req.body.userId}' found.`, payload: user});
             }
           });
       }
