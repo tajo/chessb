@@ -49,14 +49,13 @@ export default function userReducer(state = initialState, action) {
       if (action.payload.err) {
         return state.update('signInError', () => action.payload.err);
       } else {
-        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('token', action.payload.payload.token);
         // NASTY HACK: alright, this sucks ass, but I dont have time now to make it w/o refreshing
         document.location.reload(true);
-
         return state
-          .update('userId', () => action.payload.userId)
+          .update('userId', () => action.payload.payload.userId)
           .update('hasPassword', () => true)
-          .update('token', () => action.payload.token)
+          .update('token', () => action.payload.payload.token)
           .update('signInError', () => null);
       }
     }
