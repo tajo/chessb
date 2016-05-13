@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "main": "index.js",
   "author": "Vojtech Miksu <vojtech@miksu.cz> (https://miksu.cz)",
-  "license": "UNLICENSED",
+  "license": "GPLv3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tajo/chessb.git"
   },
-  "private": true,
   "scripts": {
     "clean": "rm -rf build",
     "start": "node webpack/server | NODE_ENV=development nodemon src/server",
