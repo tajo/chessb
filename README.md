@@ -1,6 +1,6 @@
 # ChessB
 
-[![Build Status](https://travis-ci.com/tajo/chessb.svg?token=qkyETBiTXs35GEgJTPM5&branch=master)](https://travis-ci.com/tajo/chessb)
+[![Build Status](https://travis-ci.org/tajo/chessb.svg?token=qkyETBiTXs35GEgJTPM5&branch=master)](https://travis-ci.org/tajo/chessb)
 
 ## Description 
 
